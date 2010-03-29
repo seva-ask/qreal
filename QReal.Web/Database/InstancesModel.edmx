@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="QRealModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="QRealModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="QRealModelStoreContainer">
           <EntitySet Name="GraphicInstances" EntityType="QRealModel.Store.GraphicInstances" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="InstanceProperties" EntityType="QRealModel.Store.InstanceProperties" store:Type="Tables" Schema="dbo" />
@@ -31,6 +31,8 @@
           <Property Name="ParentId" Type="int" />
           <Property Name="X" Type="float" Nullable="false" />
           <Property Name="Y" Type="float" Nullable="false" />
+          <Property Name="Width" Type="float" Nullable="false" />
+          <Property Name="Height" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="InstanceProperties">
           <Key>
@@ -85,8 +87,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="QRealModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -119,6 +120,8 @@
           <NavigationProperty Name="Children" Relationship="QRealModel.FK_GraphicParents" FromRole="GraphicInstances" ToRole="GraphicInstances1" />
           <NavigationProperty Name="Parent" Relationship="QRealModel.FK_GraphicParents" FromRole="GraphicInstances1" ToRole="GraphicInstances" />
           <NavigationProperty Name="LogicalInstance" Relationship="QRealModel.FK_GraphicToLogical" FromRole="GraphicInstances" ToRole="LogicalInstances" />
+          <Property Type="Double" Name="Width" Nullable="false" />
+          <Property Type="Double" Name="Height" Nullable="false" />
         </EntityType>
         <EntityType Name="InstanceProperty">
           <Key>
@@ -183,7 +186,9 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="QRealModelStoreContainer" CdmEntityContainer="QRealEntities">
           <EntitySetMapping Name="GraphicInstances"><EntityTypeMapping TypeName="QRealModel.GraphicInstance"><MappingFragment StoreEntitySet="GraphicInstances">
-            <ScalarProperty Name="Id" ColumnName="Id" />
+            <ScalarProperty Name="Height" ColumnName="Height" />
+                <ScalarProperty Name="Width" ColumnName="Width" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="LogicalId" ColumnName="LogicalId" />
             <ScalarProperty Name="ParentId" ColumnName="ParentId" />
             <ScalarProperty Name="X" ColumnName="X" />
@@ -222,7 +227,7 @@
     <Diagrams>
       <Diagram Name="InstancesModel">
         <EntityTypeShape EntityType="QRealModel.GraphicInstance" Width="1.5" PointX="3" PointY="1.125" Height="2.5571907552083335" IsExpanded="true" />
-        <EntityTypeShape EntityType="QRealModel.InstanceProperty" Width="1.5" PointX="3" PointY="4.375" Height="1.9802864583333335" IsExpanded="true" />
+        <EntityTypeShape EntityType="QRealModel.InstanceProperty" Width="1.5" PointX="3" PointY="5.25" Height="1.9802864583333335" IsExpanded="true" />
         <EntityTypeShape EntityType="QRealModel.LogicalInstance" Width="1.5" PointX="0.75" PointY="2.75" Height="1.9802864583333322" IsExpanded="true" />
         <AssociationConnector Association="QRealModel.FK_GraphicParents" ManuallyRouted="false">
           <ConnectorPoint PointX="3.5319230769230767" PointY="3.6821907552083335" />
@@ -235,8 +240,9 @@
           <ConnectorPoint PointX="3" PointY="3.2160953776041667" />
         </AssociationConnector>
         <AssociationConnector Association="QRealModel.FK_PropertiesToLogicalInstances" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="4.5526432291666659" />
-          <ConnectorPoint PointX="3" PointY="4.5526432291666659" />
+          <ConnectorPoint PointX="1.5" PointY="4.7302864583333317" />
+          <ConnectorPoint PointX="1.5" PointY="6.2401432291666667" />
+          <ConnectorPoint PointX="3" PointY="6.2401432291666667" />
         </AssociationConnector>
       </Diagram>
     </Diagrams>

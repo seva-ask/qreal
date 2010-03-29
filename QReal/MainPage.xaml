@@ -42,14 +42,16 @@
         <Button Content="Save" Height="23" HorizontalAlignment="Left" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click" />
         <Button Content="Reject" Height="23" HorizontalAlignment="Left" Margin="81,0,0,0" Name="button2" VerticalAlignment="Top" Width="75" Click="button2_Click" />
         <Button Content="Clear" Height="23" HorizontalAlignment="Left" Margin="150,0,0,0" Name="button3" VerticalAlignment="Top" Width="75" Click="button3_Click" />
-        <localControls:CanvasDDTarget x:Name="canvasDDTarget" Margin="200,23,151,0" AllowDrop="True">
-            <localControls:CanvasItemsControl x:Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="{Binding ActualHeight, ElementName=canvasDDTarget, Mode=OneWay}" Width="{Binding ActualWidth, ElementName=canvasDDTarget, Mode=OneWay}" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.TreeviewInstancesSource, Mode=TwoWay}">
-			    <ItemsControl.ItemsPanel>
-			        <ItemsPanelTemplate>
-			            <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FF0606B7"/>
-			        </ItemsPanelTemplate>
-			    </ItemsControl.ItemsPanel>
-            </localControls:CanvasItemsControl>
-        </localControls:CanvasDDTarget>
+        <ScrollViewer x:Name="scrollViewer" Margin="200,23,151,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        	<localControls:CanvasDDTarget x:Name="canvasDDTarget" AllowDrop="True" Height="1000" Width="1000">
+        		<localControls:CanvasItemsControl x:Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Instance.TreeviewInstancesSource, Mode=TwoWay, Source={StaticResource InstancesManager}}" Width="{Binding Width, ElementName=canvasDDTarget, Mode=OneWay}" Height="{Binding Height, ElementName=canvasDDTarget, Mode=OneWay}">
+        			<localControls:CanvasItemsControl.ItemsPanel>
+        				<ItemsPanelTemplate>
+        					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FF0606B7"/>
+        				</ItemsPanelTemplate>
+        			</localControls:CanvasItemsControl.ItemsPanel>
+        		</localControls:CanvasItemsControl>
+        	</localControls:CanvasDDTarget>
+        </ScrollViewer>
     </Grid>
 </UserControl>

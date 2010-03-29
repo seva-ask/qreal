@@ -172,13 +172,17 @@ namespace QReal.Web.Database
         /// <param name="logicalId">Initial value of the LogicalId property.</param>
         /// <param name="x">Initial value of the X property.</param>
         /// <param name="y">Initial value of the Y property.</param>
-        public static GraphicInstance CreateGraphicInstance(global::System.Int32 id, global::System.Int32 logicalId, global::System.Double x, global::System.Double y)
+        /// <param name="width">Initial value of the Width property.</param>
+        /// <param name="height">Initial value of the Height property.</param>
+        public static GraphicInstance CreateGraphicInstance(global::System.Int32 id, global::System.Int32 logicalId, global::System.Double x, global::System.Double y, global::System.Double width, global::System.Double height)
         {
             GraphicInstance graphicInstance = new GraphicInstance();
             graphicInstance.Id = id;
             graphicInstance.LogicalId = logicalId;
             graphicInstance.X = x;
             graphicInstance.Y = y;
+            graphicInstance.Width = width;
+            graphicInstance.Height = height;
             return graphicInstance;
         }
 
@@ -307,6 +311,54 @@ namespace QReal.Web.Database
         private global::System.Double _Y;
         partial void OnYChanging(global::System.Double value);
         partial void OnYChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Double Width
+        {
+            get
+            {
+                return _Width;
+            }
+            set
+            {
+                OnWidthChanging(value);
+                ReportPropertyChanging("Width");
+                _Width = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Width");
+                OnWidthChanged();
+            }
+        }
+        private global::System.Double _Width;
+        partial void OnWidthChanging(global::System.Double value);
+        partial void OnWidthChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Double Height
+        {
+            get
+            {
+                return _Height;
+            }
+            set
+            {
+                OnHeightChanging(value);
+                ReportPropertyChanging("Height");
+                _Height = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Height");
+                OnHeightChanged();
+            }
+        }
+        private global::System.Double _Height;
+        partial void OnHeightChanging(global::System.Double value);
+        partial void OnHeightChanged();
 
         #endregion
     

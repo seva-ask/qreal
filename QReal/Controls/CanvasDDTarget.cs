@@ -31,7 +31,50 @@ namespace QReal.Controls
             Point position = args.GetPosition(this);
             graphicInstance.X = position.X;
             graphicInstance.Y = position.Y;
+            graphicInstance.Width = 200;
+            graphicInstance.Height = 200;
             InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicInstance);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            double rightBound = 0;
+            double leftBound = double.PositiveInfinity;
+            double bottomBound = 0;
+            double topBound = double.PositiveInfinity;
+            foreach (var item in (this.Content as CanvasItemsControl).Items)
+            {
+                GraphicInstance graphicInstance = item as GraphicInstance;
+                rightBound = Math.Max(rightBound, graphicInstance.X + graphicInstance.Width + 10);
+                leftBound = Math.Min(leftBound, graphicInstance.X - 10);
+                topBound = Math.Min(topBound, graphicInstance.Y - 10);
+                bottomBound = Math.Max(bottomBound, graphicInstance.Y + graphicInstance.Height + 10);
+            }
+            if (rightBound > this.Width)
+            {
+                this.Width = rightBound;
+            }
+            if (bottomBound > this.Height)
+            {
+                this.Height = bottomBound;
+            }
+            if (leftBound < 0)
+            {
+                foreach (var item in (this.Content as CanvasItemsControl).Items)
+                {
+                    GraphicInstance graphicInstance = item as GraphicInstance;
+                    graphicInstance.X -= leftBound;
+                }
+            }
+            if (topBound < 0)
+            {
+                foreach (var item in (this.Content as CanvasItemsControl).Items)
+                {
+                    GraphicInstance graphicInstance = item as GraphicInstance;
+                    graphicInstance.Y -= topBound;
+                }
+            }
         }
     }
 }
