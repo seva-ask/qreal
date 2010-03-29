@@ -27,18 +27,14 @@ namespace KernelDiagram
             get { return "Diagram"; }
         }
 
-
-
-        public int MyProperty
+        public string MyProperty
         {
-            get { return (int)GetValue(MyPropertyProperty); }
+            get { return (string)GetValue(MyPropertyProperty); }
             set { SetValue(MyPropertyProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MyPropertyProperty =
-            DependencyProperty.Register("MyProperty", typeof(int), typeof(ObjectType), null);
-
-        
+            DependencyProperty.Register("MyProperty", typeof(string), typeof(ObjectType), null);        
     }
 }

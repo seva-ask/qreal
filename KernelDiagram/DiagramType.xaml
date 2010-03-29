@@ -7,5 +7,6 @@
     <Grid x:Name="LayoutRoot" Background="Transparent">
     	<Rectangle Fill="Transparent" Stroke="Black" Margin="28,25,25,27"/>
     	<TextBlock Margin="28,25,25,0" TextWrapping="Wrap" Text="{Binding ElementName, ElementName=objectType, Mode=TwoWay}" VerticalAlignment="Top" TextAlignment="Center"/>
+    	<TextBlock Margin="78,0,68,38" TextWrapping="Wrap" VerticalAlignment="Bottom" d:LayoutOverrides="Width" Text="{Binding MyProperty, ElementName=objectType, Mode=TwoWay}"/>
     </Grid>
 </base:ObjectType>
