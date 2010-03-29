@@ -12,6 +12,7 @@ using System.Windows.Markup;
 using QReal.Types;
 using QReal.Web.Database;
 using ObjectTypes;
+using System.Collections.Generic;
 
 namespace QReal.Controls
 {
@@ -24,10 +25,10 @@ namespace QReal.Controls
 
         private void Instance_SelectedItemChanged(int newId)
         {
-            ProcessObjectTypes(delegate(ObjectType item)
+            foreach (var item in GetObjectTypes())
             {
                 (item.Content as Panel).Background = new SolidColorBrush(Colors.Transparent);
-            });
+            }
             ObjectType itemToSelect = GetObjectType(newId);
             if (itemToSelect != null)
             {
@@ -35,9 +36,7 @@ namespace QReal.Controls
             }
         }
 
-        private delegate void ProcessObjectType(ObjectType item);
-
-        private void ProcessObjectTypes(ProcessObjectType work)
+        private IEnumerable<ObjectType> GetObjectTypes()
         {
             var itemsPresenter = VisualTreeHelper.GetChild(this, 0);
             var canvas = VisualTreeHelper.GetChild(itemsPresenter, 0) as Canvas;
@@ -47,21 +46,20 @@ namespace QReal.Controls
                 var contentPresenter = VisualTreeHelper.GetChild(canvas, i);
                 var itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
                 var objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
-                work(objectType);
+                yield return objectType;
             }
         }
 
         private ObjectType GetObjectType(int id)
         {
-            ObjectType result = null;
-            ProcessObjectTypes(delegate(ObjectType item)
+            foreach (var item in GetObjectTypes())
             {
                 if (item.Id == id)
                 {
-                    result = item;
+                    return item;
                 }
-            });
-            return result;
+            }
+            return null;
         }
 
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
