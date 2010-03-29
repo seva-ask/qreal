@@ -93,15 +93,5 @@ namespace QReal
         {
             InstancesContext.RejectChanges();
         }
-
-        private void canvasDDTarget_Drop(object sender, Microsoft.Windows.DragEventArgs e)
-        {
-            //Point position = e.GetPosition(canvasDDTarget);
-            //ItemDragEventArgs rawObject = e.Data.GetData(e.Data.GetFormats()[0]) as ItemDragEventArgs;
-            //string typeName = (rawObject.Data as System.Collections.ObjectModel.SelectionCollection).First().Item as string;
-            //ObjectType type = TypeManager.Instance.Objects["Kernel Diagram"][typeName];
-            //type.Margin = new System.Windows.Thickness(position.X - canvasDDTarget.ActualWidth / 2, position.Y - canvasDDTarget.ActualHeight / 2, 0, 0);
-            //canvas.Items.Add(type);
-        }
     }
 }
