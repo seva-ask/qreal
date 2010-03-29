@@ -21,9 +21,11 @@ namespace QReal.Controls
             base.PrepareContainerForItemOverride(element, item);
             GraphicInstance graphicInstance = item as GraphicInstance;
             ContentPresenter contentPresenter = element as ContentPresenter;
-            TypeManager.Instance.Request(() =>
-            contentPresenter.ContentTemplate = Create(TypeManager.Instance.Objects["Kernel Diagram"][graphicInstance.LogicalInstance.Type])
-            );
+            if (graphicInstance.LogicalInstance != null)
+            {
+                TypeManager.Instance.Request(() =>
+                contentPresenter.ContentTemplate = Create(TypeManager.Instance.Objects["Kernel Diagram"][graphicInstance.LogicalInstance.Type]));
+            }
         }
 
         protected override DependencyObject GetContainerForItemOverride()
