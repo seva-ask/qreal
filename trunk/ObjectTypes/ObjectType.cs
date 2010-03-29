@@ -122,5 +122,15 @@ namespace ObjectTypes
         // Using a DependencyProperty as the backing store for Id.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IdProperty =
             DependencyProperty.Register("Id", typeof(int), typeof(ObjectType), null);
+
+        public string ElementName
+        {
+            get { return (string)GetValue(ElementNameProperty); }
+            set { SetValue(ElementNameProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ElementName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ElementNameProperty =
+            DependencyProperty.Register("ElementName", typeof(string), typeof(ObjectType), null);
     }
 }
