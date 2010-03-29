@@ -13,11 +13,71 @@ using ObjectTypes;
 using QReal.Types;
 using QReal.Web.Database;
 using QReal.Database;
+using System.Diagnostics;
 
 namespace QReal.Controls
 {
     public class CanvasDDTarget : ItemsControlDragDropTarget<CanvasItemsControl, ObjectType>
     {
+        public CanvasDDTarget()
+        {
+            this.MouseMove += new MouseEventHandler(CanvasDDTarget_MouseMove);
+            this.MouseMove += new MouseEventHandler(CanvasDDTarget_MouseMoveElement);
+            this.MouseLeftButtonDown += new MouseButtonEventHandler(CanvasDDTarget_MouseLeftButtonDown);
+            this.MouseLeftButtonUp += new MouseButtonEventHandler(CanvasDDTarget_MouseLeftButtonUp);
+        }
+
+        private void CanvasDDTarget_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ObjectType objectType = FindObjectType(e);
+            SetZIndex(objectType, 0);
+        }
+
+        private void CanvasDDTarget_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ObjectType objectType = FindObjectType(e);
+            SetZIndex(objectType, 1);
+        }
+
+        private static void SetZIndex(ObjectType objectType, int zIndex)
+        {
+            if (objectType != null)
+            {
+                ContentPresenter contentPresenter = VisualTreeHelper.GetParent(objectType.Parent) as ContentPresenter;
+                Canvas.SetZIndex(contentPresenter, zIndex);
+            }
+        }
+
+        private void CanvasDDTarget_MouseMoveElement(object sender, MouseEventArgs e)
+        {
+            ObjectType objectType = FindObjectType(e);
+            if (objectType != null)
+            {
+                if (objectType.IsMouseCaptured)
+                {
+                    double deltaY;
+                    double deltaX;
+                    objectType.GetDeltaMouseMove(e, out deltaY, out deltaX);
+                    GraphicInstance graphicInstance = (this.Content as CanvasItemsControl).Items.Single(item => (item as GraphicInstance).Id == objectType.Id) as GraphicInstance;
+                    foreach (var instanceChild in graphicInstance.Children)
+                    {
+                        instanceChild.X += deltaX;
+                        instanceChild.Y += deltaY;
+                    }
+                }
+            }
+        }
+
+        private ObjectType FindObjectType(MouseEventArgs e)
+        {
+            FrameworkElement parent = (e.OriginalSource as FrameworkElement);
+            while ((parent != null) && (!(parent is ObjectType)))
+            {
+                parent = parent.Parent as FrameworkElement;
+            }
+            return parent as ObjectType;
+        }
+
         protected override void OnDropOverride(Microsoft.Windows.DragEventArgs args)
         {
             ItemDragEventArgs rawObject = args.Data.GetData(args.Data.GetFormats()[0]) as ItemDragEventArgs;
@@ -56,9 +116,8 @@ namespace QReal.Controls
             return null;
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
+        private void CanvasDDTarget_MouseMove(object sender, MouseEventArgs e)
         {
-            base.OnMouseMove(e);
             double rightBound = 0;
             double leftBound = double.PositiveInfinity;
             double bottomBound = 0;

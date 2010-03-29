@@ -18,6 +18,8 @@ namespace KernelDiagram
         public DiagramType()
         {
             InitializeComponent();
+            Random a = new Random((int)DateTime.Now.Ticks);
+            LayoutRoot.Background = new SolidColorBrush(Color.FromArgb(255, (byte)a.Next(255), (byte)a.Next(255), (byte)a.Next(255)));
         }
 
         public override string TypeName

@@ -12,19 +12,13 @@ using System.Windows.Shapes;
 
 namespace ObjectTypes
 {
-    public class ObjectType : UserControl
+    public abstract class ObjectType : UserControl
     {
-        public virtual string TypeName 
-        { 
-            get 
-            { 
-                return "You shouldn't see it. It is not abstract only because"
-                 + "Expression Blend can't parse classes, inherited from abstract!";
-            }
-        }
+        public abstract string TypeName { get; }
 
         public ObjectType()
         {
+            IsMouseCaptured = false;
             this.MouseLeftButtonDown += new MouseButtonEventHandler(ObjectType_MouseLeftButtonDown);
             this.MouseMove += new MouseEventHandler(ObjectType_MouseMove);
             this.MouseLeftButtonUp += new MouseButtonEventHandler(ObjectType_MouseLeftButtonUp);
@@ -32,22 +26,26 @@ namespace ObjectTypes
 
         private double mouseX = -1;
         private double mouseY = -1;
-        private bool isMouseCaptured = false;
+
+        public bool IsMouseCaptured { get; set; }
 
         private void ObjectType_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             mouseY = e.GetPosition(null).Y;
             mouseX = e.GetPosition(null).X;
-            isMouseCaptured = true;
+            IsMouseCaptured = true;
             this.CaptureMouse();
+            Canvas.SetZIndex(this, 2);
+            (this.Parent as Canvas).UpdateLayout();
         }
 
         private void ObjectType_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isMouseCaptured)
+            if (IsMouseCaptured)
             {
-                double deltaY = e.GetPosition(null).Y - mouseY;
-                double deltaX = e.GetPosition(null).X - mouseX;
+                double deltaY;
+                double deltaX;
+                GetDeltaMouseMove(e, out deltaY, out deltaX);
 
                 double newTop = deltaY + (double)this.GetValue(Canvas.TopProperty);
                 double newLeft = deltaX + (double)this.GetValue(Canvas.LeftProperty);
@@ -55,17 +53,44 @@ namespace ObjectTypes
                 this.SetValue(Canvas.TopProperty, newTop);
                 this.SetValue(Canvas.LeftProperty, newLeft);
 
+                previousMouseX = mouseX != -1 ? mouseX : e.GetPosition(null).X;
+                previousMouseY = mouseY != -1 ? mouseY : e.GetPosition(null).Y;
+
                 mouseY = e.GetPosition(null).Y;
                 mouseX = e.GetPosition(null).X;
             }
         }
 
+        private double previousMouseX = -1;
+        private double previousMouseY = -1;
+
+        public void GetDeltaMouseMove(MouseEventArgs e, out double deltaY, out double deltaX)
+        {
+            deltaY = e.GetPosition(null).Y - mouseY;
+            deltaX = e.GetPosition(null).X - mouseX;
+            if ((deltaX == 0) && (deltaY == 0))
+            {
+                deltaY = e.GetPosition(null).Y - previousMouseY;
+                deltaX = e.GetPosition(null).X - previousMouseX;
+            }
+        }
+
         private void ObjectType_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            isMouseCaptured = false;
+            IsMouseCaptured = false;
             this.ReleaseMouseCapture();
             mouseY = -1;
             mouseX = -1;
         }
+
+        public int Id
+        {
+            get { return (int)GetValue(IdProperty); }
+            set { SetValue(IdProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Id.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IdProperty =
+            DependencyProperty.Register("Id", typeof(int), typeof(ObjectType), null);
     }
 }
