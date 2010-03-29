@@ -9,11 +9,14 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Markup;
+using System.Linq;
 using QReal.Types;
 using QReal.Web.Database;
 using ObjectTypes;
 using System.Collections.Generic;
 using QReal.Database;
+using System.Reflection;
+using System.Windows.Data;
 
 namespace QReal.Controls
 {
@@ -81,6 +84,29 @@ namespace QReal.Controls
             ContentPresenter contentPresenter = sender as ContentPresenter;
             GraphicInstance graphicInstance = contentPresenter.Content as GraphicInstance;
             InstancesManager.Instance.InitProperties(graphicInstance);
+            Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
+            ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
+            SetPropertyBindings(graphicInstance, objectType);
+        }
+
+        private void SetPropertyBindings(GraphicInstance graphicInstance, ObjectType objectType)
+        {
+            Type type = objectType.GetType();
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
+            foreach (var field in fields)
+            {
+                if (field.FieldType == typeof(DependencyProperty))
+                {
+                    string propertyName = field.Name.Substring(0, field.Name.LastIndexOf("Property"));
+                    InstanceProperty instanceProperty = graphicInstance.LogicalInstance.InstanceProperties.Single(item => item.Name == propertyName);
+                    Binding binding = new Binding();
+                    binding.Path = new PropertyPath("Value");
+                    binding.Mode = BindingMode.TwoWay;
+                    binding.Source = instanceProperty;
+                    DependencyProperty dependencyProperty = field.GetValue(objectType) as DependencyProperty;
+                    objectType.SetBinding(dependencyProperty, binding);
+                }
+            }
         }
 
         protected override DependencyObject GetContainerForItemOverride()
