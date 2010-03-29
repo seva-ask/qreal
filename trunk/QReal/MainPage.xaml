@@ -31,7 +31,12 @@
                 </common:HierarchicalDataTemplate>
             </controls:TreeView.ItemTemplate>
         </controls:TreeView>
-        <data:DataGrid x:Name="propertiesDataGrid" Height="170" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="151" Background="#FFE01AF0" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.InstancePropertiesSource, Mode=TwoWay}"/>
+        <data:DataGrid x:Name="propertiesDataGrid" Height="170" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="151" Background="#FFE01AF0" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.InstancePropertiesSource, Mode=TwoWay}" AutoGenerateColumns="False">
+        	<data:DataGrid.Columns>
+        		<data:DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Name" IsReadOnly="True"/>
+        		<data:DataGridTextColumn Binding="{Binding Value, Mode=TwoWay}" Header="Value"/>
+        	</data:DataGrid.Columns>
+        </data:DataGrid>
       	<Grid x:Name="toolboxGrid" HorizontalAlignment="Right" Margin="0,23,0,170" Width="151">
       		<dataInput:Label x:Name="toolboxLabel" Background="#FFF4F715" Margin="3,0,0,0" VerticalAlignment="Top" Content="Панель инструментов" HorizontalAlignment="Center"/>
       		<ComboBox x:Name="toolboxDiagramComboBox" Margin="0,16,0,0" VerticalAlignment="Top" SelectionChanged="toolboxDiagramComboBox_SelectionChanged"/>
