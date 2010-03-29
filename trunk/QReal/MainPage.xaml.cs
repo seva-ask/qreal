@@ -11,60 +11,28 @@ using System.Collections.Generic;
 using System.Windows.Threading;
 using System.ServiceModel.DomainServices.Client;
 using System.Windows;
+using QReal.Database;
+using System.Threading;
 
 namespace QReal
 {
-    public partial class MainPage : UserControl, INotifyPropertyChanged
+    public partial class MainPage : UserControl
     {
         public MainPage()
         {
             InitializeComponent();
-            InstancesContext.Instances.PropertyChanged += new PropertyChangedEventHandler(Instances_PropertyChanged);
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 1000);
-            timer.Tick += new EventHandler(timer_Tick);
-            timer.Start();
             InitializeToolBox();
             TestCanvas();
         }
-
-        #region Treeview content loading
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            InstancesContext.Load(InstancesContext.GetInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
-        }
-
-        private void Instances_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if ((e.PropertyName=="Count") && (PropertyChanged != null))
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs("TreeviewInstancesSource"));
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private InstancesContext InstancesContext = new InstancesContext();
-
-        public IEnumerable<Instance> TreeviewInstancesSource
-        {
-            get
-            {
-                return InstancesContext.Instances.Where(instance => instance.Parent == null);
-            }
-        }
-
-        #endregion Treeview content loading
 
         private void TestCanvas()
         {
             TypeManager.Instance.Request(delegate()
             {
-                ObjectType diagram = TypeManager.Instance.Objects["Kernel Diagram"]["Diagram"];
+           //     ObjectType diagram = TypeManager.Instance.Objects["Kernel Diagram"]["Diagram"];
           //      canvas.Children.Add(diagram);
-                ObjectType relation = TypeManager.Instance.Objects["Kernel Diagram"]["Relation"];
-                relation.Margin = new System.Windows.Thickness(200,200,0,0);
+            //    ObjectType relation = TypeManager.Instance.Objects["Kernel Diagram"]["Relation"];
+             //   relation.Margin = new System.Windows.Thickness(200,200,0,0);
             //    canvas.Children.Add(relation);
             });
         }
@@ -86,12 +54,21 @@ namespace QReal
 
         private void button1_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            InstancesContext.SubmitChanges();
+            InstancesManager.Instance.InstancesContext.SubmitChanges();
         }
 
         private void button2_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            InstancesContext.RejectChanges();
+            InstancesManager.Instance.InstancesContext.RejectChanges();
+        }
+
+        private void button3_Click(object sender, RoutedEventArgs e)
+        {
+            while (InstancesManager.Instance.InstancesContext.GraphicInstances.Count > 0)
+            {
+            InstancesManager.Instance.InstancesContext.GraphicInstances.Remove(InstancesManager.Instance.InstancesContext.GraphicInstances.First());
+            }
+            InstancesManager.Instance.InstancesContext.SubmitChanges();
         }
     }
 }

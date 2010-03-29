@@ -24,11 +24,19 @@ namespace QReal.Types
             mTypes = types;
         }
 
-        public ObjectType this[string typeName]
+        //public ObjectType this[string typeName]
+        //{
+        //    get
+        //    {
+        //        return (ObjectType)Activator.CreateInstance(mTypes[typeName]);
+        //    }
+        //}
+
+        public Type this[string typeName]
         {
             get
             {
-                return (ObjectType)Activator.CreateInstance(mTypes[typeName]);
+                return mTypes[typeName];
             }
         }
 
