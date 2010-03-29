@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Threading;
 using System.ServiceModel.DomainServices.Client;
+using System.Windows;
 
 namespace QReal
 {
@@ -61,10 +62,10 @@ namespace QReal
             TypeManager.Instance.Request(delegate()
             {
                 ObjectType diagram = TypeManager.Instance.Objects["Kernel Diagram"]["Diagram"];
-                canvas.Children.Add(diagram);
+          //      canvas.Children.Add(diagram);
                 ObjectType relation = TypeManager.Instance.Objects["Kernel Diagram"]["Relation"];
                 relation.Margin = new System.Windows.Thickness(200,200,0,0);
-                canvas.Children.Add(relation);
+            //    canvas.Children.Add(relation);
             });
         }
 
@@ -91,6 +92,16 @@ namespace QReal
         private void button2_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             InstancesContext.RejectChanges();
+        }
+
+        private void canvasDDTarget_Drop(object sender, Microsoft.Windows.DragEventArgs e)
+        {
+            //Point position = e.GetPosition(canvasDDTarget);
+            //ItemDragEventArgs rawObject = e.Data.GetData(e.Data.GetFormats()[0]) as ItemDragEventArgs;
+            //string typeName = (rawObject.Data as System.Collections.ObjectModel.SelectionCollection).First().Item as string;
+            //ObjectType type = TypeManager.Instance.Objects["Kernel Diagram"][typeName];
+            //type.Margin = new System.Windows.Thickness(position.X - canvasDDTarget.ActualWidth / 2, position.Y - canvasDDTarget.ActualHeight / 2, 0, 0);
+            //canvas.Items.Add(type);
         }
     }
 }
