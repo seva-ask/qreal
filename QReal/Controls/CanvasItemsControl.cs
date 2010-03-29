@@ -11,11 +11,59 @@ using System.Windows.Shapes;
 using System.Windows.Markup;
 using QReal.Types;
 using QReal.Web.Database;
+using ObjectTypes;
 
 namespace QReal.Controls
 {
     public class CanvasItemsControl : ItemsControl
     {
+        public CanvasItemsControl()
+        {
+            UIManager.Instance.SelectedItemChanged += new SelectedItemChangedHandler(Instance_SelectedItemChanged);
+        }
+
+        private void Instance_SelectedItemChanged(int newId)
+        {
+            ProcessObjectTypes(delegate(ObjectType item)
+            {
+                (item.Content as Panel).Background = new SolidColorBrush(Colors.Transparent);
+            });
+            ObjectType itemToSelect = GetObjectType(newId);
+            if (itemToSelect != null)
+            {
+                (itemToSelect.Content as Panel).Background = new SolidColorBrush(Colors.Blue);
+            }
+        }
+
+        private delegate void ProcessObjectType(ObjectType item);
+
+        private void ProcessObjectTypes(ProcessObjectType work)
+        {
+            var itemsPresenter = VisualTreeHelper.GetChild(this, 0);
+            var canvas = VisualTreeHelper.GetChild(itemsPresenter, 0) as Canvas;
+            int itemsCount = VisualTreeHelper.GetChildrenCount(canvas);
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var contentPresenter = VisualTreeHelper.GetChild(canvas, i);
+                var itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
+                var objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
+                work(objectType);
+            }
+        }
+
+        private ObjectType GetObjectType(int id)
+        {
+            ObjectType result = null;
+            ProcessObjectTypes(delegate(ObjectType item)
+            {
+                if (item.Id == id)
+                {
+                    result = item;
+                }
+            });
+            return result;
+        }
+
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);

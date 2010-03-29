@@ -12,6 +12,8 @@ using QReal.Controls;
 
 namespace QReal
 {
+    public delegate void SelectedItemChangedHandler(int newId);
+
     public class UIManager
     {
         private UIManager()
@@ -43,6 +45,34 @@ namespace QReal
                 AutoScroller autoScroller = new AutoScroller(MainPage.scrollViewer, AutoScroller.Mode.Auto);
                 autoScroller.TargetCanvas = myCanvas;
                 autoScroller.AutoScroll = AutoScroller.Mode.Drag;
+            }
+        }
+
+        public event SelectedItemChangedHandler SelectedItemChanged;
+
+        private int selectedGraphicInstanceId = -1;
+
+        public int SelectedGraphicInstanceId
+        {
+            get
+            {
+                return selectedGraphicInstanceId;
+            }
+            set
+            {
+                if (selectedGraphicInstanceId != value)
+                {
+                    OnSelectedGrahicInstanceIdChanged(value);
+                }
+                selectedGraphicInstanceId = value;
+            }
+        }
+
+        private void OnSelectedGrahicInstanceIdChanged(int newId)
+        {
+            if (SelectedItemChanged != null)
+            {
+                SelectedItemChanged(newId);
             }
         }
     }

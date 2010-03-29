@@ -65,8 +65,6 @@ namespace ObjectTypes
             mouseX = e.GetPosition(null).X;
             IsMouseCaptured = true;
             this.CaptureMouse();
-            Canvas.SetZIndex(this, 2);
-            (this.Parent as Canvas).UpdateLayout();
         }
 
         private void ObjectType_MouseMove(object sender, MouseEventArgs e)
