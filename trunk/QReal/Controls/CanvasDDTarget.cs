@@ -29,11 +29,31 @@ namespace QReal.Controls
             GraphicInstance graphicInstance = new GraphicInstance();
             graphicInstance.LogicalInstance = logicalInstance;
             Point position = args.GetPosition(this);
+            graphicInstance.Parent = FindParent(position, graphicInstance);
             graphicInstance.X = position.X;
             graphicInstance.Y = position.Y;
             graphicInstance.Width = 200;
             graphicInstance.Height = 200;
             InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicInstance);
+            InstancesManager.Instance.UpdateProperties();
+        }
+
+        private GraphicInstance FindParent(Point position, GraphicInstance instance)
+        {
+            foreach (var item in (this.Content as CanvasItemsControl).Items)
+            {
+                GraphicInstance graphicInstance = item as GraphicInstance;
+                if (graphicInstance == instance)
+                {
+                    continue;
+                }
+                Rect itemBoundingRect = new Rect(graphicInstance.X, graphicInstance.Y, graphicInstance.Width, graphicInstance.Height);
+                if (itemBoundingRect.Contains(position))
+                {
+                    return graphicInstance;
+                }
+            }
+            return null;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)

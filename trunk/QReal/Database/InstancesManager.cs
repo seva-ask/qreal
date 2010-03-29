@@ -44,7 +44,7 @@ namespace QReal.Database
         {
             if (e.PropertyName == "Count")
             {
-                TreeviewInstancesSource = InstancesContext.GraphicInstances.Where(instance => instance.Parent == null);
+                UpdateProperties();
             }
         }
 
@@ -64,5 +64,21 @@ namespace QReal.Database
         // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TreeviewInstancesSourceProperty =
             DependencyProperty.Register("TreeviewInstancesSource", typeof(IEnumerable<GraphicInstance>), typeof(InstancesManager), null);
+
+        public IEnumerable<GraphicInstance> CanvasInstancesSource
+        {
+            get { return (IEnumerable<GraphicInstance>)GetValue(CanvasInstancesSourceProperty); }
+            set { SetValue(CanvasInstancesSourceProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CanvasInstancesSourceProperty =
+            DependencyProperty.Register("CanvasInstancesSource", typeof(IEnumerable<GraphicInstance>), typeof(InstancesManager), null);
+
+        public void UpdateProperties()
+        {
+            TreeviewInstancesSource = InstancesContext.GraphicInstances.Where(instance => instance.Parent == null);
+            CanvasInstancesSource = InstancesContext.GraphicInstances;
+        }
     }
 }

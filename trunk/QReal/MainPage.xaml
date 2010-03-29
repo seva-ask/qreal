@@ -44,7 +44,7 @@
         <Button Content="Clear" Height="23" HorizontalAlignment="Left" Margin="150,0,0,0" Name="button3" VerticalAlignment="Top" Width="75" Click="button3_Click" />
         <ScrollViewer x:Name="scrollViewer" Margin="200,23,151,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         	<localControls:CanvasDDTarget x:Name="canvasDDTarget" AllowDrop="True" Height="1000" Width="1000">
-        		<localControls:CanvasItemsControl x:Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Instance.TreeviewInstancesSource, Mode=TwoWay, Source={StaticResource InstancesManager}}" Width="{Binding Width, ElementName=canvasDDTarget, Mode=OneWay}" Height="{Binding Height, ElementName=canvasDDTarget, Mode=OneWay}">
+        		<localControls:CanvasItemsControl x:Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Instance.CanvasInstancesSource, Mode=TwoWay, Source={StaticResource InstancesManager}}" Width="{Binding Width, ElementName=canvasDDTarget, Mode=OneWay}" Height="{Binding Height, ElementName=canvasDDTarget, Mode=OneWay}">
         			<localControls:CanvasItemsControl.ItemsPanel>
         				<ItemsPanelTemplate>
         					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FF0606B7"/>
