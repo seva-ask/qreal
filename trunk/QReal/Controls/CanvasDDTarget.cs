@@ -20,7 +20,6 @@ namespace QReal.Controls
     {
         protected override void OnDropOverride(Microsoft.Windows.DragEventArgs args)
         {
-            Point position = args.GetPosition(this);
             ItemDragEventArgs rawObject = args.Data.GetData(args.Data.GetFormats()[0]) as ItemDragEventArgs;
             string typeName = (rawObject.Data as System.Collections.ObjectModel.SelectionCollection).First().Item as string;
             LogicalInstance logicalInstance = new LogicalInstance();
@@ -29,10 +28,10 @@ namespace QReal.Controls
             InstancesManager.Instance.InstancesContext.LogicalInstances.Add(logicalInstance);
             GraphicInstance graphicInstance = new GraphicInstance();
             graphicInstance.LogicalInstance = logicalInstance;
+            Point position = args.GetPosition(this);
+            graphicInstance.X = position.X;
+            graphicInstance.Y = position.Y;
             InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicInstance);
-            //ObjectType type = TypeManager.Instance.Objects["Kernel Diagram"][typeName];
-            //type.Margin = new System.Windows.Thickness(position.X - this.ActualWidth / 2, position.Y - this.ActualHeight / 2, 0, 0);
-            //(this.Content as ItemsControl).Items.Add(type);
         }
     }
 }

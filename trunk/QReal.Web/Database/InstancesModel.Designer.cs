@@ -170,11 +170,15 @@ namespace QReal.Web.Database
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="logicalId">Initial value of the LogicalId property.</param>
-        public static GraphicInstance CreateGraphicInstance(global::System.Int32 id, global::System.Int32 logicalId)
+        /// <param name="x">Initial value of the X property.</param>
+        /// <param name="y">Initial value of the Y property.</param>
+        public static GraphicInstance CreateGraphicInstance(global::System.Int32 id, global::System.Int32 logicalId, global::System.Double x, global::System.Double y)
         {
             GraphicInstance graphicInstance = new GraphicInstance();
             graphicInstance.Id = id;
             graphicInstance.LogicalId = logicalId;
+            graphicInstance.X = x;
+            graphicInstance.Y = y;
             return graphicInstance;
         }
 
@@ -259,26 +263,50 @@ namespace QReal.Web.Database
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.String Position
+        public global::System.Double X
         {
             get
             {
-                return _Position;
+                return _X;
             }
             set
             {
-                OnPositionChanging(value);
-                ReportPropertyChanging("Position");
-                _Position = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("Position");
-                OnPositionChanged();
+                OnXChanging(value);
+                ReportPropertyChanging("X");
+                _X = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("X");
+                OnXChanged();
             }
         }
-        private global::System.String _Position;
-        partial void OnPositionChanging(global::System.String value);
-        partial void OnPositionChanged();
+        private global::System.Double _X;
+        partial void OnXChanging(global::System.Double value);
+        partial void OnXChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Double Y
+        {
+            get
+            {
+                return _Y;
+            }
+            set
+            {
+                OnYChanging(value);
+                ReportPropertyChanging("Y");
+                _Y = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Y");
+                OnYChanged();
+            }
+        }
+        private global::System.Double _Y;
+        partial void OnYChanging(global::System.Double value);
+        partial void OnYChanged();
 
         #endregion
     
