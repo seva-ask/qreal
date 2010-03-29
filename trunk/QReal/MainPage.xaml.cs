@@ -24,8 +24,7 @@ namespace QReal
         {
             InitializeComponent();
             InitializeToolBox();
-            AutoScroller autoScroller = new AutoScroller(scrollViewer, AutoScroller.Mode.Auto);
-            canvas.Autoscroller = autoScroller;
+            UIManager.Instance.MainPage = this;
         }
 
         private void InitializeToolBox()

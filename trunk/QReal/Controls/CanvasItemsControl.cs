@@ -32,8 +32,7 @@ namespace QReal.Controls
         {
             var itemsPresenter = VisualTreeHelper.GetChild(this, 0);
             var canvas = VisualTreeHelper.GetChild(itemsPresenter, 0) as Canvas;
-            Autoscroller.TargetCanvas = canvas;
-            Autoscroller.AutoScroll = AutoScroller.Mode.Drag;
+            UIManager.Instance.Canvas = canvas;
             return base.GetContainerForItemOverride();
         }
 
@@ -45,7 +44,7 @@ namespace QReal.Controls
                 xmlns=""http://schemas.microsoft.com/client/2007""
                 xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @""">
                 <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">
-                    <controls:" + type.Name + @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}""/>
+                    <controls:" + type.Name + @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}"" Id=""{Binding Id, Mode=TwoWay}""/>
                 </Canvas>
                 </DataTemplate>";
             return (DataTemplate)XamlReader.Load(xaml);

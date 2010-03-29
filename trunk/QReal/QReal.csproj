@@ -93,6 +93,7 @@
     <Compile Include="Types\DiagramWithTypes.cs" />
     <Compile Include="Types\TypeManager.cs" />
     <Compile Include="TypeToIconConverter.cs" />
+    <Compile Include="UIManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
