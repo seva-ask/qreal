@@ -10,7 +10,7 @@
     xmlns:common="clr-namespace:System.Windows;assembly=System.Windows.Controls"
     xmlns:local="clr-namespace:QReal"
     x:Class="QReal.MainPage"
-    d:DesignWidth="640" d:DesignHeight="480">
+    d:DesignWidth="640" d:DesignHeight="480" xmlns:controlsDataToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Toolkit">
   <Grid x:Name="LayoutRoot">
         <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" Background="#FFE60D0D" ItemsSource="{Binding TreeviewInstancesSource, ElementName=mainPage, Mode=TwoWay}">
             <controls:TreeView.Resources>
@@ -25,14 +25,24 @@
                 </common:HierarchicalDataTemplate>
             </controls:TreeView.ItemTemplate>
         </controls:TreeView>
-  	<Canvas x:Name="canvas" Margin="200,23,151,0" Background="#FF0606B7"/>
   	<data:DataGrid x:Name="propertiesDataGrid" Height="170" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="151" Background="#FFE01AF0"/>
   	<Grid x:Name="toolboxGrid" HorizontalAlignment="Right" Margin="0,23,0,170" Width="151">
   		<dataInput:Label x:Name="toolboxLabel" Background="#FFF4F715" Margin="3,0,0,0" VerticalAlignment="Top" Content="Панель инструментов" HorizontalAlignment="Center"/>
-  		<data:DataGrid x:Name="toolboxObjectsDataGrid" Background="#FF31DC1A" Margin="0,36,0,0" HeadersVisibility="None"/>
   		<ComboBox x:Name="toolboxDiagramComboBox" Margin="0,16,0,0" VerticalAlignment="Top" SelectionChanged="toolboxDiagramComboBox_SelectionChanged"/>
-  	</Grid>
+            <controlsDataToolkit:DataGridDragDropTarget HorizontalAlignment="Left" x:Name="toolboxObjectsDataGridDDT" Width="151" Margin="0,36,0,0" RenderTransformOrigin="0.497,0.653">
+            	<data:DataGrid x:Name="toolboxObjectsDataGrid" Background="#FF31DC1A" HeadersVisibility="None" Height="{Binding ActualHeight, ElementName=toolboxObjectsDataGridDDT, Mode=OneWay}" Width="{Binding ActualWidth, ElementName=toolboxObjectsDataGridDDT, Mode=OneWay}"/>
+            </controlsDataToolkit:DataGridDragDropTarget>
+        </Grid>
         <Button Content="Save" Height="23" HorizontalAlignment="Left" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click" />
         <Button Content="Reject" Height="23" HorizontalAlignment="Left" Margin="81,0,0,0" Name="button2" VerticalAlignment="Top" Width="75" Click="button2_Click" />
+        <local:CanvasDDTarget x:Name="canvasDDTarget" Margin="200,23,151,0" AllowDrop="True" Drop="canvasDDTarget_Drop">
+        	<ItemsControl x:Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="{Binding ActualHeight, ElementName=canvasDDTarget, Mode=OneWay}" Width="{Binding ActualWidth, ElementName=canvasDDTarget, Mode=OneWay}">
+			    <ItemsControl.ItemsPanel>
+			        <ItemsPanelTemplate>
+			            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FF0606B7"/>
+			        </ItemsPanelTemplate>
+			    </ItemsControl.ItemsPanel>
+		    </ItemsControl>
+        </local:CanvasDDTarget>
     </Grid>
 </UserControl>
