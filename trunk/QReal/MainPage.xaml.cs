@@ -13,6 +13,8 @@ using System.ServiceModel.DomainServices.Client;
 using System.Windows;
 using QReal.Database;
 using System.Threading;
+using System.Windows.Media;
+using QReal.Controls;
 
 namespace QReal
 {
@@ -22,19 +24,8 @@ namespace QReal
         {
             InitializeComponent();
             InitializeToolBox();
-            TestCanvas();
-        }
-
-        private void TestCanvas()
-        {
-            TypeManager.Instance.Request(delegate()
-            {
-           //     ObjectType diagram = TypeManager.Instance.Objects["Kernel Diagram"]["Diagram"];
-          //      canvas.Children.Add(diagram);
-            //    ObjectType relation = TypeManager.Instance.Objects["Kernel Diagram"]["Relation"];
-             //   relation.Margin = new System.Windows.Thickness(200,200,0,0);
-            //    canvas.Children.Add(relation);
-            });
+            AutoScroller autoScroller = new AutoScroller(scrollViewer, AutoScroller.Mode.Auto);
+            canvas.Autoscroller = autoScroller;
         }
 
         private void InitializeToolBox()

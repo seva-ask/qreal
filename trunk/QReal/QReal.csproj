@@ -82,6 +82,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AutoScroller.cs" />
     <Compile Include="Controls\CanvasDDTarget.cs" />
     <Compile Include="Controls\CanvasItemsControl.cs" />
     <Compile Include="Database\InstancesManager.cs" />
