@@ -37,6 +37,12 @@ namespace QReal.Controls
         {
             ObjectType objectType = FindObjectType(e);
             SetZIndex(objectType, 1);
+            int selectedId = -1;
+            if (objectType != null)
+            {
+                selectedId = objectType.Id;
+            }
+            UIManager.Instance.SelectedGraphicInstanceId = selectedId;
         }
 
         private static void SetZIndex(ObjectType objectType, int zIndex)
@@ -96,6 +102,7 @@ namespace QReal.Controls
             graphicInstance.Height = 200;
             InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicInstance);
             InstancesManager.Instance.UpdateProperties();
+            InstancesManager.Instance.InstancesContext.SubmitChanges(); // to get id for new instance
         }
 
         private GraphicInstance FindParent(Point position, GraphicInstance instance)

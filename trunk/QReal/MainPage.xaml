@@ -18,7 +18,7 @@
         <localDatabase:InstancesManager x:Key="InstancesManager"/>
     </UserControl.Resources>
   <Grid x:Name="LayoutRoot">
-        <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" Background="#FFE60D0D" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.TreeviewInstancesSource, Mode=TwoWay}">
+        <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" Background="#FFE60D0D" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.TreeviewInstancesSource, Mode=TwoWay}" SelectedItemChanged="treeView_SelectedItemChanged">
             <controls:TreeView.Resources>
                 <local:TypeToIconConverter x:Key="TypeToIconConverter"/>
             </controls:TreeView.Resources>
@@ -47,7 +47,7 @@
         		<localControls:CanvasItemsControl x:Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Instance.CanvasInstancesSource, Mode=TwoWay, Source={StaticResource InstancesManager}}" Width="{Binding Width, ElementName=canvasDDTarget, Mode=OneWay}" Height="{Binding Height, ElementName=canvasDDTarget, Mode=OneWay}">
         			<localControls:CanvasItemsControl.ItemsPanel>
         				<ItemsPanelTemplate>
-        					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FF0606B7"/>
+        					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#606077"/>
         				</ItemsPanelTemplate>
         			</localControls:CanvasItemsControl.ItemsPanel>
         		</localControls:CanvasItemsControl>

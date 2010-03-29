@@ -25,6 +25,24 @@ namespace QReal
             InitializeComponent();
             InitializeToolBox();
             UIManager.Instance.MainPage = this;
+            UIManager.Instance.SelectedItemChanged += new SelectedItemChangedHandler(Instance_SelectedItemChanged);
+        }
+
+        private void Instance_SelectedItemChanged(int newId)
+        {
+            if (newId != -1)
+            {
+                GraphicInstance instanceToSelect = InstancesManager.Instance.InstancesContext.GraphicInstances.Single(item => item.Id == newId);
+                treeView.SelectItem(instanceToSelect);
+            }
+            else
+            {
+                var selectedContainer = treeView.GetSelectedContainer();
+                if (selectedContainer != null)
+                {
+                    selectedContainer.IsSelected = false;
+                }
+            }
         }
 
         private void InitializeToolBox()
@@ -59,6 +77,17 @@ namespace QReal
             InstancesManager.Instance.InstancesContext.GraphicInstances.Remove(InstancesManager.Instance.InstancesContext.GraphicInstances.First());
             }
             InstancesManager.Instance.InstancesContext.SubmitChanges();
+        }
+
+        private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            GraphicInstance graphicInstance = treeView.SelectedItem as GraphicInstance;
+            int selectedId = -1;
+            if (graphicInstance != null)
+            {
+                selectedId = graphicInstance.Id;
+            }
+            UIManager.Instance.SelectedGraphicInstanceId = selectedId;
         }
     }
 }
