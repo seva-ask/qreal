@@ -46,7 +46,7 @@
             <localControls:CanvasItemsControl x:Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="{Binding ActualHeight, ElementName=canvasDDTarget, Mode=OneWay}" Width="{Binding ActualWidth, ElementName=canvasDDTarget, Mode=OneWay}" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.TreeviewInstancesSource, Mode=TwoWay}">
 			    <ItemsControl.ItemsPanel>
 			        <ItemsPanelTemplate>
-			            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FF0606B7"/>
+			            <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FF0606B7"/>
 			        </ItemsPanelTemplate>
 			    </ItemsControl.ItemsPanel>
             </localControls:CanvasItemsControl>

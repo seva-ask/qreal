@@ -31,7 +31,10 @@ namespace QReal.Controls
             string xaml = @"<DataTemplate 
                 xmlns=""http://schemas.microsoft.com/client/2007""
                 xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @""">
-                <controls:" + type.Name + @" Margin=""{Binding Position, Mode=OneWay}""/></DataTemplate>";
+                <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">
+                    <controls:" + type.Name + @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}""/>
+                </Canvas>
+                </DataTemplate>";
             return (DataTemplate)XamlReader.Load(xaml);
         }
     }
