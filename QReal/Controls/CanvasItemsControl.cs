@@ -13,6 +13,7 @@ using QReal.Types;
 using QReal.Web.Database;
 using ObjectTypes;
 using System.Collections.Generic;
+using QReal.Database;
 
 namespace QReal.Controls
 {
@@ -72,6 +73,14 @@ namespace QReal.Controls
                 TypeManager.Instance.Request(() =>
                 contentPresenter.ContentTemplate = Create(TypeManager.Instance.Objects["Kernel Diagram"][graphicInstance.LogicalInstance.Type]));
             }
+            contentPresenter.Loaded += new RoutedEventHandler(contentPresenter_Loaded);
+        }
+
+        private void contentPresenter_Loaded(object sender, RoutedEventArgs e)
+        {
+            ContentPresenter contentPresenter = sender as ContentPresenter;
+            GraphicInstance graphicInstance = contentPresenter.Content as GraphicInstance;
+            InstancesManager.Instance.InitProperties(graphicInstance);
         }
 
         protected override DependencyObject GetContainerForItemOverride()
