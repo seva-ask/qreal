@@ -1,0 +1,12 @@
+﻿<base:ObjectType
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:base="clr-namespace:ObjectTypes;assembly=ObjectTypes"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="objectType" mc:Ignorable="d" x:Class="KernelDiagram.DiagramType"
+    Width="200" Height="200" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+    	<Rectangle Fill="Transparent" Stroke="Black" Margin="28,25,25,27"/>
+    	<TextBlock Margin="28,25,25,0" TextWrapping="Wrap" Text="{Binding ElementName, ElementName=objectType, Mode=TwoWay}" VerticalAlignment="Top" TextAlignment="Center"/>
+    	<TextBlock Margin="78,0,68,38" TextWrapping="Wrap" VerticalAlignment="Bottom" d:LayoutOverrides="Width" Text="{Binding MyProperty, ElementName=objectType, Mode=TwoWay}"/>
+    </Grid>
+</base:ObjectType>

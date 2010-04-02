@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="C:\inetpub\wwwroot" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Local IIS" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="ClientBin/QReal.xap" publishTime="03/26/2010 02:52:07" />
+    <file relUrl="Web.config" publishTime="03/26/2010 02:52:25" />
+    <file relUrl="Silverlight.js" publishTime="03/17/2010 22:00:13" />
+    <file relUrl="Default.aspx" publishTime="03/17/2010 22:00:13" />
+    <file relUrl="bin/QReal.Web.pdb" publishTime="03/26/2010 02:51:54" />
+    <file relUrl="bin/QReal.Web.dll" publishTime="03/26/2010 02:51:55" />
+  </publishProfile>
+</publishData>
