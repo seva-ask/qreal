@@ -26,30 +26,26 @@ namespace ObjectTypes
 
         private void EdgeType_Loaded(object sender, RoutedEventArgs e)
         {
-            Binding bindingTransform = new Binding();
-            bindingTransform.Source = this;
-            bindingTransform.Path = new PropertyPath("Transformation");
-            bindingTransform.Mode = BindingMode.TwoWay;
-            this.SetBinding(UserControl.RenderTransformProperty, bindingTransform);
-
             Line line = new Line();
-            line.X1 = 0;
-            line.Y1 = 0;
             line.StrokeThickness = 5;
             line.Stroke = new SolidColorBrush(Colors.Black);
+
             Binding bindingX2 = new Binding();
             bindingX2.Source = this;
             bindingX2.Path = new PropertyPath("X2");
             bindingX2.Mode = BindingMode.TwoWay;
             bindingX2.Converter = new AbsConverter();
             line.SetBinding(Line.X2Property, bindingX2);
+
             Binding bindingY2 = new Binding();
             bindingY2.Source = this;
             bindingY2.Path = new PropertyPath("Y2");
             bindingY2.Mode = BindingMode.TwoWay;
-      //      bindingY2.Converter = new AbsConverter();
+            bindingY2.Converter = new AbsConverter();
             line.SetBinding(Line.Y2Property, bindingY2);
+
             (this.Content as Panel).Children.Add(line);
+
             Thumb thumb = new Thumb();
             thumb.Width = 7;
             thumb.Height = 7;
@@ -62,7 +58,7 @@ namespace ObjectTypes
 
         private void thumb_DragStarted(object sender, DragStartedEventArgs e)
         {
-            mouseTransform = this.Transformation;
+            mouseTransform = this.RenderTransform;
         }
 
         private GeneralTransform mouseTransform;
@@ -81,15 +77,6 @@ namespace ObjectTypes
             Y2 += e.VerticalChange;
         }
 
-        public GeneralTransform Transformation
-        {
-            get { return (GeneralTransform)GetValue(TransformationProperty); }
-            set { SetValue(TransformationProperty, value); }
-        }
-
-        public static readonly DependencyProperty TransformationProperty =
-            DependencyProperty.Register("Transformation", typeof(GeneralTransform), typeof(EdgeType), null);
-
         public double X2
         {
             get { return (double)GetValue(X2Property); }
@@ -97,32 +84,7 @@ namespace ObjectTypes
         }
 
         public static readonly DependencyProperty X2Property =
-            DependencyProperty.Register("X2", typeof(double), typeof(EdgeType), new PropertyMetadata(OnX2PropertyChanged));
-
-        private static void OnX2PropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            EdgeType edgeType = obj as EdgeType;
-            if ((edgeType.X2 < 0) && (edgeType.Y2 > 0))
-            {
-                TransformGroup transformGroup = new TransformGroup();
-
-                RotateTransform rotateTransform = new RotateTransform();
-                rotateTransform.Angle = 2 * Math.Atan(Math.Abs(edgeType.X2 / edgeType.Y2)) * 180 / Math.PI;
-                rotateTransform.CenterX = Math.Abs(edgeType.X2) / 2;
-                rotateTransform.CenterY = Math.Abs(edgeType.Y2) / 2;
-                transformGroup.Children.Add(rotateTransform);
-
-                TranslateTransform translateTransform = new TranslateTransform();
-                translateTransform.X = - Math.Abs(edgeType.X2);
-                transformGroup.Children.Add(translateTransform);
-
-                edgeType.Transformation = transformGroup;
-            }
-            else
-            {
-                edgeType.Transformation = null;
-            }
-        }
+            DependencyProperty.Register("X2", typeof(double), typeof(EdgeType), new PropertyMetadata(OnSizePropertyChanged));
 
         public double Y2
         {
@@ -131,6 +93,52 @@ namespace ObjectTypes
         }
 
         public static readonly DependencyProperty Y2Property =
-            DependencyProperty.Register("Y2", typeof(double), typeof(EdgeType), null);
+            DependencyProperty.Register("Y2", typeof(double), typeof(EdgeType), new PropertyMetadata(OnSizePropertyChanged));
+
+        private static void OnSizePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            EdgeType edgeType = obj as EdgeType;
+            Transform generalTransform = null;
+            if ((edgeType.X2 < 0) && (edgeType.Y2 > 0))
+            {
+                double angle = 2 * Math.Atan(Math.Abs(edgeType.X2 / edgeType.Y2)) * 180 / Math.PI;
+                generalTransform = GetTransform(edgeType, angle, true, false);
+            }
+            else if ((edgeType.X2 > 0) && (edgeType.Y2 < 0))
+            {
+                double angle = -2 * Math.Atan(Math.Abs(edgeType.Y2 / edgeType.X2)) * 180 / Math.PI;
+                generalTransform = GetTransform(edgeType, angle, false, true);
+            }
+            else if ((edgeType.X2 < 0) && (edgeType.Y2 < 0))
+            {
+                double angle = 180;
+                generalTransform = GetTransform(edgeType, angle, true, true);
+            }
+            edgeType.RenderTransform = generalTransform;
+        }
+
+        private static Transform GetTransform(EdgeType edgeType, double angle, bool xTranslateNeeded, bool yTranformNeeded)
+        {
+            TransformGroup transformGroup = new TransformGroup();
+
+            RotateTransform rotateTransform = new RotateTransform();
+            rotateTransform.Angle = angle;
+            rotateTransform.CenterX = Math.Abs(edgeType.X2) / 2;
+            rotateTransform.CenterY = Math.Abs(edgeType.Y2) / 2;
+            transformGroup.Children.Add(rotateTransform);
+
+            TranslateTransform translateTransform = new TranslateTransform();
+            if (xTranslateNeeded)
+            {
+                translateTransform.X = -Math.Abs(edgeType.X2);
+            }
+            if (yTranformNeeded)
+            {
+                translateTransform.Y = -Math.Abs(edgeType.Y2);
+            }
+
+            transformGroup.Children.Add(translateTransform);
+            return transformGroup;
+        }
     }
 }
