@@ -65,12 +65,12 @@ namespace ObjectTypes
 
         private void thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            Point p = new Point(e.HorizontalChange, e.VerticalChange);
+            Point deltaTempPoint = new Point(e.HorizontalChange, e.VerticalChange);
             if (mouseTransform != null)
             {
-                Point p2 = mouseTransform.Transform(p);
-                X2 += p2.X;
-                Y2 += p2.Y;
+                Point deltaTempPointTransformed = mouseTransform.Transform(deltaTempPoint);
+                X2 += deltaTempPointTransformed.X;
+                Y2 += deltaTempPointTransformed.Y;
                 return;
             }
             X2 += e.HorizontalChange;
@@ -106,7 +106,7 @@ namespace ObjectTypes
             }
             else if ((edgeType.X2 > 0) && (edgeType.Y2 < 0))
             {
-                double angle = -2 * Math.Atan(Math.Abs(edgeType.Y2 / edgeType.X2)) * 180 / Math.PI;
+                double angle = - 2 * Math.Atan(Math.Abs(edgeType.Y2 / edgeType.X2)) * 180 / Math.PI;
                 generalTransform = GetTransform(edgeType, angle, false, true);
             }
             else if ((edgeType.X2 < 0) && (edgeType.Y2 < 0))
@@ -130,11 +130,11 @@ namespace ObjectTypes
             TranslateTransform translateTransform = new TranslateTransform();
             if (xTranslateNeeded)
             {
-                translateTransform.X = -Math.Abs(edgeType.X2);
+                translateTransform.X = - Math.Abs(edgeType.X2);
             }
             if (yTranformNeeded)
             {
-                translateTransform.Y = -Math.Abs(edgeType.Y2);
+                translateTransform.Y = - Math.Abs(edgeType.Y2);
             }
 
             transformGroup.Children.Add(translateTransform);
