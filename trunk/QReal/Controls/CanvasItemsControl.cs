@@ -22,24 +22,6 @@ namespace QReal.Controls
 {
     public class CanvasItemsControl : ItemsControl
     {
-        public CanvasItemsControl()
-        {
-            UIManager.Instance.SelectedItemChanged += new SelectedItemChangedHandler(Instance_SelectedItemChanged);
-        }
-
-        private void Instance_SelectedItemChanged(int newId)
-        {
-            //foreach (var item in GetObjectTypes())
-            //{
-            //    item.Selected = false;
-            //}
-            //ObjectType itemToSelect = GetObjectType(newId);
-            //if (itemToSelect != null)
-            //{
-            //    itemToSelect.Selected = true;
-            //}
-        }
-
         private IEnumerable<ObjectType> GetObjectTypes()
         {
             var itemsPresenter = VisualTreeHelper.GetChild(this, 0);
@@ -52,18 +34,6 @@ namespace QReal.Controls
                 var objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
                 yield return objectType;
             }
-        }
-
-        private ObjectType GetObjectType(int id)
-        {
-            foreach (var item in GetObjectTypes())
-            {
-                if (item.Id == id)
-                {
-                    return item;
-                }
-            }
-            return null;
         }
 
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
