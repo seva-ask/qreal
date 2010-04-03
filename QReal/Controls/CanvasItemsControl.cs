@@ -125,10 +125,22 @@ namespace QReal.Controls
                 xmlns=""http://schemas.microsoft.com/client/2007""
                 xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @""">
                 <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">
-                    <controls:" + type.Name + @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}"" Id=""{Binding Id, Mode=TwoWay}"" ElementName=""{Binding LogicalInstance.Name, Mode=TwoWay}""/>
+                    <controls:" + type.Name + @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" Id=""{Binding Id, Mode=TwoWay}"" ElementName=""{Binding LogicalInstance.Name, Mode=TwoWay}"" " + GetSizeBinding(type) +  @" />
                 </Canvas>
                 </DataTemplate>";
             return (DataTemplate)XamlReader.Load(xaml);
+        }
+
+        private string GetSizeBinding(Type type)
+        {
+            if (type.IsSubclassOf(typeof(NodeType)))
+            {
+                return @"Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}""";
+            }
+            else
+            {
+                return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}""";
+            }
         }
     }
 }
