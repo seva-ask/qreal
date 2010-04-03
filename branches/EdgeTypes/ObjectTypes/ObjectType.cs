@@ -23,35 +23,6 @@ namespace ObjectTypes
             this.MouseLeftButtonDown += new MouseButtonEventHandler(ObjectType_MouseLeftButtonDown);
             this.MouseMove += new MouseEventHandler(ObjectType_MouseMove);
             this.MouseLeftButtonUp += new MouseButtonEventHandler(ObjectType_MouseLeftButtonUp);
-            this.Loaded += new RoutedEventHandler(ObjectType_Loaded);
-            this.MinHeight = 100;
-            this.MinWidth = 100;
-        }
-
-        private void ObjectType_Loaded(object sender, RoutedEventArgs e)
-        {
-            Thumb thumb = new Thumb();
-            thumb.Width = 7;
-            thumb.Height = 7;
-            thumb.Cursor = Cursors.SizeNWSE;
-            thumb.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
-            thumb.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-            thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
-            (this.Content as Panel).Children.Add(thumb);
-        }
-
-        private void thumb_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            double newWidth = this.Width + e.HorizontalChange;
-            if (newWidth > 0)
-            {
-                this.Width = newWidth;
-            }
-            double newHeight = this.Height + e.VerticalChange;
-            if (newHeight > 0)
-            {
-                this.Height = newHeight;
-            }
         }
 
         private double mouseX = -1;

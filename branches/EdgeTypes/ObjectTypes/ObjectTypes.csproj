@@ -55,7 +55,10 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbsConverter.cs" />
+    <Compile Include="EdgeType.cs" />
     <Compile Include="IDiagram.cs" />
+    <Compile Include="NodeType.cs" />
     <Compile Include="ObjectType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
