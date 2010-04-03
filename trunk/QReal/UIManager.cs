@@ -14,7 +14,7 @@ namespace QReal
 {
     public delegate void SelectedItemChangedHandler(int newId);
 
-    public class UIManager
+    public class UIManager : DependencyObject
     {
         private UIManager()
         {}
@@ -48,32 +48,24 @@ namespace QReal
             }
         }
 
-        public event SelectedItemChangedHandler SelectedItemChanged;
-
-        private int selectedGraphicInstanceId = -1;
-
         public int SelectedGraphicInstanceId
         {
-            get
+            get { return (int)GetValue(SelectedGraphicInstanceIdProperty); }
+            set { SetValue(SelectedGraphicInstanceIdProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedGraphicInstanceIdProperty =
+            DependencyProperty.Register("SelectedGraphicInstanceId", typeof(int), typeof(UIManager), new PropertyMetadata(-1, OnSelectedGraphicInstanceIdPropertyChanged));
+
+        private static void OnSelectedGraphicInstanceIdPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            UIManager uiManager = obj as UIManager;
+            if (uiManager.SelectedItemChanged != null)
             {
-                return selectedGraphicInstanceId;
-            }
-            set
-            {
-                if (selectedGraphicInstanceId != value)
-                {
-                    OnSelectedGrahicInstanceIdChanged(value);
-                }
-                selectedGraphicInstanceId = value;
+                uiManager.SelectedItemChanged(uiManager.SelectedGraphicInstanceId);
             }
         }
 
-        private void OnSelectedGrahicInstanceIdChanged(int newId)
-        {
-            if (SelectedItemChanged != null)
-            {
-                SelectedItemChanged(newId);
-            }
-        }
+        public event SelectedItemChangedHandler SelectedItemChanged;
     }
 }

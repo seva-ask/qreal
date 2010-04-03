@@ -29,15 +29,15 @@ namespace QReal.Controls
 
         private void Instance_SelectedItemChanged(int newId)
         {
-            foreach (var item in GetObjectTypes())
-            {
-                item.UnSelect();
-            }
-            ObjectType itemToSelect = GetObjectType(newId);
-            if (itemToSelect != null)
-            {
-                itemToSelect.Select();
-            }
+            //foreach (var item in GetObjectTypes())
+            //{
+            //    item.Selected = false;
+            //}
+            //ObjectType itemToSelect = GetObjectType(newId);
+            //if (itemToSelect != null)
+            //{
+            //    itemToSelect.Selected = true;
+            //}
         }
 
         private IEnumerable<ObjectType> GetObjectTypes()
@@ -88,6 +88,12 @@ namespace QReal.Controls
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
             SetPropertyBindings(graphicInstance, objectType);
             objectType.MouseLeftButtonDown += new MouseButtonEventHandler(objectType_MouseLeftButtonDown);
+            Binding bindingSelected = new Binding();
+            bindingSelected.Mode = BindingMode.TwoWay;
+            bindingSelected.Path = new PropertyPath("SelectedGraphicInstanceId");
+            bindingSelected.Source = UIManager.Instance;
+            bindingSelected.Converter = new IdToSelectedConverter(objectType);
+            objectType.SetBinding(ObjectType.SelectedProperty, bindingSelected);
         }
 
         private void objectType_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

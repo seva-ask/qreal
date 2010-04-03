@@ -110,12 +110,34 @@ namespace ObjectTypes
         public static readonly DependencyProperty ElementNameProperty =
             DependencyProperty.Register("ElementName", typeof(string), typeof(ObjectType), null);
 
-        public virtual void Select()
+        public bool Selected
+        {
+            get { return (bool)GetValue(SelectedProperty); }
+            set { SetValue(SelectedProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedProperty =
+            DependencyProperty.Register("Selected", typeof(bool), typeof(ObjectType), new PropertyMetadata(OnSelectedPropertyChanged));
+
+        private static void OnSelectedPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            ObjectType objectType = obj as ObjectType;
+            if (objectType.Selected)
+            {
+                objectType.Select();
+            }
+            else
+            {
+                objectType.UnSelect();
+            }
+        }
+
+        protected virtual void Select()
         {
             (this.Content as Panel).Background = new SolidColorBrush(Colors.Blue);
         }
 
-        public virtual void UnSelect()
+        protected virtual void UnSelect()
         {
             (this.Content as Panel).Background = null;
         }
