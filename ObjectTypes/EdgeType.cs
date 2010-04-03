@@ -142,12 +142,12 @@ namespace ObjectTypes
             return transformGroup;
         }
 
-        public override void Select()
+        protected override void Select()
         {
             mainLine.Stroke = new SolidColorBrush(Colors.Blue);
         }
 
-        public override void UnSelect()
+        protected override void UnSelect()
         {
             mainLine.Stroke = new SolidColorBrush(Colors.Black);
         }
