@@ -64,6 +64,24 @@ namespace QReal.Controls
             bindingSelected.Source = UIManager.Instance;
             bindingSelected.Converter = new IdToSelectedConverter(objectType);
             objectType.SetBinding(ObjectType.SelectedProperty, bindingSelected);
+            objectType.ZIndexChanged += new ZIndexChangedHandler(objectType_ZIndexChanged);
+        }
+
+        private void objectType_ZIndexChanged(ObjectType objectType, int newZIndex)
+        {
+            foreach (var item in GetChildren(objectType.Id))
+            {
+                item.SetZIndex(newZIndex);
+            }
+        }
+
+        private IEnumerable<ObjectType> GetChildren(int parentId)
+        {
+            GraphicInstance graphicInstance = InstancesManager.Instance.InstancesContext.GraphicInstances.Single(item => item.Id == parentId);
+            foreach (var child in graphicInstance.Children)
+            {
+                yield return GetObjectTypes().Single(item => item.Id == child.Id);
+            }
         }
 
         private void objectType_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

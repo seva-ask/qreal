@@ -13,6 +13,8 @@ using System.Windows.Controls.Primitives;
 
 namespace ObjectTypes
 {
+    public delegate void ZIndexChangedHandler(ObjectType objectType, int newZIndex);
+
     public abstract class ObjectType : UserControl
     {
         public abstract string TypeName { get; }
@@ -25,11 +27,17 @@ namespace ObjectTypes
             this.MouseLeftButtonUp += new MouseButtonEventHandler(ObjectType_MouseLeftButtonUp);
         }
 
-        private void SetZIndex(int zIndex)
+        public void SetZIndex(int zIndex)
         {
             ContentPresenter contentPresenter = VisualTreeHelper.GetParent(this.Parent) as ContentPresenter;
             Canvas.SetZIndex(contentPresenter, zIndex);
+            if (ZIndexChanged != null)
+            {
+                ZIndexChanged(this, zIndex);
+            }
         }
+
+        public event ZIndexChangedHandler ZIndexChanged;
 
         private double mouseX = -1;
         private double mouseY = -1;
