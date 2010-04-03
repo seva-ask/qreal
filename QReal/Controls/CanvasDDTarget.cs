@@ -24,34 +24,11 @@ namespace QReal.Controls
             this.MouseMove += new MouseEventHandler(CanvasDDTarget_MouseMove);
             this.MouseMove += new MouseEventHandler(CanvasDDTarget_MouseMoveElement);
             this.MouseLeftButtonDown += new MouseButtonEventHandler(CanvasDDTarget_MouseLeftButtonDown);
-            this.MouseLeftButtonUp += new MouseButtonEventHandler(CanvasDDTarget_MouseLeftButtonUp);
-        }
-
-        private void CanvasDDTarget_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            ObjectType objectType = FindObjectType(e);
-            SetZIndex(objectType, 0);
         }
 
         private void CanvasDDTarget_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ObjectType objectType = FindObjectType(e);
-            SetZIndex(objectType, 1);
-            int selectedId = -1;
-            if (objectType != null)
-            {
-                selectedId = objectType.Id;
-            }
-            UIManager.Instance.SelectedGraphicInstanceId = selectedId;
-        }
-
-        private static void SetZIndex(ObjectType objectType, int zIndex)
-        {
-            if (objectType != null)
-            {
-                ContentPresenter contentPresenter = VisualTreeHelper.GetParent(objectType.Parent) as ContentPresenter;
-                Canvas.SetZIndex(contentPresenter, zIndex);
-            }
+            UIManager.Instance.SelectedGraphicInstanceId = -1;
         }
 
         private void CanvasDDTarget_MouseMoveElement(object sender, MouseEventArgs e)

@@ -19,32 +19,33 @@ namespace ObjectTypes
         {
             Grid grid = new Grid();
             grid.Name = "LayoutRoot";
-            grid.Background = new SolidColorBrush(Colors.Transparent);
             this.Content = grid;
             this.Loaded += new RoutedEventHandler(EdgeType_Loaded);
         }
 
+        private Line mainLine;
+
         private void EdgeType_Loaded(object sender, RoutedEventArgs e)
         {
-            Line line = new Line();
-            line.StrokeThickness = 5;
-            line.Stroke = new SolidColorBrush(Colors.Black);
+            mainLine = new Line();
+            mainLine.StrokeThickness = 5;
+            mainLine.Stroke = new SolidColorBrush(Colors.Black);
 
             Binding bindingX2 = new Binding();
             bindingX2.Source = this;
             bindingX2.Path = new PropertyPath("X2");
             bindingX2.Mode = BindingMode.TwoWay;
             bindingX2.Converter = new AbsConverter();
-            line.SetBinding(Line.X2Property, bindingX2);
+            mainLine.SetBinding(Line.X2Property, bindingX2);
 
             Binding bindingY2 = new Binding();
             bindingY2.Source = this;
             bindingY2.Path = new PropertyPath("Y2");
             bindingY2.Mode = BindingMode.TwoWay;
             bindingY2.Converter = new AbsConverter();
-            line.SetBinding(Line.Y2Property, bindingY2);
+            mainLine.SetBinding(Line.Y2Property, bindingY2);
 
-            (this.Content as Panel).Children.Add(line);
+            (this.Content as Panel).Children.Add(mainLine);
 
             Thumb thumb = new Thumb();
             thumb.Width = 7;
@@ -139,6 +140,16 @@ namespace ObjectTypes
 
             transformGroup.Children.Add(translateTransform);
             return transformGroup;
+        }
+
+        public override void Select()
+        {
+            mainLine.Stroke = new SolidColorBrush(Colors.Blue);
+        }
+
+        public override void UnSelect()
+        {
+            mainLine.Stroke = new SolidColorBrush(Colors.Black);
         }
     }
 }

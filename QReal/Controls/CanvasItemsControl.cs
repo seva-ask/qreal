@@ -31,12 +31,12 @@ namespace QReal.Controls
         {
             foreach (var item in GetObjectTypes())
             {
-                (item.Content as Panel).Background = new SolidColorBrush(Colors.Transparent);
+                item.UnSelect();
             }
             ObjectType itemToSelect = GetObjectType(newId);
             if (itemToSelect != null)
             {
-                (itemToSelect.Content as Panel).Background = new SolidColorBrush(Colors.Blue);
+                itemToSelect.Select();
             }
         }
 
@@ -87,6 +87,13 @@ namespace QReal.Controls
             Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
             SetPropertyBindings(graphicInstance, objectType);
+            objectType.MouseLeftButtonDown += new MouseButtonEventHandler(objectType_MouseLeftButtonDown);
+        }
+
+        private void objectType_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            UIManager.Instance.SelectedGraphicInstanceId = (sender as ObjectType).Id;
+            e.Handled = true;
         }
 
         private void SetPropertyBindings(GraphicInstance graphicInstance, ObjectType objectType)

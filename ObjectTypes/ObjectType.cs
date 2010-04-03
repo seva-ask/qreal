@@ -25,6 +25,12 @@ namespace ObjectTypes
             this.MouseLeftButtonUp += new MouseButtonEventHandler(ObjectType_MouseLeftButtonUp);
         }
 
+        private void SetZIndex(int zIndex)
+        {
+            ContentPresenter contentPresenter = VisualTreeHelper.GetParent(this.Parent) as ContentPresenter;
+            Canvas.SetZIndex(contentPresenter, zIndex);
+        }
+
         private double mouseX = -1;
         private double mouseY = -1;
 
@@ -36,6 +42,7 @@ namespace ObjectTypes
             mouseX = e.GetPosition(null).X;
             IsMouseCaptured = true;
             this.CaptureMouse();
+            SetZIndex(1);
         }
 
         private void ObjectType_MouseMove(object sender, MouseEventArgs e)
@@ -80,6 +87,7 @@ namespace ObjectTypes
             this.ReleaseMouseCapture();
             mouseY = -1;
             mouseX = -1;
+            SetZIndex(0);
         }
 
         public int Id
@@ -101,5 +109,15 @@ namespace ObjectTypes
         // Using a DependencyProperty as the backing store for ElementName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ElementNameProperty =
             DependencyProperty.Register("ElementName", typeof(string), typeof(ObjectType), null);
+
+        public virtual void Select()
+        {
+            (this.Content as Panel).Background = new SolidColorBrush(Colors.Blue);
+        }
+
+        public virtual void UnSelect()
+        {
+            (this.Content as Panel).Background = null;
+        }
     }
 }
