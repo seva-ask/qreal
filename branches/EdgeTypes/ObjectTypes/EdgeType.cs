@@ -47,7 +47,7 @@ namespace ObjectTypes
             bindingY2.Source = this;
             bindingY2.Path = new PropertyPath("Y2");
             bindingY2.Mode = BindingMode.TwoWay;
-            bindingY2.Converter = new AbsConverter();
+      //      bindingY2.Converter = new AbsConverter();
             line.SetBinding(Line.Y2Property, bindingY2);
             (this.Content as Panel).Children.Add(line);
             Thumb thumb = new Thumb();
@@ -55,12 +55,28 @@ namespace ObjectTypes
             thumb.Height = 7;
             thumb.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
             thumb.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
+            thumb.DragStarted += new DragStartedEventHandler(thumb_DragStarted);
             thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
             (this.Content as Panel).Children.Add(thumb);
         }
 
+        private void thumb_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            mouseTransform = this.Transformation;
+        }
+
+        private GeneralTransform mouseTransform;
+
         private void thumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
+            Point p = new Point(e.HorizontalChange, e.VerticalChange);
+            if (mouseTransform != null)
+            {
+                Point p2 = mouseTransform.Transform(p);
+                X2 += p2.X;
+                Y2 += p2.Y;
+                return;
+            }
             X2 += e.HorizontalChange;
             Y2 += e.VerticalChange;
         }
@@ -86,12 +102,12 @@ namespace ObjectTypes
         private static void OnX2PropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             EdgeType edgeType = obj as EdgeType;
-            if (edgeType.X2 < 0)
+            if ((edgeType.X2 < 0) && (edgeType.Y2 > 0))
             {
                 TransformGroup transformGroup = new TransformGroup();
 
                 RotateTransform rotateTransform = new RotateTransform();
-                rotateTransform.Angle = Math.Atan(edgeType.X2 / edgeType.Y2) * 180 / Math.PI;
+                rotateTransform.Angle = 2 * Math.Atan(Math.Abs(edgeType.X2 / edgeType.Y2)) * 180 / Math.PI;
                 rotateTransform.CenterX = Math.Abs(edgeType.X2) / 2;
                 rotateTransform.CenterY = Math.Abs(edgeType.Y2) / 2;
                 transformGroup.Children.Add(rotateTransform);
