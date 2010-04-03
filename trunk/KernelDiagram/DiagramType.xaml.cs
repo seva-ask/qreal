@@ -13,7 +13,7 @@ using ObjectTypes;
 
 namespace KernelDiagram
 {
-    public partial class DiagramType : ObjectType
+    public partial class DiagramType : NodeType
     {
         public DiagramType()
         {

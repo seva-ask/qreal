@@ -13,13 +13,8 @@ using ObjectTypes;
 
 namespace KernelDiagram
 {
-    public partial class RelationType : ObjectType
+    public class RelationType : EdgeType
     {
-        public RelationType()
-        {
-            InitializeComponent();
-        }
-
         public override string TypeName
         {
             get { return "Relation"; }

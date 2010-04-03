@@ -1,4 +1,4 @@
-﻿<base:ObjectType
+﻿<base:NodeType
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:base="clr-namespace:ObjectTypes;assembly=ObjectTypes"
@@ -9,4 +9,4 @@
     	<TextBlock Margin="28,25,25,0" TextWrapping="Wrap" Text="{Binding ElementName, ElementName=objectType, Mode=TwoWay}" VerticalAlignment="Top" TextAlignment="Center"/>
     	<TextBlock Margin="78,0,68,38" TextWrapping="Wrap" VerticalAlignment="Bottom" d:LayoutOverrides="Width" Text="{Binding MyProperty, ElementName=objectType, Mode=TwoWay}"/>
     </Grid>
-</base:ObjectType>
+</base:NodeType>
