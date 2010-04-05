@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
+using System.Windows.Browser;
 
 namespace ObjectTypes
 {
@@ -16,8 +17,16 @@ namespace ObjectTypes
     {
         public Port()
         {
-            this.Visibility = Visibility.Collapsed;
+            if (IsNotDesigner())
+            {
+                this.Visibility = Visibility.Collapsed;
+            }
             this.Loaded += new RoutedEventHandler(Port_Loaded);
+        }
+
+        private static bool IsNotDesigner()
+        {
+            return HtmlPage.IsEnabled;
         }
 
         private void Port_Loaded(object sender, RoutedEventArgs e)

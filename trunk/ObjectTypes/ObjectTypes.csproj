@@ -63,11 +63,18 @@
     <Compile Include="LinkBoundaryPointPort.xaml.cs">
       <DependentUpon>LinkBoundaryPointPort.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PointPort.xaml.cs">
+      <DependentUpon>PointPort.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Port.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="LinkBoundaryPointPort.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PointPort.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

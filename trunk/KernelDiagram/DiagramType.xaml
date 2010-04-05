@@ -8,5 +8,9 @@
     	<Rectangle Fill="Transparent" Stroke="Black" Margin="28,25,25,27"/>
     	<TextBlock Margin="28,25,25,0" TextWrapping="Wrap" Text="{Binding ElementName, ElementName=objectType, Mode=TwoWay}" VerticalAlignment="Top" TextAlignment="Center"/>
     	<TextBlock Margin="78,0,68,38" TextWrapping="Wrap" VerticalAlignment="Bottom" d:LayoutOverrides="Width" Text="{Binding MyProperty, ElementName=objectType, Mode=TwoWay}"/>
+    	<base:PointPort Margin="28,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+    	<base:PointPort HorizontalAlignment="Right" Margin="0,25,25,0" VerticalAlignment="Top" d:LayoutOverrides="Width, Height"/>
+    	<base:PointPort HorizontalAlignment="Left" Margin="28,0,0,27" VerticalAlignment="Bottom" d:LayoutOverrides="Width, Height"/>
+    	<base:PointPort HorizontalAlignment="Right" Margin="0,0,25,27" VerticalAlignment="Bottom" d:LayoutOverrides="Width, Height"/>
     </Grid>
 </base:NodeType>
