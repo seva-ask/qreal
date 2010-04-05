@@ -60,7 +60,17 @@
     <Compile Include="IDiagram.cs" />
     <Compile Include="NodeType.cs" />
     <Compile Include="ObjectType.cs" />
+    <Compile Include="LinkBoundaryPointPort.xaml.cs">
+      <DependentUpon>LinkBoundaryPointPort.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Port.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="LinkBoundaryPointPort.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
