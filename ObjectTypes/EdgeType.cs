@@ -56,6 +56,39 @@ namespace ObjectTypes
             endPort.DragStarted += new DragStartedEventHandler(endPort_DragStarted);
             endPort.DragDelta += new DragDeltaEventHandler(endPort_DragDelta);
             (this.Content as Panel).Children.Add(endPort);
+
+            LinkBoundaryPointPort startPort = new LinkBoundaryPointPort();
+            startPort.Width = 7;
+            startPort.Height = 7;
+            startPort.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+            startPort.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+            startPort.DragStarted += new DragStartedEventHandler(endPort_DragStarted);
+            startPort.DragDelta += new DragDeltaEventHandler(startPort_DragDelta);
+            (this.Content as Panel).Children.Add(startPort);
+        }
+
+        private void startPort_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            Point deltaTempPoint = new Point(e.HorizontalChange, e.VerticalChange);
+            if (mouseTransform != null)
+            {
+                Point deltaTempPointTransformed = mouseTransform.Transform(deltaTempPoint);
+                X2 -= deltaTempPointTransformed.X;
+                Y2 -= deltaTempPointTransformed.Y;
+                double newTop = deltaTempPointTransformed.Y + (double)this.GetValue(Canvas.TopProperty);
+                double newLeft = deltaTempPointTransformed.X + (double)this.GetValue(Canvas.LeftProperty);
+
+                this.SetValue(Canvas.TopProperty, newTop);
+                this.SetValue(Canvas.LeftProperty, newLeft);
+                return;
+            }
+            X2 -= e.HorizontalChange;
+            Y2 -= e.VerticalChange;
+            double newTop2 = e.VerticalChange + (double)this.GetValue(Canvas.TopProperty);
+            double newLeft2 = e.HorizontalChange + (double)this.GetValue(Canvas.LeftProperty);
+
+            this.SetValue(Canvas.TopProperty, newTop2);
+            this.SetValue(Canvas.LeftProperty, newLeft2);
         }
 
         private void endPort_DragStarted(object sender, DragStartedEventArgs e)
