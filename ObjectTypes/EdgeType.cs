@@ -53,7 +53,7 @@ namespace ObjectTypes
             endPort.Height = 7;
             endPort.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
             endPort.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-            endPort.DragStarted += new DragStartedEventHandler(endPort_DragStarted);
+            endPort.DragStarted += new DragStartedEventHandler(boundaryPort_DragStarted);
             endPort.DragDelta += new DragDeltaEventHandler(endPort_DragDelta);
             (this.Content as Panel).Children.Add(endPort);
 
@@ -62,7 +62,7 @@ namespace ObjectTypes
             startPort.Height = 7;
             startPort.VerticalAlignment = System.Windows.VerticalAlignment.Top;
             startPort.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            startPort.DragStarted += new DragStartedEventHandler(endPort_DragStarted);
+            startPort.DragStarted += new DragStartedEventHandler(boundaryPort_DragStarted);
             startPort.DragDelta += new DragDeltaEventHandler(startPort_DragDelta);
             (this.Content as Panel).Children.Add(startPort);
         }
@@ -91,7 +91,7 @@ namespace ObjectTypes
             this.SetValue(Canvas.LeftProperty, newLeft2);
         }
 
-        private void endPort_DragStarted(object sender, DragStartedEventArgs e)
+        private void boundaryPort_DragStarted(object sender, DragStartedEventArgs e)
         {
             mouseTransform = this.RenderTransform;
         }
