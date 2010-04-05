@@ -10,6 +10,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.IO;
 
 namespace ObjectTypes
 {
@@ -47,24 +48,24 @@ namespace ObjectTypes
 
             (this.Content as Panel).Children.Add(mainLine);
 
-            Thumb thumb = new Thumb();
-            thumb.Width = 7;
-            thumb.Height = 7;
-            thumb.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
-            thumb.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-            thumb.DragStarted += new DragStartedEventHandler(thumb_DragStarted);
-            thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
-            (this.Content as Panel).Children.Add(thumb);
+            LinkBoundaryPointPort endPort = new LinkBoundaryPointPort();
+            endPort.Width = 7;
+            endPort.Height = 7;
+            endPort.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
+            endPort.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
+            endPort.DragStarted += new DragStartedEventHandler(endPort_DragStarted);
+            endPort.DragDelta += new DragDeltaEventHandler(endPort_DragDelta);
+            (this.Content as Panel).Children.Add(endPort);
         }
 
-        private void thumb_DragStarted(object sender, DragStartedEventArgs e)
+        private void endPort_DragStarted(object sender, DragStartedEventArgs e)
         {
             mouseTransform = this.RenderTransform;
         }
 
         private GeneralTransform mouseTransform;
 
-        private void thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void endPort_DragDelta(object sender, DragDeltaEventArgs e)
         {
             Point deltaTempPoint = new Point(e.HorizontalChange, e.VerticalChange);
             if (mouseTransform != null)
@@ -150,6 +151,6 @@ namespace ObjectTypes
         protected override void UnSelect()
         {
             mainLine.Stroke = new SolidColorBrush(Colors.Black);
-        }
+        }   
     }
 }
