@@ -11,6 +11,7 @@ using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.IO;
+using QReal.Web.Database;
 
 namespace ObjectTypes
 {
@@ -184,6 +185,42 @@ namespace ObjectTypes
         protected override void UnSelect()
         {
             mainLine.Stroke = new SolidColorBrush(Colors.Black);
-        }   
+        }
+
+        public double PortFrom
+        {
+            get { return (double)GetValue(PortFromProperty); }
+            set { SetValue(PortFromProperty, value); }
+        }
+
+        public static readonly DependencyProperty PortFromProperty =
+            DependencyProperty.Register("PortFrom", typeof(double), typeof(EdgeType), null);
+
+        public double PortTo
+        {
+            get { return (double)GetValue(PortToProperty); }
+            set { SetValue(PortToProperty, value); }
+        }
+
+        public static readonly DependencyProperty PortToProperty =
+            DependencyProperty.Register("PortTo", typeof(double), typeof(EdgeType), null);
+
+        public NodeInstance NodeFrom
+        {
+            get { return (NodeInstance)GetValue(NodeFromProperty); }
+            set { SetValue(NodeFromProperty, value); }
+        }
+
+        public static readonly DependencyProperty NodeFromProperty =
+            DependencyProperty.Register("NodeFrom", typeof(NodeInstance), typeof(EdgeType), null);
+
+        public NodeInstance NodeTo
+        {
+            get { return (NodeInstance)GetValue(NodeToProperty); }
+            set { SetValue(NodeToProperty, value); }
+        }
+
+        public static readonly DependencyProperty NodeToProperty =
+            DependencyProperty.Register("NodeTo", typeof(NodeInstance), typeof(EdgeType), null);
     }
 }

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 04/12/2010 19:14:31
+-- Date Created: 04/13/2010 00:15:08
 -- Generated from EDMX file: C:\Projects\QReal\silverlight\svn\trunk\QReal.Web\Database\InstancesModel.edmx
 -- --------------------------------------------------
 
@@ -27,10 +27,10 @@ IF OBJECT_ID(N'[dbo].[FK_GraphicParents]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GraphicInstances_GraphicVisualizedInstance] DROP CONSTRAINT [FK_GraphicParents];
 GO
 IF OBJECT_ID(N'[dbo].[FK_LinksFromNode]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[GraphicInstances_LinkInstance] DROP CONSTRAINT [FK_LinksFromNode];
+    ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_LinksFromNode];
 GO
 IF OBJECT_ID(N'[dbo].[FK_LinksToNode]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[GraphicInstances_LinkInstance] DROP CONSTRAINT [FK_LinksToNode];
+    ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_LinksToNode];
 GO
 IF OBJECT_ID(N'[dbo].[FK_GraphicVisualizedInstance_inherits_GraphicInstance]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GraphicInstances_GraphicVisualizedInstance] DROP CONSTRAINT [FK_GraphicVisualizedInstance_inherits_GraphicInstance];
@@ -38,8 +38,8 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_NodeInstance_inherits_GraphicVisualizedInstance]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GraphicInstances_NodeInstance] DROP CONSTRAINT [FK_NodeInstance_inherits_GraphicVisualizedInstance];
 GO
-IF OBJECT_ID(N'[dbo].[FK_LinkInstance_inherits_GraphicVisualizedInstance]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[GraphicInstances_LinkInstance] DROP CONSTRAINT [FK_LinkInstance_inherits_GraphicVisualizedInstance];
+IF OBJECT_ID(N'[dbo].[FK_EdgeInstance_inherits_GraphicVisualizedInstance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_EdgeInstance_inherits_GraphicVisualizedInstance];
 GO
 
 -- --------------------------------------------------
@@ -61,8 +61,8 @@ GO
 IF OBJECT_ID(N'[dbo].[GraphicInstances_NodeInstance]', 'U') IS NOT NULL
     DROP TABLE [dbo].[GraphicInstances_NodeInstance];
 GO
-IF OBJECT_ID(N'[dbo].[GraphicInstances_LinkInstance]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[GraphicInstances_LinkInstance];
+IF OBJECT_ID(N'[dbo].[GraphicInstances_EdgeInstance]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GraphicInstances_EdgeInstance];
 GO
 
 -- --------------------------------------------------
@@ -104,18 +104,18 @@ CREATE TABLE [dbo].[GraphicInstances_GraphicVisualizedInstance] (
 );
 GO
 
--- Creating table 'GraphicInstances_NodeInstance'
-CREATE TABLE [dbo].[GraphicInstances_NodeInstance] (
-    [Id] int  NOT NULL
-);
-GO
-
 -- Creating table 'GraphicInstances_EdgeInstance'
 CREATE TABLE [dbo].[GraphicInstances_EdgeInstance] (
     [PortFrom] float  NULL,
     [PortTo] float  NULL,
     [NodeFromId] int  NULL,
     [NodeToId] int  NULL,
+    [Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'GraphicInstances_NodeInstance'
+CREATE TABLE [dbo].[GraphicInstances_NodeInstance] (
     [Id] int  NOT NULL
 );
 GO
@@ -148,15 +148,15 @@ ADD CONSTRAINT [PK_GraphicInstances_GraphicVisualizedInstance]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'GraphicInstances_NodeInstance'
-ALTER TABLE [dbo].[GraphicInstances_NodeInstance]
-ADD CONSTRAINT [PK_GraphicInstances_NodeInstance]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
-GO
-
 -- Creating primary key on [Id] in table 'GraphicInstances_EdgeInstance'
 ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
 ADD CONSTRAINT [PK_GraphicInstances_EdgeInstance]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'GraphicInstances_NodeInstance'
+ALTER TABLE [dbo].[GraphicInstances_NodeInstance]
+ADD CONSTRAINT [PK_GraphicInstances_NodeInstance]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -210,7 +210,7 @@ GO
 ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
 ADD CONSTRAINT [FK_LinksFromNode]
     FOREIGN KEY ([NodeFromId])
-    REFERENCES [dbo].[GraphicInstances_NodeInstance]
+    REFERENCES [dbo].[GraphicInstances]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
@@ -224,7 +224,7 @@ GO
 ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
 ADD CONSTRAINT [FK_LinksToNode]
     FOREIGN KEY ([NodeToId])
-    REFERENCES [dbo].[GraphicInstances_NodeInstance]
+    REFERENCES [dbo].[GraphicInstances]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
@@ -243,18 +243,18 @@ ADD CONSTRAINT [FK_GraphicVisualizedInstance_inherits_GraphicInstance]
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating foreign key on [Id] in table 'GraphicInstances_NodeInstance'
-ALTER TABLE [dbo].[GraphicInstances_NodeInstance]
-ADD CONSTRAINT [FK_NodeInstance_inherits_GraphicVisualizedInstance]
+-- Creating foreign key on [Id] in table 'GraphicInstances_EdgeInstance'
+ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
+ADD CONSTRAINT [FK_EdgeInstance_inherits_GraphicVisualizedInstance]
     FOREIGN KEY ([Id])
     REFERENCES [dbo].[GraphicInstances_GraphicVisualizedInstance]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating foreign key on [Id] in table 'GraphicInstances_EdgeInstance'
-ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
-ADD CONSTRAINT [FK_EdgeInstance_inherits_GraphicVisualizedInstance]
+-- Creating foreign key on [Id] in table 'GraphicInstances_NodeInstance'
+ALTER TABLE [dbo].[GraphicInstances_NodeInstance]
+ADD CONSTRAINT [FK_NodeInstance_inherits_GraphicVisualizedInstance]
     FOREIGN KEY ([Id])
     REFERENCES [dbo].[GraphicInstances_GraphicVisualizedInstance]
         ([Id])

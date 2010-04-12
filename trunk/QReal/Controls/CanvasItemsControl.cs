@@ -143,7 +143,7 @@ namespace QReal.Controls
             }
             else
             {
-                return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}"" PortTo=""{Binding PortTo, Mode=TwoWay}"" PortFrom=""{Binding PortFrom, Mode=TwoWay}"" NodeToId=""{Binding NodeToId, Mode=TwoWay}"" NodeFromId=""{Binding NodeFromId, Mode=TwoWay}""";
+                return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}"" PortTo=""{Binding PortTo, Mode=TwoWay}"" PortFrom=""{Binding PortFrom, Mode=TwoWay}"" NodeTo=""{Binding NodeTo, Mode=TwoWay}"" NodeFrom=""{Binding NodeFrom, Mode=TwoWay}""";
             }
         }
     }
