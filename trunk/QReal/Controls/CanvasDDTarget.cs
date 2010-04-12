@@ -28,7 +28,7 @@ namespace QReal.Controls
 
         private void CanvasDDTarget_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            UIManager.Instance.SelectedGraphicInstanceId = -1;
+            UIManager.Instance.SelectedGraphicInstance = null;
         }
 
         private void CanvasDDTarget_MouseMoveElement(object sender, MouseEventArgs e)
@@ -79,7 +79,7 @@ namespace QReal.Controls
             }
             else
             {
-                graphicVisualizedInstance = new LinkInstance();
+                graphicVisualizedInstance = new EdgeInstance();
             }
             graphicVisualizedInstance.LogicalInstance = logicalInstance;
             Point position = args.GetPosition(this);
@@ -89,9 +89,8 @@ namespace QReal.Controls
             graphicVisualizedInstance.Width = 200;
             graphicVisualizedInstance.Height = 200;
             InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicVisualizedInstance);
-            InstancesManager.Instance.InstancesContext.SubmitChanges(); // to get id for new instance
-            InstancesManager.Instance.UpdateProperties();
         }
+
 
         private NodeInstance FindParent(Point position, GraphicInstance instance)
         {

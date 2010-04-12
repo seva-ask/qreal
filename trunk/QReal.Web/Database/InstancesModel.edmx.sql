@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 04/12/2010 18:56:39
+-- Date Created: 04/12/2010 19:14:31
 -- Generated from EDMX file: C:\Projects\QReal\silverlight\svn\trunk\QReal.Web\Database\InstancesModel.edmx
 -- --------------------------------------------------
 
@@ -110,8 +110,8 @@ CREATE TABLE [dbo].[GraphicInstances_NodeInstance] (
 );
 GO
 
--- Creating table 'GraphicInstances_LinkInstance'
-CREATE TABLE [dbo].[GraphicInstances_LinkInstance] (
+-- Creating table 'GraphicInstances_EdgeInstance'
+CREATE TABLE [dbo].[GraphicInstances_EdgeInstance] (
     [PortFrom] float  NULL,
     [PortTo] float  NULL,
     [NodeFromId] int  NULL,
@@ -154,9 +154,9 @@ ADD CONSTRAINT [PK_GraphicInstances_NodeInstance]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'GraphicInstances_LinkInstance'
-ALTER TABLE [dbo].[GraphicInstances_LinkInstance]
-ADD CONSTRAINT [PK_GraphicInstances_LinkInstance]
+-- Creating primary key on [Id] in table 'GraphicInstances_EdgeInstance'
+ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
+ADD CONSTRAINT [PK_GraphicInstances_EdgeInstance]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -206,8 +206,8 @@ ON [dbo].[GraphicInstances_GraphicVisualizedInstance]
     ([ParentId]);
 GO
 
--- Creating foreign key on [NodeFromId] in table 'GraphicInstances_LinkInstance'
-ALTER TABLE [dbo].[GraphicInstances_LinkInstance]
+-- Creating foreign key on [NodeFromId] in table 'GraphicInstances_EdgeInstance'
+ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
 ADD CONSTRAINT [FK_LinksFromNode]
     FOREIGN KEY ([NodeFromId])
     REFERENCES [dbo].[GraphicInstances_NodeInstance]
@@ -216,12 +216,12 @@ ADD CONSTRAINT [FK_LinksFromNode]
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_LinksFromNode'
 CREATE INDEX [IX_FK_LinksFromNode]
-ON [dbo].[GraphicInstances_LinkInstance]
+ON [dbo].[GraphicInstances_EdgeInstance]
     ([NodeFromId]);
 GO
 
--- Creating foreign key on [NodeToId] in table 'GraphicInstances_LinkInstance'
-ALTER TABLE [dbo].[GraphicInstances_LinkInstance]
+-- Creating foreign key on [NodeToId] in table 'GraphicInstances_EdgeInstance'
+ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
 ADD CONSTRAINT [FK_LinksToNode]
     FOREIGN KEY ([NodeToId])
     REFERENCES [dbo].[GraphicInstances_NodeInstance]
@@ -230,7 +230,7 @@ ADD CONSTRAINT [FK_LinksToNode]
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_LinksToNode'
 CREATE INDEX [IX_FK_LinksToNode]
-ON [dbo].[GraphicInstances_LinkInstance]
+ON [dbo].[GraphicInstances_EdgeInstance]
     ([NodeToId]);
 GO
 
@@ -252,9 +252,9 @@ ADD CONSTRAINT [FK_NodeInstance_inherits_GraphicVisualizedInstance]
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating foreign key on [Id] in table 'GraphicInstances_LinkInstance'
-ALTER TABLE [dbo].[GraphicInstances_LinkInstance]
-ADD CONSTRAINT [FK_LinkInstance_inherits_GraphicVisualizedInstance]
+-- Creating foreign key on [Id] in table 'GraphicInstances_EdgeInstance'
+ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
+ADD CONSTRAINT [FK_EdgeInstance_inherits_GraphicVisualizedInstance]
     FOREIGN KEY ([Id])
     REFERENCES [dbo].[GraphicInstances_GraphicVisualizedInstance]
         ([Id])

@@ -43,12 +43,11 @@ namespace QReal.Database
             UIManager.Instance.SelectedItemChanged += new SelectedItemChangedHandler(Instance_SelectedItemChanged);
         }
 
-        private void Instance_SelectedItemChanged(int newId)
+        private void Instance_SelectedItemChanged(GraphicInstance newSelectedGraphicInstance)
         {
-            if (newId != -1)
+            if (newSelectedGraphicInstance != null)
             {
-                var graphicInstance = InstancesContext.GraphicInstances.Single(item => item.Id == newId);
-                InstancePropertiesSource = InstancesContext.InstanceProperties.Where(item => item.LogicalInstance == graphicInstance.LogicalInstance);
+                InstancePropertiesSource = InstancesContext.InstanceProperties.Where(item => item.LogicalInstance == newSelectedGraphicInstance.LogicalInstance);
             }
             else
             {
@@ -127,6 +126,5 @@ namespace QReal.Database
         // Using a DependencyProperty as the backing store for InstancePropertiesSource.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty InstancePropertiesSourceProperty =
             DependencyProperty.Register("InstancePropertiesSource", typeof(IEnumerable<InstanceProperty>), typeof(InstancesManager), null);
-        
     }
 }

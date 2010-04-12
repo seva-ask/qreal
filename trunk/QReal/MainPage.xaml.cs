@@ -28,12 +28,11 @@ namespace QReal
             UIManager.Instance.SelectedItemChanged += new SelectedItemChangedHandler(Instance_SelectedItemChanged);
         }
 
-        private void Instance_SelectedItemChanged(int newId)
+        private void Instance_SelectedItemChanged(GraphicInstance newSelectedGraphicInstance)
         {
-            if (newId != -1)
+            if (newSelectedGraphicInstance != null)
             {
-                GraphicInstance instanceToSelect = InstancesManager.Instance.InstancesContext.GraphicInstances.Single(item => item.Id == newId);
-                treeView.SelectItem(instanceToSelect);
+                treeView.SelectItem(newSelectedGraphicInstance);
             }
             else
             {
@@ -81,13 +80,7 @@ namespace QReal
 
         private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            GraphicInstance graphicInstance = treeView.SelectedItem as GraphicInstance;
-            int selectedId = -1;
-            if (graphicInstance != null)
-            {
-                selectedId = graphicInstance.Id;
-            }
-            UIManager.Instance.SelectedGraphicInstanceId = selectedId;
+            UIManager.Instance.SelectedGraphicInstance = treeView.SelectedItem as GraphicInstance;
         }
     }
 }

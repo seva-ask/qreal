@@ -9,10 +9,11 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using QReal.Controls;
+using QReal.Web.Database;
 
 namespace QReal
 {
-    public delegate void SelectedItemChangedHandler(int newId);
+    public delegate void SelectedItemChangedHandler(GraphicInstance newSelectedGraphicInstance);
 
     public class UIManager : DependencyObject
     {
@@ -48,21 +49,21 @@ namespace QReal
             }
         }
 
-        public int SelectedGraphicInstanceId
+        public GraphicInstance SelectedGraphicInstance
         {
-            get { return (int)GetValue(SelectedGraphicInstanceIdProperty); }
-            set { SetValue(SelectedGraphicInstanceIdProperty, value); }
+            get { return (GraphicInstance)GetValue(SelectedGraphicInstanceProperty); }
+            set { SetValue(SelectedGraphicInstanceProperty, value); }
         }
 
-        public static readonly DependencyProperty SelectedGraphicInstanceIdProperty =
-            DependencyProperty.Register("SelectedGraphicInstanceId", typeof(int), typeof(UIManager), new PropertyMetadata(-1, OnSelectedGraphicInstanceIdPropertyChanged));
+        public static readonly DependencyProperty SelectedGraphicInstanceProperty =
+            DependencyProperty.Register("SelectedGraphicInstance", typeof(GraphicInstance), typeof(UIManager), new PropertyMetadata(null, OnSelectedGraphicInstancePropertyChanged));
 
-        private static void OnSelectedGraphicInstanceIdPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        private static void OnSelectedGraphicInstancePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             UIManager uiManager = obj as UIManager;
             if (uiManager.SelectedItemChanged != null)
             {
-                uiManager.SelectedItemChanged(uiManager.SelectedGraphicInstanceId);
+                uiManager.SelectedItemChanged(uiManager.SelectedGraphicInstance);
             }
         }
 
