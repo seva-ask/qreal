@@ -11,7 +11,7 @@
     <EntitySet Name="GraphicInstances" EntityType="QRealModel.Store.GraphicInstances" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="GraphicInstances_GraphicVisualizedInstance" EntityType="QRealModel.Store.GraphicInstances_GraphicVisualizedInstance" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="GraphicInstances_NodeInstance" EntityType="QRealModel.Store.GraphicInstances_NodeInstance" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="GraphicInstances_LinkInstance" EntityType="QRealModel.Store.GraphicInstances_LinkInstance" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GraphicInstances_EdgeInstance" EntityType="QRealModel.Store.GraphicInstances_EdgeInstance" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="LogicalInstanceProperties" Association="QRealModel.Store.LogicalInstanceProperties">
       <End Role="LogicalInstance" EntitySet="LogicalInstances" />
       <End Role="InstanceProperty" EntitySet="InstanceProperties" />
@@ -26,11 +26,11 @@
     </AssociationSet>
     <AssociationSet Name="LinksFromNode" Association="QRealModel.Store.LinksFromNode">
       <End Role="NodeInstance" EntitySet="GraphicInstances_NodeInstance" />
-      <End Role="LinkInstance" EntitySet="GraphicInstances_LinkInstance" />
+      <End Role="LinkInstance" EntitySet="GraphicInstances_EdgeInstance" />
     </AssociationSet>
     <AssociationSet Name="LinksToNode" Association="QRealModel.Store.LinksToNode">
       <End Role="NodeInstance" EntitySet="GraphicInstances_NodeInstance" />
-      <End Role="LinkInstance" EntitySet="GraphicInstances_LinkInstance" />
+      <End Role="LinkInstance" EntitySet="GraphicInstances_EdgeInstance" />
     </AssociationSet>
     <AssociationSet Name="FK_GraphicVisualizedInstance_inherits_GraphicInstance" Association="QRealModel.Store.FK_GraphicVisualizedInstance_inherits_GraphicInstance">
       <End Role="GraphicInstance" EntitySet="GraphicInstances" />
@@ -40,9 +40,9 @@
       <End Role="GraphicVisualizedInstance" EntitySet="GraphicInstances_GraphicVisualizedInstance" />
       <End Role="NodeInstance" EntitySet="GraphicInstances_NodeInstance" />
     </AssociationSet>
-    <AssociationSet Name="FK_LinkInstance_inherits_GraphicVisualizedInstance" Association="QRealModel.Store.FK_LinkInstance_inherits_GraphicVisualizedInstance">
+    <AssociationSet Name="FK_EdgeInstance_inherits_GraphicVisualizedInstance" Association="QRealModel.Store.FK_EdgeInstance_inherits_GraphicVisualizedInstance">
       <End Role="GraphicVisualizedInstance" EntitySet="GraphicInstances_GraphicVisualizedInstance" />
-      <End Role="LinkInstance" EntitySet="GraphicInstances_LinkInstance" />
+      <End Role="EdgeInstance" EntitySet="GraphicInstances_EdgeInstance" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="LogicalInstances">
@@ -86,7 +86,7 @@
     </Key>
     <Property Name="Id" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="GraphicInstances_LinkInstance">
+  <EntityType Name="GraphicInstances_EdgeInstance">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
@@ -134,7 +134,7 @@
   </Association>
   <Association Name="LinksFromNode">
     <End Role="NodeInstance" Type="QRealModel.Store.GraphicInstances_NodeInstance" Multiplicity="0..1" />
-    <End Role="LinkInstance" Type="QRealModel.Store.GraphicInstances_LinkInstance" Multiplicity="*" />
+    <End Role="LinkInstance" Type="QRealModel.Store.GraphicInstances_EdgeInstance" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="NodeInstance">
         <PropertyRef Name="Id" />
@@ -146,7 +146,7 @@
   </Association>
   <Association Name="LinksToNode">
     <End Role="NodeInstance" Type="QRealModel.Store.GraphicInstances_NodeInstance" Multiplicity="0..1" />
-    <End Role="LinkInstance" Type="QRealModel.Store.GraphicInstances_LinkInstance" Multiplicity="*" />
+    <End Role="LinkInstance" Type="QRealModel.Store.GraphicInstances_EdgeInstance" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="NodeInstance">
         <PropertyRef Name="Id" />
@@ -180,14 +180,14 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_LinkInstance_inherits_GraphicVisualizedInstance">
+  <Association Name="FK_EdgeInstance_inherits_GraphicVisualizedInstance">
     <End Role="GraphicVisualizedInstance" Type="QRealModel.Store.GraphicInstances_GraphicVisualizedInstance" Multiplicity="1" />
-    <End Role="LinkInstance" Type="QRealModel.Store.GraphicInstances_LinkInstance" Multiplicity="0..1" />
+    <End Role="EdgeInstance" Type="QRealModel.Store.GraphicInstances_EdgeInstance" Multiplicity="0..1" />
     <ReferentialConstraint>
       <Principal Role="GraphicVisualizedInstance">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="LinkInstance">
+      <Dependent Role="EdgeInstance">
         <PropertyRef Name="Id" />
       </Dependent>
     </ReferentialConstraint>
@@ -265,7 +265,7 @@
           <NavigationProperty Name="LinksFrom" Relationship="QRealModel.LinksFromNode" FromRole="NodeInstance" ToRole="LinkInstance" />
           <NavigationProperty Name="LinksTo" Relationship="QRealModel.LinksToNode" FromRole="NodeInstance" ToRole="LinkInstance" />
         </EntityType>
-        <EntityType Name="LinkInstance" BaseType="QRealModel.GraphicVisualizedInstance" >
+        <EntityType Name="EdgeInstance" BaseType="QRealModel.GraphicVisualizedInstance" >
           <Property Type="Double" Name="PortFrom" Nullable="true" />
           <Property Type="Double" Name="PortTo" Nullable="true" />
           <NavigationProperty Name="NodeFrom" Relationship="QRealModel.LinksFromNode" FromRole="LinkInstance" ToRole="NodeInstance" />
@@ -308,7 +308,7 @@
         </Association>
         <Association Name="LinksFromNode">
           <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="0..1" />
-          <End Type="QRealModel.LinkInstance" Role="LinkInstance" Multiplicity="*" />
+          <End Type="QRealModel.EdgeInstance" Role="LinkInstance" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="NodeInstance">
               <PropertyRef Name="Id" />
@@ -320,7 +320,7 @@
         </Association>
         <Association Name="LinksToNode">
           <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="0..1" />
-          <End Type="QRealModel.LinkInstance" Role="LinkInstance" Multiplicity="*" />
+          <End Type="QRealModel.EdgeInstance" Role="LinkInstance" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="NodeInstance">
               <PropertyRef Name="Id" />
@@ -377,8 +377,8 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
-      <EntityTypeMapping TypeName="IsTypeOf(QRealModel.LinkInstance)">
-        <MappingFragment StoreEntitySet="GraphicInstances_LinkInstance">
+      <EntityTypeMapping TypeName="IsTypeOf(QRealModel.EdgeInstance)">
+        <MappingFragment StoreEntitySet="GraphicInstances_EdgeInstance">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="PortFrom" ColumnName="PortFrom" />
           <ScalarProperty Name="PortTo" ColumnName="PortTo" />
@@ -413,21 +413,21 @@
           <ConnectorPoint PointX="2.125" PointY="5.2879850260416665" />
           <ConnectorPoint PointX="2.125" PointY="5.875" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="QRealModel.GraphicVisualizedInstance" Width="1.5" PointX="5.625" PointY="3.625" Height="1.7879850260416665" />
+        <EntityTypeShape EntityType="QRealModel.GraphicVisualizedInstance" Width="1.5" PointX="5.75" PointY="3.625" Height="2.1725878906249996" />
         <EntityTypeShape EntityType="QRealModel.NodeInstance" Width="1.5" PointX="8.125" PointY="3.125" Height="1.0187792968749996" />
         <InheritanceConnector EntityType="QRealModel.NodeInstance" ManuallyRouted="false" >
-          <ConnectorPoint PointX="7.125" PointY="4.047473468913898" />
-          <ConnectorPoint PointX="7.5" PointY="4.047473468913898" />
-          <ConnectorPoint PointX="7.5" PointY="4.0448573286197869" />
-          <ConnectorPoint PointX="8.125" PointY="4.0448573286197869" />
+          <ConnectorPoint PointX="7.25" PointY="4.0766910807291659" />
+          <ConnectorPoint PointX="8.125" PointY="4.0766910807291659" />
         </InheritanceConnector>
-        <EntityTypeShape EntityType="QRealModel.LinkInstance" Width="1.5" PointX="8.125" PointY="5.25" Height="1.4033821614583326" />
-        <InheritanceConnector EntityType="QRealModel.LinkInstance" ManuallyRouted="false" >
-          <ConnectorPoint PointX="7.125" PointY="5.5237939453125" />
-          <ConnectorPoint PointX="8.125" PointY="5.5237939453125" />
+        <EntityTypeShape EntityType="QRealModel.EdgeInstance" Width="1.5" PointX="8.25" PointY="5.25" Height="2.1725878906249996" />
+        <InheritanceConnector EntityType="QRealModel.EdgeInstance" ManuallyRouted="false" >
+          <ConnectorPoint PointX="7.25" PointY="4.968391485677083" />
+          <ConnectorPoint PointX="7.625" PointY="4.968391485677083" />
+          <ConnectorPoint PointX="7.625" PointY="5.9318831838688384" />
+          <ConnectorPoint PointX="8.25" PointY="5.9318831838688384" />
         </InheritanceConnector>
         <EntityTypeShape EntityType="QRealModel.GraphicInstance" Width="1.5" PointX="3.625" PointY="3.75" Height="1.2110807291666665" />
-        <InheritanceConnector EntityType="QRealModel.LinkInstance">
+        <InheritanceConnector EntityType="QRealModel.EdgeInstance">
           <ConnectorPoint PointX="5.625" PointY="4.9575998126993035" />
           <ConnectorPoint PointX="7.2604156666666668" PointY="4.9575998126993026" />
           <ConnectorPoint PointX="7.4270823333333329" PointY="4.9575998126993035" />
@@ -439,8 +439,8 @@
           <ConnectorPoint PointX="7.125" PointY="4.0766910807291659" />
         </InheritanceConnector>
         <InheritanceConnector EntityType="QRealModel.GraphicVisualizedInstance" ManuallyRouted="false">
-          <ConnectorPoint PointX="5.125" PointY="4.547841796875" />
-          <ConnectorPoint PointX="5.625" PointY="4.547841796875" />
+          <ConnectorPoint PointX="5.125" PointY="4.9479166666666661" />
+          <ConnectorPoint PointX="5.75" PointY="4.9479166666666661" />
         </InheritanceConnector>
         <InheritanceConnector EntityType="QRealModel.GraphicVisualizedInstance">
           <ConnectorPoint PointX="5.125" PointY="4.3555403645833337" />
@@ -454,21 +454,21 @@
           <ConnectorPoint PointX="7.125" PointY="3.7593896484375" />
           <ConnectorPoint PointX="8.125" PointY="3.7593896484375" />
         </InheritanceConnector>
-        <InheritanceConnector EntityType="QRealModel.LinkInstance">
+        <InheritanceConnector EntityType="QRealModel.EdgeInstance">
           <ConnectorPoint PointX="7.125" PointY="5.2191121921532924" />
           <ConnectorPoint PointX="8.125" PointY="5.2191121921532924" />
         </InheritanceConnector>
         <AssociationConnector Association="QRealModel.GraphicParents">
-          <ConnectorPoint PointX="5.625" PointY="4.2498514811197916" />
-          <ConnectorPoint PointX="5.125" PointY="4.2498514811197916" />
+          <ConnectorPoint PointX="5.75" PointY="4.286458333333333" />
+          <ConnectorPoint PointX="5.125" PointY="4.286458333333333" />
         </AssociationConnector>
         <AssociationConnector Association="QRealModel.LinksFromNode">
-          <ConnectorPoint PointX="8.875" PointY="4.3360807291666665" />
-          <ConnectorPoint PointX="8.875" PointY="5.25" />
+          <ConnectorPoint PointX="8.6222812387890677" PointY="4.5283821614583326" />
+          <ConnectorPoint PointX="8.6222812387890677" PointY="5.25" />
         </AssociationConnector>
         <AssociationConnector Association="QRealModel.LinksToNode">
-          <ConnectorPoint PointX="9.203125" PointY="4.5283821614583326" />
-          <ConnectorPoint PointX="9.203125" PointY="5.25" />
+          <ConnectorPoint PointX="9.34375" PointY="4.5283821614583326" />
+          <ConnectorPoint PointX="9.34375" PointY="5.25" />
         </AssociationConnector>
       </Diagram>
     </Diagrams>
