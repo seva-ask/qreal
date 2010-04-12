@@ -60,7 +60,7 @@ namespace QReal.Controls
             objectType.MouseLeftButtonDown += new MouseButtonEventHandler(objectType_MouseLeftButtonDown);
             Binding bindingSelected = new Binding();
             bindingSelected.Mode = BindingMode.TwoWay;
-            bindingSelected.Path = new PropertyPath("SelectedGraphicInstanceId");
+            bindingSelected.Path = new PropertyPath("SelectedGraphicInstance");
             bindingSelected.Source = UIManager.Instance;
             bindingSelected.Converter = new IdToSelectedConverter(objectType);
             objectType.SetBinding(ObjectType.SelectedProperty, bindingSelected);
@@ -69,20 +69,20 @@ namespace QReal.Controls
 
         private void objectType_ZIndexChanged(ObjectType objectType, int newZIndex)
         {
-            foreach (var item in GetChildren(objectType.Id))
+            foreach (var item in GetChildren(objectType))
             {
                 item.SetZIndex(newZIndex);
             }
         }
 
-        private IEnumerable<ObjectType> GetChildren(int parentId)
+        private IEnumerable<ObjectType> GetChildren(ObjectType parent)
         {
-            NodeInstance nodeInstance = InstancesManager.Instance.InstancesContext.GraphicInstances.Single(item => item.Id == parentId) as NodeInstance;
+            NodeInstance nodeInstance = parent.DataContext as NodeInstance;
             if (nodeInstance != null)
             {
                 foreach (var child in nodeInstance.Children)
                 {
-                    yield return GetObjectTypes().Single(item => item.Id == child.Id);
+                    yield return GetObjectTypes().Single(item => item.DataContext == child);
                 }                
             }
         }
@@ -129,13 +129,13 @@ namespace QReal.Controls
                 xmlns=""http://schemas.microsoft.com/client/2007""
                 xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @""">
                 <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">
-                    <controls:" + type.Name + @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" Id=""{Binding Id, Mode=TwoWay}"" ElementName=""{Binding LogicalInstance.Name, Mode=TwoWay}"" " + GetSizeBinding(type) +  @" />
+                    <controls:" + type.Name + @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" " + GetTypeSpecificBinding(type) +  @" />
                 </Canvas>
                 </DataTemplate>";
             return (DataTemplate)XamlReader.Load(xaml);
         }
 
-        private string GetSizeBinding(Type type)
+        private string GetTypeSpecificBinding(Type type)
         {
             if (type.IsSubclassOf(typeof(NodeType)))
             {
@@ -143,7 +143,7 @@ namespace QReal.Controls
             }
             else
             {
-                return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}""";
+                return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}"" PortTo=""{Binding PortTo, Mode=TwoWay}"" PortFrom=""{Binding PortFrom, Mode=TwoWay}"" NodeToId=""{Binding NodeToId, Mode=TwoWay}"" NodeFromId=""{Binding NodeFromId, Mode=TwoWay}""";
             }
         }
     }
