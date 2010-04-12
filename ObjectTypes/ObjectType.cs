@@ -72,7 +72,12 @@ namespace ObjectTypes
 
                 mouseY = e.GetPosition(null).Y;
                 mouseX = e.GetPosition(null).X;
+                OnMoving(deltaX, deltaY);
             }
+        }
+
+        protected virtual void OnMoving(double deltaX, double deltaY)
+        {
         }
 
         private double previousMouseX = -1;
