@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows.Controls;
 using QReal.Web.Database;
-using QReal.Types;
+using QReal.Ria.Types;
 using ObjectTypes;
 using System.Windows.Data;
 using System;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Windows.Threading;
 using System.ServiceModel.DomainServices.Client;
 using System.Windows;
-using QReal.Database;
+using QReal.Ria.Database;
 using System.Threading;
 using System.Windows.Media;
 using QReal.Controls;
@@ -46,9 +46,9 @@ namespace QReal
 
         private void InitializeToolBox()
         {
-            TypeManager.Instance.Request(delegate()
+            TypeLoader.Instance.Request(delegate()
             {
-                toolboxDiagramComboBox.ItemsSource = TypeManager.Instance.Objects.Keys;
+                toolboxDiagramComboBox.ItemsSource = TypeLoader.Instance.Objects.Keys;
                 toolboxDiagramComboBox.SelectedIndex = 0;
             });
         }
@@ -56,7 +56,7 @@ namespace QReal
         private void toolboxDiagramComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string diagram = (string) toolboxDiagramComboBox.SelectedItem;
-            toolboxObjectsDataGrid.ItemsSource = TypeManager.Instance.Objects[diagram].TypeList;
+            toolboxObjectsDataGrid.ItemsSource = TypeLoader.Instance.Objects[diagram].TypeList;
         }
 
         private void button1_Click(object sender, System.Windows.RoutedEventArgs e)

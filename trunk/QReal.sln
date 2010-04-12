@@ -14,6 +14,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectTypes", "ObjectTypes\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KernelDiagram", "KernelDiagram\KernelDiagram.csproj", "{5A364621-8AB5-427E-9482-B2C1ACF03B91}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QReal.Ria", "QReal.Ria\QReal.Ria.csproj", "{96028304-20A9-4573-A0DA-6C810348BBCE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{397BE4C2-011A-4843-88CE-F83B35981187} = {397BE4C2-011A-4843-88CE-F83B35981187}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +41,10 @@ Global
 		{5A364621-8AB5-427E-9482-B2C1ACF03B91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A364621-8AB5-427E-9482-B2C1ACF03B91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A364621-8AB5-427E-9482-B2C1ACF03B91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96028304-20A9-4573-A0DA-6C810348BBCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96028304-20A9-4573-A0DA-6C810348BBCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96028304-20A9-4573-A0DA-6C810348BBCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96028304-20A9-4573-A0DA-6C810348BBCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

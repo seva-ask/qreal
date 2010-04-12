@@ -29,7 +29,8 @@
     <OutOfBrowserSettingsFile>Properties\OutOfBrowserSettings.xml</OutOfBrowserSettingsFile>
     <UsePlatformExtensions>false</UsePlatformExtensions>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
-    <LinkedServerProject>..\QReal.Web\QReal.Web.csproj</LinkedServerProject>
+    <LinkedServerProject>
+    </LinkedServerProject>
   </PropertyGroup>
   <!-- This property group is only here to support building this project using the 
        MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
@@ -86,13 +87,10 @@
     <Compile Include="Controls\CanvasDDTarget.cs" />
     <Compile Include="Controls\CanvasItemsControl.cs" />
     <Compile Include="Controls\IdToSelectedConverter.cs" />
-    <Compile Include="Database\InstancesManager.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Types\DiagramWithTypes.cs" />
-    <Compile Include="Types\TypeManager.cs" />
     <Compile Include="TypeToIconConverter.cs" />
     <Compile Include="UIManager.cs" />
   </ItemGroup>
@@ -113,6 +111,10 @@
     <ProjectReference Include="..\ObjectTypes\ObjectTypes.csproj">
       <Project>{B4B82D97-9328-48C8-8202-DAA0BA72D12A}</Project>
       <Name>ObjectTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QReal.Ria\QReal.Ria.csproj">
+      <Project>{96028304-20A9-4573-A0DA-6C810348BBCE}</Project>
+      <Name>QReal.Ria</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
