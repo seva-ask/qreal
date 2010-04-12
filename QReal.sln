@@ -11,6 +11,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagrams", "Diagrams", "{1DE5899C-B8BF-4048-8910-E749801B9610}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectTypes", "ObjectTypes\ObjectTypes.csproj", "{B4B82D97-9328-48C8-8202-DAA0BA72D12A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{397BE4C2-011A-4843-88CE-F83B35981187} = {397BE4C2-011A-4843-88CE-F83B35981187}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KernelDiagram", "KernelDiagram\KernelDiagram.csproj", "{5A364621-8AB5-427E-9482-B2C1ACF03B91}"
 EndProject
