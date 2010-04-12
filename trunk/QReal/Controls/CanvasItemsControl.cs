@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Windows.Data;
 using QReal.Web.Database;
 using QReal.Ria.Types;
+using QReal.Types;
 
 namespace QReal.Controls
 {
@@ -43,7 +44,7 @@ namespace QReal.Controls
             if (graphicInstance.LogicalInstance != null)
             {
                 TypeLoader.Instance.Request(() =>
-                contentPresenter.ContentTemplate = Create(TypeLoader.Instance.Objects["Kernel Diagram"][graphicInstance.LogicalInstance.Type]));
+                contentPresenter.ContentTemplate = Create(TypesProxy.GetType(graphicInstance.LogicalInstance.Type)));
             }
             contentPresenter.Loaded += new RoutedEventHandler(contentPresenter_Loaded);
         }
@@ -52,7 +53,7 @@ namespace QReal.Controls
         {
             ContentPresenter contentPresenter = sender as ContentPresenter;
             GraphicInstance graphicInstance = contentPresenter.Content as GraphicInstance;
-            TypeLoader.Instance.InitProperties(graphicInstance);
+            TypesProxy.InitProperties(graphicInstance);
             Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
             SetPropertyBindings(graphicInstance, objectType);

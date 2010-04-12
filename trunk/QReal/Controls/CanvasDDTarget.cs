@@ -14,6 +14,7 @@ using QReal.Ria.Types;
 using QReal.Web.Database;
 using QReal.Ria.Database;
 using System.Diagnostics;
+using QReal.Types;
 
 namespace QReal.Controls
 {
@@ -67,13 +68,13 @@ namespace QReal.Controls
         protected override void OnDropOverride(Microsoft.Windows.DragEventArgs args)
         {
             ItemDragEventArgs rawObject = args.Data.GetData(args.Data.GetFormats()[0]) as ItemDragEventArgs;
-            string typeName = (rawObject.Data as System.Collections.ObjectModel.SelectionCollection).First().Item as string;
+            Type type = (rawObject.Data as System.Collections.ObjectModel.SelectionCollection).First().Item as Type;
             LogicalInstance logicalInstance = new LogicalInstance();
-            logicalInstance.Name = "anonymous " + typeName;
-            logicalInstance.Type = typeName;
+            logicalInstance.Name = "anonymous " + (Activator.CreateInstance(type) as ObjectType).TypeName;
+            logicalInstance.Type = type.FullName;
             InstancesManager.Instance.InstancesContext.LogicalInstances.Add(logicalInstance);
             GraphicVisualizedInstance graphicVisualizedInstance = null;
-            if (TypeLoader.Instance.Objects["Kernel Diagram"][typeName].IsSubclassOf(typeof(NodeType)))
+            if (type.IsSubclassOf(typeof(NodeType)))
             {
                 graphicVisualizedInstance = new NodeInstance();
             }

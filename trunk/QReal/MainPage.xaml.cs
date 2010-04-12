@@ -15,6 +15,7 @@ using QReal.Ria.Database;
 using System.Threading;
 using System.Windows.Media;
 using QReal.Controls;
+using QReal.Types;
 
 namespace QReal
 {
@@ -48,7 +49,7 @@ namespace QReal
         {
             TypeLoader.Instance.Request(delegate()
             {
-                toolboxDiagramComboBox.ItemsSource = TypeLoader.Instance.Objects.Keys;
+                toolboxDiagramComboBox.ItemsSource = TypesProxy.Diagrams;
                 toolboxDiagramComboBox.SelectedIndex = 0;
             });
         }
@@ -56,7 +57,7 @@ namespace QReal
         private void toolboxDiagramComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string diagram = (string) toolboxDiagramComboBox.SelectedItem;
-            toolboxObjectsDataGrid.ItemsSource = TypeLoader.Instance.Objects[diagram].TypeList;
+            toolboxObjectsDataGrid.ItemsSource = TypesProxy.GetDiagramTypes(diagram);
         }
 
         private void button1_Click(object sender, System.Windows.RoutedEventArgs e)
