@@ -11,11 +11,12 @@
     xmlns:controlsDataToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Toolkit"
     xmlns:local="clr-namespace:QReal"
     xmlns:localControls="clr-namespace:QReal.Controls"
-    xmlns:localDatabase="clr-namespace:QReal.Database"
+    xmlns:localDatabase="clr-namespace:QReal.Ria.Database;assembly=QReal.Ria"
     x:Class="QReal.MainPage"
     d:DesignWidth="640" d:DesignHeight="480">
     <UserControl.Resources>
         <localDatabase:InstancesManager x:Key="InstancesManager"/>
+        <local:UIManager x:Key="UIManager"/>
     </UserControl.Resources>
     <Grid x:Name="LayoutRoot">
         <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" Background="#FFE60D0D" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.TreeviewInstancesSource, Mode=TwoWay}" SelectedItemChanged="treeView_SelectedItemChanged">
@@ -31,7 +32,7 @@
                 </common:HierarchicalDataTemplate>
             </controls:TreeView.ItemTemplate>
         </controls:TreeView>
-        <data:DataGrid x:Name="propertiesDataGrid" Height="170" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="151" Background="#FFE01AF0" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.InstancePropertiesSource, Mode=TwoWay}" AutoGenerateColumns="False">
+        <data:DataGrid x:Name="propertiesDataGrid" Height="170" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="151" Background="#FFE01AF0" ItemsSource="{Binding Source={StaticResource UIManager}, Path=Instance.InstancePropertiesSource, Mode=TwoWay}" AutoGenerateColumns="False">
         	<data:DataGrid.Columns>
         		<data:DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Name" IsReadOnly="True"/>
         		<data:DataGridTextColumn Binding="{Binding Value, Mode=TwoWay}" Header="Value"/>

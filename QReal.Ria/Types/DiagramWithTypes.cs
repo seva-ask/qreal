@@ -9,9 +9,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
-using ObjectTypes;
 
-namespace QReal.Types
+namespace QReal.Ria.Types
 {
     public class DiagramWithTypes
     {
@@ -23,14 +22,6 @@ namespace QReal.Types
             mDiagram = diagram;
             mTypes = types;
         }
-
-        //public ObjectType this[string typeName]
-        //{
-        //    get
-        //    {
-        //        return (ObjectType)Activator.CreateInstance(mTypes[typeName]);
-        //    }
-        //}
 
         public Type this[string typeName]
         {

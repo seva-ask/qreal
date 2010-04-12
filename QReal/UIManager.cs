@@ -10,6 +10,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using QReal.Controls;
 using QReal.Web.Database;
+using System.Collections.Generic;
+using QReal.Ria.Database;
+using System.Linq;
 
 namespace QReal
 {
@@ -17,9 +20,6 @@ namespace QReal
 
     public class UIManager : DependencyObject
     {
-        private UIManager()
-        {}
-
         private static UIManager instance = new UIManager();
 
         public static UIManager Instance
@@ -65,8 +65,27 @@ namespace QReal
             {
                 uiManager.SelectedItemChanged(uiManager.SelectedGraphicInstance);
             }
+            if (uiManager.SelectedGraphicInstance != null)
+            {
+                uiManager.InstancePropertiesSource = InstancesManager.Instance.InstancesContext.InstanceProperties.Where(item => item.LogicalInstance == uiManager.SelectedGraphicInstance.LogicalInstance);
+            }
+            else
+            {
+                uiManager.InstancePropertiesSource = null;
+            }
         }
 
         public event SelectedItemChangedHandler SelectedItemChanged;
+
+        public IEnumerable<InstanceProperty> InstancePropertiesSource
+        {
+            get { return (IEnumerable<InstanceProperty>)GetValue(InstancePropertiesSourceProperty); }
+            set { SetValue(InstancePropertiesSourceProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for InstancePropertiesSource.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty InstancePropertiesSourceProperty =
+            DependencyProperty.Register("InstancePropertiesSource", typeof(IEnumerable<InstanceProperty>), typeof(UIManager), null);
+
     }
 }

@@ -10,9 +10,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Linq;
 using ObjectTypes;
-using QReal.Types;
+using QReal.Ria.Types;
 using QReal.Web.Database;
-using QReal.Database;
+using QReal.Ria.Database;
 using System.Diagnostics;
 
 namespace QReal.Controls
@@ -73,7 +73,7 @@ namespace QReal.Controls
             logicalInstance.Type = typeName;
             InstancesManager.Instance.InstancesContext.LogicalInstances.Add(logicalInstance);
             GraphicVisualizedInstance graphicVisualizedInstance = null;
-            if (TypeManager.Instance.Objects["Kernel Diagram"][typeName].IsSubclassOf(typeof(NodeType)))
+            if (TypeLoader.Instance.Objects["Kernel Diagram"][typeName].IsSubclassOf(typeof(NodeType)))
             {
                 graphicVisualizedInstance = new NodeInstance();
             }

@@ -10,13 +10,12 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Markup;
 using System.Linq;
-using QReal.Types;
-using QReal.Web.Database;
 using ObjectTypes;
 using System.Collections.Generic;
-using QReal.Database;
 using System.Reflection;
 using System.Windows.Data;
+using QReal.Web.Database;
+using QReal.Ria.Types;
 
 namespace QReal.Controls
 {
@@ -43,8 +42,8 @@ namespace QReal.Controls
             ContentPresenter contentPresenter = element as ContentPresenter;
             if (graphicInstance.LogicalInstance != null)
             {
-                TypeManager.Instance.Request(() =>
-                contentPresenter.ContentTemplate = Create(TypeManager.Instance.Objects["Kernel Diagram"][graphicInstance.LogicalInstance.Type]));
+                TypeLoader.Instance.Request(() =>
+                contentPresenter.ContentTemplate = Create(TypeLoader.Instance.Objects["Kernel Diagram"][graphicInstance.LogicalInstance.Type]));
             }
             contentPresenter.Loaded += new RoutedEventHandler(contentPresenter_Loaded);
         }
@@ -53,7 +52,7 @@ namespace QReal.Controls
         {
             ContentPresenter contentPresenter = sender as ContentPresenter;
             GraphicInstance graphicInstance = contentPresenter.Content as GraphicInstance;
-            InstancesManager.Instance.InitProperties(graphicInstance);
+            TypeLoader.Instance.InitProperties(graphicInstance);
             Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
             SetPropertyBindings(graphicInstance, objectType);
