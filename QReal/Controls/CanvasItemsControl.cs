@@ -77,10 +77,13 @@ namespace QReal.Controls
 
         private IEnumerable<ObjectType> GetChildren(int parentId)
         {
-            GraphicInstance graphicInstance = InstancesManager.Instance.InstancesContext.GraphicInstances.Single(item => item.Id == parentId);
-            foreach (var child in graphicInstance.Children)
+            NodeInstance nodeInstance = InstancesManager.Instance.InstancesContext.GraphicInstances.Single(item => item.Id == parentId) as NodeInstance;
+            if (nodeInstance != null)
             {
-                yield return GetObjectTypes().Single(item => item.Id == child.Id);
+                foreach (var child in nodeInstance.Children)
+                {
+                    yield return GetObjectTypes().Single(item => item.Id == child.Id);
+                }                
             }
         }
 

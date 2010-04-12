@@ -41,11 +41,14 @@ namespace QReal.Controls
                     double deltaY;
                     double deltaX;
                     objectType.GetDeltaMouseMove(e, out deltaY, out deltaX);
-                    GraphicInstance graphicInstance = (this.Content as CanvasItemsControl).Items.Single(item => (item as GraphicInstance).Id == objectType.Id) as GraphicInstance;
-                    foreach (var instanceChild in graphicInstance.Children)
+                    NodeInstance nodeInstance = (this.Content as CanvasItemsControl).Items.Single(item => (item as GraphicInstance).Id == objectType.Id) as NodeInstance;
+                    if (nodeInstance != null)
                     {
-                        instanceChild.X += deltaX;
-                        instanceChild.Y += deltaY;
+                        foreach (var instanceChild in nodeInstance.Children)
+                        {
+                            instanceChild.X += deltaX;
+                            instanceChild.Y += deltaY;
+                        }
                     }
                 }
             }
@@ -69,32 +72,40 @@ namespace QReal.Controls
             logicalInstance.Name = "anonymous " + typeName;
             logicalInstance.Type = typeName;
             InstancesManager.Instance.InstancesContext.LogicalInstances.Add(logicalInstance);
-            GraphicInstance graphicInstance = new GraphicInstance();
-            graphicInstance.LogicalInstance = logicalInstance;
+            GraphicVisualizedInstance graphicVisualizedInstance = null;
+            if (TypeManager.Instance.Objects["Kernel Diagram"][typeName].IsSubclassOf(typeof(NodeType)))
+            {
+                graphicVisualizedInstance = new NodeInstance();
+            }
+            else
+            {
+                graphicVisualizedInstance = new LinkInstance();
+            }
+            graphicVisualizedInstance.LogicalInstance = logicalInstance;
             Point position = args.GetPosition(this);
-            graphicInstance.Parent = FindParent(position, graphicInstance);
-            graphicInstance.X = position.X;
-            graphicInstance.Y = position.Y;
-            graphicInstance.Width = 200;
-            graphicInstance.Height = 200;
-            InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicInstance);
-            InstancesManager.Instance.UpdateProperties();
+            graphicVisualizedInstance.Parent = FindParent(position, graphicVisualizedInstance);
+            graphicVisualizedInstance.X = position.X;
+            graphicVisualizedInstance.Y = position.Y;
+            graphicVisualizedInstance.Width = 200;
+            graphicVisualizedInstance.Height = 200;
+            InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicVisualizedInstance);
             InstancesManager.Instance.InstancesContext.SubmitChanges(); // to get id for new instance
+            InstancesManager.Instance.UpdateProperties();
         }
 
-        private GraphicInstance FindParent(Point position, GraphicInstance instance)
+        private NodeInstance FindParent(Point position, GraphicInstance instance)
         {
             foreach (var item in (this.Content as CanvasItemsControl).Items)
             {
-                GraphicInstance graphicInstance = item as GraphicInstance;
-                if (graphicInstance == instance)
+                NodeInstance nodeInstance = item as NodeInstance;
+                if ((nodeInstance == null) || (nodeInstance == instance))
                 {
                     continue;
                 }
-                Rect itemBoundingRect = new Rect(graphicInstance.X, graphicInstance.Y, graphicInstance.Width, graphicInstance.Height);
+                Rect itemBoundingRect = new Rect(nodeInstance.X, nodeInstance.Y, nodeInstance.Width, nodeInstance.Height);
                 if (itemBoundingRect.Contains(position))
                 {
-                    return graphicInstance;
+                    return nodeInstance;
                 }
             }
             return null;
@@ -108,11 +119,11 @@ namespace QReal.Controls
             double topBound = double.PositiveInfinity;
             foreach (var item in (this.Content as CanvasItemsControl).Items)
             {
-                GraphicInstance graphicInstance = item as GraphicInstance;
-                rightBound = Math.Max(rightBound, graphicInstance.X + graphicInstance.Width + 10);
-                leftBound = Math.Min(leftBound, graphicInstance.X - 10);
-                topBound = Math.Min(topBound, graphicInstance.Y - 10);
-                bottomBound = Math.Max(bottomBound, graphicInstance.Y + graphicInstance.Height + 10);
+                GraphicVisualizedInstance graphicVisualizedInstance = item as GraphicVisualizedInstance;
+                rightBound = Math.Max(rightBound, graphicVisualizedInstance.X + graphicVisualizedInstance.Width + 10);
+                leftBound = Math.Min(leftBound, graphicVisualizedInstance.X - 10);
+                topBound = Math.Min(topBound, graphicVisualizedInstance.Y - 10);
+                bottomBound = Math.Max(bottomBound, graphicVisualizedInstance.Y + graphicVisualizedInstance.Height + 10);
             }
             if (rightBound > this.Width)
             {
@@ -126,16 +137,16 @@ namespace QReal.Controls
             {
                 foreach (var item in (this.Content as CanvasItemsControl).Items)
                 {
-                    GraphicInstance graphicInstance = item as GraphicInstance;
-                    graphicInstance.X -= leftBound;
+                    GraphicVisualizedInstance graphicVisualizedInstance = item as GraphicVisualizedInstance;
+                    graphicVisualizedInstance.X -= leftBound;
                 }
             }
             if (topBound < 0)
             {
                 foreach (var item in (this.Content as CanvasItemsControl).Items)
                 {
-                    GraphicInstance graphicInstance = item as GraphicInstance;
-                    graphicInstance.Y -= topBound;
+                    GraphicVisualizedInstance graphicVisualizedInstance = item as GraphicVisualizedInstance;
+                    graphicVisualizedInstance.Y -= topBound;
                 }
             }
         }

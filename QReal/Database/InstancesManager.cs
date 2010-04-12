@@ -93,7 +93,7 @@ namespace QReal.Database
 
         public void UpdateProperties()
         {
-            TreeviewInstancesSource = InstancesContext.GraphicInstances.Where(instance => instance.Parent == null);
+            TreeviewInstancesSource = InstancesContext.GraphicInstances.Where(instance => (instance as GraphicVisualizedInstance).Parent == null);
             CanvasInstancesSource = InstancesContext.GraphicInstances;
         }
 
