@@ -139,7 +139,7 @@ namespace QReal.Controls
         {
             if (type.IsSubclassOf(typeof(NodeType)))
             {
-                return @"Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}""";
+                return @"Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}"" LinksFrom=""{Binding LinksFrom, Mode=TwoWay}"" LinksTo=""{Binding LinksTo, Mode=TwoWay}""";
             }
             else
             {

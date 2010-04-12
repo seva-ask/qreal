@@ -9,6 +9,9 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
+using System.Collections.Generic;
+using QReal.Web.Database;
+using System.Linq;
 
 namespace ObjectTypes
 {
@@ -46,5 +49,55 @@ namespace ObjectTypes
                 this.Height = newHeight;
             }
         }
+
+        protected override void OnMoving(double deltaX, double deltaY)
+        {
+            base.OnMoving(deltaX, deltaY);
+            Canvas canvas = VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(this.Parent)) as Canvas;
+            UIElementCollection children = canvas.Children;
+            foreach (var linkInstanceFrom in LinksFrom)
+            {
+                EdgeType linkFrom = GetEdgeType(children.Single(item =>
+                    {
+                        EdgeType edgeType = GetEdgeType(item);
+                        return edgeType == null ? false : edgeType.DataContext == linkInstanceFrom;
+                    }));
+                linkFrom.SetValue(Canvas.TopProperty, (double)linkFrom.GetValue(Canvas.TopProperty) + deltaY);
+                linkFrom.SetValue(Canvas.LeftProperty, (double)linkFrom.GetValue(Canvas.LeftProperty) + deltaX);
+            }           
+            foreach (var linkInstanceTo in LinksTo)
+            {
+                EdgeType linkFrom = GetEdgeType(children.Single(item =>
+                    {
+                        EdgeType edgeType = GetEdgeType(item);
+                        return edgeType == null ? false : edgeType.DataContext == linkInstanceTo;
+                    }));
+                linkFrom.Y2 += deltaY;
+                linkFrom.X2 += deltaX;
+            }
+        }
+
+        private EdgeType GetEdgeType(object item)
+        {
+            return (VisualTreeHelper.GetChild((item as ContentPresenter), 0) as Canvas).Children[0] as EdgeType;
+        }
+
+        public IEnumerable<EdgeInstance> LinksFrom
+        {
+            get { return (IEnumerable<EdgeInstance>)GetValue(LinksFromProperty); }
+            set { SetValue(LinksFromProperty, value); }
+        }
+
+        public static readonly DependencyProperty LinksFromProperty =
+            DependencyProperty.Register("LinksFrom", typeof(IEnumerable<EdgeInstance>), typeof(NodeType), null);
+
+        public IEnumerable<EdgeInstance> LinksTo
+        {
+            get { return (IEnumerable<EdgeInstance>)GetValue(LinksToProperty); }
+            set { SetValue(LinksToProperty, value); }
+        }
+
+        public static readonly DependencyProperty LinksToProperty =
+            DependencyProperty.Register("LinksTo", typeof(IEnumerable<EdgeInstance>), typeof(NodeType), null);
     }
 }
