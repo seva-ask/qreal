@@ -23,7 +23,7 @@ namespace QReal.Ria.Types
 
     public class TypeLoader
     {
-        public List<Type> Types { get; private set; }
+        private List<Type> types;
 
         private static TypeLoader instance = new TypeLoader();
 
@@ -37,7 +37,7 @@ namespace QReal.Ria.Types
 
         private TypeLoader()
         {
-            Types = new List<Type>();
+            types = new List<Type>();
             AssembliesContext assembliesContext = new AssembliesContext();
             assembliesContext.GetAssemblies(operation =>
             {
@@ -77,23 +77,7 @@ namespace QReal.Ria.Types
                 AssemblyPart part = new AssemblyPart();
                 Assembly assembly = part.Load(ms);
                 Type[] availableTypes = assembly.GetTypes();
-                Types.AddRange(availableTypes);
-             //   Type diagram = null;
-                //Dictionary<string, Type> types = new Dictionary<string, Type>();
-                //foreach (Type type in availableTypes)
-                //{
-                //    if (type.GetInterface(typeof(IDiagram).FullName, false) != null)
-                //    {
-                //        diagram = type;
-                //    }
-                //    if (type.IsSubclassOf(typeof(ObjectType)))
-                //    {
-                //        ObjectType tmpType = (ObjectType)Activator.CreateInstance(type);
-                //        types[tmpType.TypeName] = type;
-                //    }
-                //}
-                //string diagramName = ((IDiagram)Activator.CreateInstance(diagram)).Name;
-                //Objects[diagramName] = new DiagramWithTypes(diagram, types);
+                types.AddRange(availableTypes);
                 DecreaseReady();
             }, null);
         }
@@ -112,25 +96,12 @@ namespace QReal.Ria.Types
 
         List<LoadingComplete> actions = new List<LoadingComplete>();
 
-        public void InitProperties(GraphicInstance graphicInstance)
+        public IEnumerable<Type> Types
         {
-            //Type type = TypeLoader.Instance.Objects["Kernel Diagram"][graphicInstance.LogicalInstance.Type];
-            //var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
-            //foreach (var field in fields)
-            //{
-            //    if (field.FieldType == typeof(DependencyProperty))
-            //    {
-            //        string propertyName = field.Name.Substring(0, field.Name.LastIndexOf("Property"));
-            //        int count = graphicInstance.LogicalInstance.InstanceProperties.Count(property => property.Name == propertyName);
-            //        if (count == 0)
-            //        {
-            //            InstanceProperty instanceProperty = new InstanceProperty();
-            //            instanceProperty.Name = propertyName;
-            //            instanceProperty.LogicalInstance = graphicInstance.LogicalInstance;
-            //            graphicInstance.LogicalInstance.InstanceProperties.Add(instanceProperty);
-            //        }
-            //    }
-            //}
+            get
+            {
+                return types;
+            }
         }
     }
 }

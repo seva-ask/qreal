@@ -42,7 +42,26 @@
       		<dataInput:Label x:Name="toolboxLabel" Background="#FFF4F715" Margin="3,0,0,0" VerticalAlignment="Top" Content="Панель инструментов" HorizontalAlignment="Center"/>
       		<ComboBox x:Name="toolboxDiagramComboBox" Margin="0,16,0,0" VerticalAlignment="Top" SelectionChanged="toolboxDiagramComboBox_SelectionChanged"/>
             <controlsDataToolkit:DataGridDragDropTarget HorizontalAlignment="Left" x:Name="toolboxObjectsDataGridDDT" Width="151" Margin="0,36,0,0" RenderTransformOrigin="0.497,0.653">
-            	<data:DataGrid x:Name="toolboxObjectsDataGrid" Background="#FF31DC1A" HeadersVisibility="None" Height="{Binding ActualHeight, ElementName=toolboxObjectsDataGridDDT, Mode=OneWay}" Width="{Binding ActualWidth, ElementName=toolboxObjectsDataGridDDT, Mode=OneWay}"/>
+                <data:DataGrid x:Name="toolboxObjectsDataGrid" Background="#FF31DC1A" HeadersVisibility="None" Height="{Binding ActualHeight, ElementName=toolboxObjectsDataGridDDT, Mode=OneWay}" Width="{Binding ActualWidth, ElementName=toolboxObjectsDataGridDDT, Mode=OneWay}" GridLinesVisibility="Horizontal">
+                	<data:DataGrid.Resources>
+                        <local:ToolBoxTypeConverter x:Key="ToolBoxTypeConverter"/>
+                        <Style x:Key="toolboxDataGridRowStyle" TargetType="data:DataGridRow">
+                			<Setter Property="Template">
+                				<Setter.Value>
+                					<ControlTemplate TargetType="data:DataGridRow">
+                                    	<StackPanel Height="20" Orientation="Horizontal">
+                                        	<Image Height="20" Source="{Binding Mode=OneWay, Converter={StaticResource ToolBoxTypeConverter}, ConverterParameter=Icon}" HorizontalAlignment="Left" Width="25"/>
+                                       		<TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource ToolBoxTypeConverter}, ConverterParameter=Name}" Height="20"/>
+                                    	</StackPanel>
+                					</ControlTemplate>
+                				</Setter.Value>
+                			</Setter>
+                		</Style>
+                	</data:DataGrid.Resources>
+                	<data:DataGrid.RowStyle>
+                		<StaticResource ResourceKey="toolboxDataGridRowStyle"/>
+                	</data:DataGrid.RowStyle>
+                </data:DataGrid>
             </controlsDataToolkit:DataGridDragDropTarget>
         </Grid>
         <Button Content="Save" Height="23" HorizontalAlignment="Left" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click" />
