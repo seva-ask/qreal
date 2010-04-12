@@ -24,8 +24,7 @@ namespace QReal.Controls
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            int selectedId = (int)value;
-            return selectedId == objectType.Id;
+            return value == objectType.DataContext;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

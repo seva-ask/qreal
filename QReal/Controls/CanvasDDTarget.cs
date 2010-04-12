@@ -41,7 +41,7 @@ namespace QReal.Controls
                     double deltaY;
                     double deltaX;
                     objectType.GetDeltaMouseMove(e, out deltaY, out deltaX);
-                    NodeInstance nodeInstance = (this.Content as CanvasItemsControl).Items.Single(item => (item as GraphicInstance).Id == objectType.Id) as NodeInstance;
+                    NodeInstance nodeInstance = (this.Content as CanvasItemsControl).Items.Single(item => item as GraphicInstance == objectType.DataContext) as NodeInstance;
                     if (nodeInstance != null)
                     {
                         foreach (var instanceChild in nodeInstance.Children)
