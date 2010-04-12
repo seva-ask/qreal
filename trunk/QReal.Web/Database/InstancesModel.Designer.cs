@@ -18,9 +18,11 @@ using System.Runtime.Serialization;
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
 
-[assembly: EdmRelationshipAttribute("QRealModel", "FK_GraphicParents", "GraphicInstances", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.GraphicInstance), "GraphicInstances1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.GraphicInstance), true)]
-[assembly: EdmRelationshipAttribute("QRealModel", "FK_GraphicToLogical", "LogicalInstances", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.LogicalInstance), "GraphicInstances", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.GraphicInstance), true)]
-[assembly: EdmRelationshipAttribute("QRealModel", "FK_PropertiesToLogicalInstances", "LogicalInstances", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.LogicalInstance), "InstanceProperties", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.InstanceProperty), true)]
+[assembly: EdmRelationshipAttribute("QRealModel", "LogicalInstanceProperties", "LogicalInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.LogicalInstance), "InstanceProperty", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.InstanceProperty), true)]
+[assembly: EdmRelationshipAttribute("QRealModel", "GraphicToLogical", "GraphicInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.GraphicInstance), "LogicalInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.LogicalInstance), true)]
+[assembly: EdmRelationshipAttribute("QRealModel", "GraphicParents", "GraphicVisualizedInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.GraphicVisualizedInstance), "GraphicInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.GraphicInstance), true)]
+[assembly: EdmRelationshipAttribute("QRealModel", "LinksFromNode", "NodeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.NodeInstance), "LinkInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.LinkInstance), true)]
+[assembly: EdmRelationshipAttribute("QRealModel", "LinksToNode", "NodeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.NodeInstance), "LinkInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.LinkInstance), true)]
 
 #endregion
 
@@ -75,18 +77,18 @@ namespace QReal.Web.Database
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<GraphicInstance> GraphicInstances
+        public ObjectSet<LogicalInstance> LogicalInstances
         {
             get
             {
-                if ((_GraphicInstances == null))
+                if ((_LogicalInstances == null))
                 {
-                    _GraphicInstances = base.CreateObjectSet<GraphicInstance>("GraphicInstances");
+                    _LogicalInstances = base.CreateObjectSet<LogicalInstance>("LogicalInstances");
                 }
-                return _GraphicInstances;
+                return _LogicalInstances;
             }
         }
-        private ObjectSet<GraphicInstance> _GraphicInstances;
+        private ObjectSet<LogicalInstance> _LogicalInstances;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -107,28 +109,28 @@ namespace QReal.Web.Database
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<LogicalInstance> LogicalInstances
+        public ObjectSet<GraphicInstance> GraphicInstances
         {
             get
             {
-                if ((_LogicalInstances == null))
+                if ((_GraphicInstances == null))
                 {
-                    _LogicalInstances = base.CreateObjectSet<LogicalInstance>("LogicalInstances");
+                    _GraphicInstances = base.CreateObjectSet<GraphicInstance>("GraphicInstances");
                 }
-                return _LogicalInstances;
+                return _GraphicInstances;
             }
         }
-        private ObjectSet<LogicalInstance> _LogicalInstances;
+        private ObjectSet<GraphicInstance> _GraphicInstances;
 
         #endregion
         #region AddTo Methods
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the GraphicInstances EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the LogicalInstances EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToGraphicInstances(GraphicInstance graphicInstance)
+        public void AddToLogicalInstances(LogicalInstance logicalInstance)
         {
-            base.AddObject("GraphicInstances", graphicInstance);
+            base.AddObject("LogicalInstances", logicalInstance);
         }
     
         /// <summary>
@@ -140,11 +142,11 @@ namespace QReal.Web.Database
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the LogicalInstances EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the GraphicInstances EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToLogicalInstances(LogicalInstance logicalInstance)
+        public void AddToGraphicInstances(GraphicInstance graphicInstance)
         {
-            base.AddObject("LogicalInstances", logicalInstance);
+            base.AddObject("GraphicInstances", graphicInstance);
         }
 
         #endregion
@@ -161,6 +163,7 @@ namespace QReal.Web.Database
     [EdmEntityTypeAttribute(NamespaceName="QRealModel", Name="GraphicInstance")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
+    [KnownTypeAttribute(typeof(GraphicVisualizedInstance))]
     public partial class GraphicInstance : EntityObject
     {
         #region Factory Method
@@ -169,20 +172,12 @@ namespace QReal.Web.Database
         /// Create a new GraphicInstance object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="logicalId">Initial value of the LogicalId property.</param>
-        /// <param name="x">Initial value of the X property.</param>
-        /// <param name="y">Initial value of the Y property.</param>
-        /// <param name="width">Initial value of the Width property.</param>
-        /// <param name="height">Initial value of the Height property.</param>
-        public static GraphicInstance CreateGraphicInstance(global::System.Int32 id, global::System.Int32 logicalId, global::System.Double x, global::System.Double y, global::System.Double width, global::System.Double height)
+        /// <param name="logicalInstanceId">Initial value of the LogicalInstanceId property.</param>
+        public static GraphicInstance CreateGraphicInstance(global::System.Int32 id, global::System.Int32 logicalInstanceId)
         {
             GraphicInstance graphicInstance = new GraphicInstance();
             graphicInstance.Id = id;
-            graphicInstance.LogicalId = logicalId;
-            graphicInstance.X = x;
-            graphicInstance.Y = y;
-            graphicInstance.Width = width;
-            graphicInstance.Height = height;
+            graphicInstance.LogicalInstanceId = logicalInstanceId;
             return graphicInstance;
         }
 
@@ -221,48 +216,103 @@ namespace QReal.Web.Database
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 LogicalId
+        public global::System.Int32 LogicalInstanceId
         {
             get
             {
-                return _LogicalId;
+                return _LogicalInstanceId;
             }
             set
             {
-                OnLogicalIdChanging(value);
-                ReportPropertyChanging("LogicalId");
-                _LogicalId = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("LogicalId");
-                OnLogicalIdChanged();
+                OnLogicalInstanceIdChanging(value);
+                ReportPropertyChanging("LogicalInstanceId");
+                _LogicalInstanceId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("LogicalInstanceId");
+                OnLogicalInstanceIdChanged();
             }
         }
-        private global::System.Int32 _LogicalId;
-        partial void OnLogicalIdChanging(global::System.Int32 value);
-        partial void OnLogicalIdChanged();
+        private global::System.Int32 _LogicalInstanceId;
+        partial void OnLogicalInstanceIdChanging(global::System.Int32 value);
+        partial void OnLogicalInstanceIdChanged();
+
+        #endregion
+    
+        #region Navigation Properties
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> ParentId
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "GraphicToLogical", "LogicalInstance")]
+        public LogicalInstance LogicalInstance
         {
             get
             {
-                return _ParentId;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.GraphicToLogical", "LogicalInstance").Value;
             }
             set
             {
-                OnParentIdChanging(value);
-                ReportPropertyChanging("ParentId");
-                _ParentId = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("ParentId");
-                OnParentIdChanged();
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.GraphicToLogical", "LogicalInstance").Value = value;
             }
         }
-        private Nullable<global::System.Int32> _ParentId;
-        partial void OnParentIdChanging(Nullable<global::System.Int32> value);
-        partial void OnParentIdChanged();
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<LogicalInstance> LogicalInstanceReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.GraphicToLogical", "LogicalInstance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<LogicalInstance>("QRealModel.GraphicToLogical", "LogicalInstance", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "GraphicParents", "GraphicVisualizedInstance")]
+        public EntityCollection<GraphicVisualizedInstance> Children
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<GraphicVisualizedInstance>("QRealModel.GraphicParents", "GraphicVisualizedInstance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<GraphicVisualizedInstance>("QRealModel.GraphicParents", "GraphicVisualizedInstance", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="QRealModel", Name="GraphicVisualizedInstance")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    [KnownTypeAttribute(typeof(NodeInstance))]
+    [KnownTypeAttribute(typeof(LinkInstance))]
+    public abstract partial class GraphicVisualizedInstance : GraphicInstance
+    {
+        #region Primitive Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -359,6 +409,30 @@ namespace QReal.Web.Database
         private global::System.Double _Height;
         partial void OnHeightChanging(global::System.Double value);
         partial void OnHeightChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> ParentId
+        {
+            get
+            {
+                return _ParentId;
+            }
+            set
+            {
+                OnParentIdChanging(value);
+                ReportPropertyChanging("ParentId");
+                _ParentId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ParentId");
+                OnParentIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _ParentId;
+        partial void OnParentIdChanging(Nullable<global::System.Int32> value);
+        partial void OnParentIdChanged();
 
         #endregion
     
@@ -370,38 +444,16 @@ namespace QReal.Web.Database
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "FK_GraphicParents", "GraphicInstances1")]
-        public EntityCollection<GraphicInstance> Children
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<GraphicInstance>("QRealModel.FK_GraphicParents", "GraphicInstances1");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<GraphicInstance>("QRealModel.FK_GraphicParents", "GraphicInstances1", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "FK_GraphicParents", "GraphicInstances")]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "GraphicParents", "GraphicInstance")]
         public GraphicInstance Parent
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.FK_GraphicParents", "GraphicInstances").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.GraphicParents", "GraphicInstance").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.FK_GraphicParents", "GraphicInstances").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.GraphicParents", "GraphicInstance").Value = value;
             }
         }
         /// <summary>
@@ -413,51 +465,13 @@ namespace QReal.Web.Database
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.FK_GraphicParents", "GraphicInstances");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.GraphicParents", "GraphicInstance");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<GraphicInstance>("QRealModel.FK_GraphicParents", "GraphicInstances", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "FK_GraphicToLogical", "LogicalInstances")]
-        public LogicalInstance LogicalInstance
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.FK_GraphicToLogical", "LogicalInstances").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.FK_GraphicToLogical", "LogicalInstances").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<LogicalInstance> LogicalInstanceReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.FK_GraphicToLogical", "LogicalInstances");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<LogicalInstance>("QRealModel.FK_GraphicToLogical", "LogicalInstances", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<GraphicInstance>("QRealModel.GraphicParents", "GraphicInstance", value);
                 }
             }
         }
@@ -479,14 +493,14 @@ namespace QReal.Web.Database
         /// Create a new InstanceProperty object.
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
-        /// <param name="instanceId">Initial value of the InstanceId property.</param>
         /// <param name="name">Initial value of the Name property.</param>
-        public static InstanceProperty CreateInstanceProperty(global::System.Int32 id, global::System.Int32 instanceId, global::System.String name)
+        /// <param name="logicalInstanceId">Initial value of the LogicalInstanceId property.</param>
+        public static InstanceProperty CreateInstanceProperty(global::System.Int32 id, global::System.String name, global::System.Int32 logicalInstanceId)
         {
             InstanceProperty instanceProperty = new InstanceProperty();
             instanceProperty.Id = id;
-            instanceProperty.InstanceId = instanceId;
             instanceProperty.Name = name;
+            instanceProperty.LogicalInstanceId = logicalInstanceId;
             return instanceProperty;
         }
 
@@ -519,30 +533,6 @@ namespace QReal.Web.Database
         private global::System.Int32 _Id;
         partial void OnIdChanging(global::System.Int32 value);
         partial void OnIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 InstanceId
-        {
-            get
-            {
-                return _InstanceId;
-            }
-            set
-            {
-                OnInstanceIdChanging(value);
-                ReportPropertyChanging("InstanceId");
-                _InstanceId = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("InstanceId");
-                OnInstanceIdChanged();
-            }
-        }
-        private global::System.Int32 _InstanceId;
-        partial void OnInstanceIdChanging(global::System.Int32 value);
-        partial void OnInstanceIdChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -591,6 +581,30 @@ namespace QReal.Web.Database
         private global::System.String _Value;
         partial void OnValueChanging(global::System.String value);
         partial void OnValueChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 LogicalInstanceId
+        {
+            get
+            {
+                return _LogicalInstanceId;
+            }
+            set
+            {
+                OnLogicalInstanceIdChanging(value);
+                ReportPropertyChanging("LogicalInstanceId");
+                _LogicalInstanceId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("LogicalInstanceId");
+                OnLogicalInstanceIdChanged();
+            }
+        }
+        private global::System.Int32 _LogicalInstanceId;
+        partial void OnLogicalInstanceIdChanging(global::System.Int32 value);
+        partial void OnLogicalInstanceIdChanged();
 
         #endregion
     
@@ -602,16 +616,16 @@ namespace QReal.Web.Database
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "FK_PropertiesToLogicalInstances", "LogicalInstances")]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LogicalInstanceProperties", "LogicalInstance")]
         public LogicalInstance LogicalInstance
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.FK_PropertiesToLogicalInstances", "LogicalInstances").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.LogicalInstanceProperties", "LogicalInstance").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.FK_PropertiesToLogicalInstances", "LogicalInstances").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.LogicalInstanceProperties", "LogicalInstance").Value = value;
             }
         }
         /// <summary>
@@ -623,13 +637,226 @@ namespace QReal.Web.Database
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.FK_PropertiesToLogicalInstances", "LogicalInstances");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<LogicalInstance>("QRealModel.LogicalInstanceProperties", "LogicalInstance");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<LogicalInstance>("QRealModel.FK_PropertiesToLogicalInstances", "LogicalInstances", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<LogicalInstance>("QRealModel.LogicalInstanceProperties", "LogicalInstance", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="QRealModel", Name="LinkInstance")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class LinkInstance : GraphicVisualizedInstance
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new LinkInstance object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="logicalInstanceId">Initial value of the LogicalInstanceId property.</param>
+        /// <param name="x">Initial value of the X property.</param>
+        /// <param name="y">Initial value of the Y property.</param>
+        /// <param name="width">Initial value of the Width property.</param>
+        /// <param name="height">Initial value of the Height property.</param>
+        public static LinkInstance CreateLinkInstance(global::System.Int32 id, global::System.Int32 logicalInstanceId, global::System.Double x, global::System.Double y, global::System.Double width, global::System.Double height)
+        {
+            LinkInstance linkInstance = new LinkInstance();
+            linkInstance.Id = id;
+            linkInstance.LogicalInstanceId = logicalInstanceId;
+            linkInstance.X = x;
+            linkInstance.Y = y;
+            linkInstance.Width = width;
+            linkInstance.Height = height;
+            return linkInstance;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Double> PortFrom
+        {
+            get
+            {
+                return _PortFrom;
+            }
+            set
+            {
+                OnPortFromChanging(value);
+                ReportPropertyChanging("PortFrom");
+                _PortFrom = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PortFrom");
+                OnPortFromChanged();
+            }
+        }
+        private Nullable<global::System.Double> _PortFrom;
+        partial void OnPortFromChanging(Nullable<global::System.Double> value);
+        partial void OnPortFromChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Double> PortTo
+        {
+            get
+            {
+                return _PortTo;
+            }
+            set
+            {
+                OnPortToChanging(value);
+                ReportPropertyChanging("PortTo");
+                _PortTo = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PortTo");
+                OnPortToChanged();
+            }
+        }
+        private Nullable<global::System.Double> _PortTo;
+        partial void OnPortToChanging(Nullable<global::System.Double> value);
+        partial void OnPortToChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> NodeFromId
+        {
+            get
+            {
+                return _NodeFromId;
+            }
+            set
+            {
+                OnNodeFromIdChanging(value);
+                ReportPropertyChanging("NodeFromId");
+                _NodeFromId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("NodeFromId");
+                OnNodeFromIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _NodeFromId;
+        partial void OnNodeFromIdChanging(Nullable<global::System.Int32> value);
+        partial void OnNodeFromIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> NodeToId
+        {
+            get
+            {
+                return _NodeToId;
+            }
+            set
+            {
+                OnNodeToIdChanging(value);
+                ReportPropertyChanging("NodeToId");
+                _NodeToId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("NodeToId");
+                OnNodeToIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _NodeToId;
+        partial void OnNodeToIdChanging(Nullable<global::System.Int32> value);
+        partial void OnNodeToIdChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksFromNode", "NodeInstance")]
+        public NodeInstance NodeFrom
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksFromNode", "NodeInstance").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksFromNode", "NodeInstance").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<NodeInstance> NodeFromReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksFromNode", "NodeInstance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<NodeInstance>("QRealModel.LinksFromNode", "NodeInstance", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksToNode", "NodeInstance")]
+        public NodeInstance NodeTo
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksToNode", "NodeInstance").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksToNode", "NodeInstance").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<NodeInstance> NodeToReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksToNode", "NodeInstance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<NodeInstance>("QRealModel.LinksToNode", "NodeInstance", value);
                 }
             }
         }
@@ -750,18 +977,18 @@ namespace QReal.Web.Database
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "FK_GraphicToLogical", "GraphicInstances")]
-        public EntityCollection<GraphicInstance> GraphicInstances
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LogicalInstanceProperties", "InstanceProperty")]
+        public EntityCollection<InstanceProperty> InstanceProperties
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<GraphicInstance>("QRealModel.FK_GraphicToLogical", "GraphicInstances");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<InstanceProperty>("QRealModel.LogicalInstanceProperties", "InstanceProperty");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<GraphicInstance>("QRealModel.FK_GraphicToLogical", "GraphicInstances", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<InstanceProperty>("QRealModel.LogicalInstanceProperties", "InstanceProperty", value);
                 }
             }
         }
@@ -772,18 +999,100 @@ namespace QReal.Web.Database
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "FK_PropertiesToLogicalInstances", "InstanceProperties")]
-        public EntityCollection<InstanceProperty> InstanceProperties
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "GraphicToLogical", "GraphicInstance")]
+        public EntityCollection<GraphicInstance> GraphicInstance
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<InstanceProperty>("QRealModel.FK_PropertiesToLogicalInstances", "InstanceProperties");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<GraphicInstance>("QRealModel.GraphicToLogical", "GraphicInstance");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<InstanceProperty>("QRealModel.FK_PropertiesToLogicalInstances", "InstanceProperties", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<GraphicInstance>("QRealModel.GraphicToLogical", "GraphicInstance", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="QRealModel", Name="NodeInstance")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class NodeInstance : GraphicVisualizedInstance
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new NodeInstance object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="logicalInstanceId">Initial value of the LogicalInstanceId property.</param>
+        /// <param name="x">Initial value of the X property.</param>
+        /// <param name="y">Initial value of the Y property.</param>
+        /// <param name="width">Initial value of the Width property.</param>
+        /// <param name="height">Initial value of the Height property.</param>
+        public static NodeInstance CreateNodeInstance(global::System.Int32 id, global::System.Int32 logicalInstanceId, global::System.Double x, global::System.Double y, global::System.Double width, global::System.Double height)
+        {
+            NodeInstance nodeInstance = new NodeInstance();
+            nodeInstance.Id = id;
+            nodeInstance.LogicalInstanceId = logicalInstanceId;
+            nodeInstance.X = x;
+            nodeInstance.Y = y;
+            nodeInstance.Width = width;
+            nodeInstance.Height = height;
+            return nodeInstance;
+        }
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksFromNode", "LinkInstance")]
+        public EntityCollection<LinkInstance> LinksFrom
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<LinkInstance>("QRealModel.LinksFromNode", "LinkInstance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<LinkInstance>("QRealModel.LinksFromNode", "LinkInstance", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksToNode", "LinkInstance")]
+        public EntityCollection<LinkInstance> LinksTo
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<LinkInstance>("QRealModel.LinksToNode", "LinkInstance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<LinkInstance>("QRealModel.LinksToNode", "LinkInstance", value);
                 }
             }
         }
