@@ -12,6 +12,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.IO;
 using QReal.Web.Database;
+using System.Linq;
 
 namespace ObjectTypes
 {
@@ -56,6 +57,7 @@ namespace ObjectTypes
             endPort.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
             endPort.DragStarted += new DragStartedEventHandler(boundaryPort_DragStarted);
             endPort.DragDelta += new DragDeltaEventHandler(endPort_DragDelta);
+            endPort.DragCompleted += new DragCompletedEventHandler(endPort_DragCompleted);
             (this.Content as Panel).Children.Add(endPort);
 
             LinkBoundaryPointPort startPort = new LinkBoundaryPointPort();
@@ -65,7 +67,97 @@ namespace ObjectTypes
             startPort.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
             startPort.DragStarted += new DragStartedEventHandler(boundaryPort_DragStarted);
             startPort.DragDelta += new DragDeltaEventHandler(startPort_DragDelta);
+            startPort.DragCompleted += new DragCompletedEventHandler(startPort_DragCompleted);
             (this.Content as Panel).Children.Add(startPort);
+        }
+
+        private void endPort_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            double y = (double)this.GetValue(Canvas.TopProperty) + Y2;
+            double x = (double)this.GetValue(Canvas.LeftProperty) + X2;
+            Point position = new Point(x, y);
+            NodeType nodeTo = FindNodeUnderPosition(position);
+            if (nodeTo != null)
+            {
+                PointPort pointPort = (nodeTo.Content as Panel).Children.Last(item => item is PointPort) as PointPort;
+                Point portPosition = GetPointPortPosition(pointPort, nodeTo);
+                Y2 = (double)nodeTo.GetValue(Canvas.TopProperty) + portPosition.Y - (double)this.GetValue(Canvas.TopProperty);
+                X2 = (double)nodeTo.GetValue(Canvas.LeftProperty) + portPosition.X - (double)this.GetValue(Canvas.LeftProperty);
+                NodeTo = nodeTo.DataContext as NodeInstance;
+            }
+            else
+            {
+                NodeTo = null;
+            }
+        }
+
+        private void startPort_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            double y = (double)this.GetValue(Canvas.TopProperty);
+            double x = (double)this.GetValue(Canvas.LeftProperty);
+            Point position = new Point(x, y);
+            NodeType nodeFrom = FindNodeUnderPosition(position);
+            if (nodeFrom != null)
+            {
+                PointPort pointPort = (nodeFrom.Content as Panel).Children.First(item => item is PointPort) as PointPort;
+                Point portPosition = GetPointPortPosition(pointPort, nodeFrom);
+                this.SetValue(Canvas.TopProperty, (double)nodeFrom.GetValue(Canvas.TopProperty) + portPosition.Y);
+                this.SetValue(Canvas.LeftProperty, (double)nodeFrom.GetValue(Canvas.LeftProperty) + portPosition.X);
+                NodeFrom = nodeFrom.DataContext as NodeInstance;
+            }
+            else
+            {
+                NodeFrom = null;
+            }
+        }
+
+        private Point GetPointPortPosition(PointPort pointPort, NodeType nodeType)
+        {
+            Point result = new Point();
+            switch (pointPort.HorizontalAlignment)
+            {
+                case HorizontalAlignment.Left:
+                    result.X = pointPort.Margin.Left;
+                    break;
+                case HorizontalAlignment.Right:
+                    result.X = nodeType.Width - pointPort.Margin.Right;
+                    break;
+                default:
+                    throw new ArgumentException("Не стоит располагать порт как придется, лучше слева или справа!");
+            }
+            switch (pointPort.VerticalAlignment)
+            {
+                case VerticalAlignment.Bottom:
+                    result.Y = nodeType.Height - pointPort.Margin.Bottom;
+                    break;
+                case VerticalAlignment.Top:
+                    result.Y = pointPort.Margin.Top;
+                    break;
+                default:
+                    throw new ArgumentException("Не стоит располагать порт как придется, лучше сверху или снизу!");
+            }
+            return result;
+        }
+
+        private NodeType FindNodeUnderPosition(Point position)
+        {
+            Canvas canvas = VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(this.Parent)) as Canvas;
+            UIElementCollection children = canvas.Children;
+            foreach (var item in children)
+            {
+                NodeType nodeType = (VisualTreeHelper.GetChild((item as ContentPresenter), 0) as Canvas).Children[0] as NodeType;
+                if (nodeType != null)
+                {
+                    double nodeX = (double)nodeType.GetValue(Canvas.LeftProperty);
+                    double nodeY = (double)nodeType.GetValue(Canvas.TopProperty);
+                    Rect itemBoundingRect = new Rect(nodeX, nodeY, nodeType.Width, nodeType.Height);
+                    if (itemBoundingRect.Contains(position))
+                    {
+                        return nodeType;
+                    }
+                }
+            }
+            return null;
         }
 
         private void startPort_DragDelta(object sender, DragDeltaEventArgs e)
