@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System.IO;
 using QReal.Web.Database;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ObjectTypes
 {
@@ -79,10 +80,10 @@ namespace ObjectTypes
             NodeType nodeTo = FindNodeUnderPosition(position);
             if (nodeTo != null)
             {
-                PointPort pointPort = (nodeTo.Content as Panel).Children.Last(item => item is PointPort) as PointPort;
-                Point portPosition = GetPointPortPosition(pointPort, nodeTo);
-                Y2 = (double)nodeTo.GetValue(Canvas.TopProperty) + portPosition.Y - (double)this.GetValue(Canvas.TopProperty);
-                X2 = (double)nodeTo.GetValue(Canvas.LeftProperty) + portPosition.X - (double)this.GetValue(Canvas.LeftProperty);
+                Point positionInNode = new Point(x - (double)nodeTo.GetValue(Canvas.LeftProperty), y - (double)nodeTo.GetValue(Canvas.TopProperty));
+                Port nearestPort = GetNearestPort(positionInNode, nodeTo);
+                Y2 = (double)nodeTo.GetValue(Canvas.TopProperty) + nearestPort.GetNearestPointToPosition(positionInNode).Y - (double)this.GetValue(Canvas.TopProperty);
+                X2 = (double)nodeTo.GetValue(Canvas.LeftProperty) + nearestPort.GetNearestPointToPosition(positionInNode).X - (double)this.GetValue(Canvas.LeftProperty);
                 NodeTo = nodeTo.DataContext as NodeInstance;
             }
             else
@@ -99,10 +100,14 @@ namespace ObjectTypes
             NodeType nodeFrom = FindNodeUnderPosition(position);
             if (nodeFrom != null)
             {
-                PointPort pointPort = (nodeFrom.Content as Panel).Children.First(item => item is PointPort) as PointPort;
-                Point portPosition = GetPointPortPosition(pointPort, nodeFrom);
-                this.SetValue(Canvas.TopProperty, (double)nodeFrom.GetValue(Canvas.TopProperty) + portPosition.Y);
-                this.SetValue(Canvas.LeftProperty, (double)nodeFrom.GetValue(Canvas.LeftProperty) + portPosition.X);
+                Point positionInNode = new Point(x - (double)nodeFrom.GetValue(Canvas.LeftProperty), y - (double)nodeFrom.GetValue(Canvas.TopProperty));
+                Port nearestPort = GetNearestPort(positionInNode, nodeFrom);
+                double oldY = (double)this.GetValue(Canvas.TopProperty);
+                double oldX = (double)this.GetValue(Canvas.LeftProperty);
+                this.SetValue(Canvas.TopProperty, (double)nodeFrom.GetValue(Canvas.TopProperty) + nearestPort.GetNearestPointToPosition(positionInNode).Y);
+                this.SetValue(Canvas.LeftProperty, (double)nodeFrom.GetValue(Canvas.LeftProperty) + nearestPort.GetNearestPointToPosition(positionInNode).X);
+                Y2 += oldY - (double)this.GetValue(Canvas.TopProperty);
+                X2 += oldX - (double)this.GetValue(Canvas.LeftProperty);
                 NodeFrom = nodeFrom.DataContext as NodeInstance;
             }
             else
@@ -111,32 +116,10 @@ namespace ObjectTypes
             }
         }
 
-        private Point GetPointPortPosition(PointPort pointPort, NodeType nodeType)
+        private Port GetNearestPort(Point position, NodeType nodeType)
         {
-            Point result = new Point();
-            switch (pointPort.HorizontalAlignment)
-            {
-                case HorizontalAlignment.Left:
-                    result.X = pointPort.Margin.Left;
-                    break;
-                case HorizontalAlignment.Right:
-                    result.X = nodeType.Width - pointPort.Margin.Right;
-                    break;
-                default:
-                    throw new ArgumentException("Не стоит располагать порт как придется, лучше слева или справа!");
-            }
-            switch (pointPort.VerticalAlignment)
-            {
-                case VerticalAlignment.Bottom:
-                    result.Y = nodeType.Height - pointPort.Margin.Bottom;
-                    break;
-                case VerticalAlignment.Top:
-                    result.Y = pointPort.Margin.Top;
-                    break;
-                default:
-                    throw new ArgumentException("Не стоит располагать порт как придется, лучше сверху или снизу!");
-            }
-            return result;
+            IEnumerable<UIElement> ports = (nodeType.Content as Panel).Children.Where(item => item is Port);
+            return ports.AsQueryable<UIElement>().OrderBy(port => (port as Port), new PortComparer(position)).First() as Port;
         }
 
         private NodeType FindNodeUnderPosition(Point position)
