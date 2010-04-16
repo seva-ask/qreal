@@ -21,8 +21,8 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("QRealModel", "LogicalInstanceProperties", "LogicalInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.LogicalInstance), "InstanceProperty", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.InstanceProperty), true)]
 [assembly: EdmRelationshipAttribute("QRealModel", "GraphicToLogical", "GraphicInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.GraphicInstance), "LogicalInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.LogicalInstance), true)]
 [assembly: EdmRelationshipAttribute("QRealModel", "GraphicParents", "GraphicVisualizedInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.GraphicVisualizedInstance), "GraphicInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.GraphicInstance), true)]
-[assembly: EdmRelationshipAttribute("QRealModel", "LinksFromNode", "GraphicInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.GraphicInstance), "EdgeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.EdgeInstance), true)]
-[assembly: EdmRelationshipAttribute("QRealModel", "LinksToNode", "EdgeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.EdgeInstance), "GraphicInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.GraphicInstance), true)]
+[assembly: EdmRelationshipAttribute("QRealModel", "LinksFromNode", "EdgeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.EdgeInstance), "NodeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.NodeInstance), true)]
+[assembly: EdmRelationshipAttribute("QRealModel", "LinksToNode", "NodeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.NodeInstance), "EdgeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.EdgeInstance), true)]
 
 #endregion
 
@@ -297,16 +297,16 @@ namespace QReal.Web.Database
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksFromNode", "GraphicInstance")]
-        public GraphicInstance NodeFrom
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksFromNode", "NodeInstance")]
+        public NodeInstance NodeFrom
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.LinksFromNode", "GraphicInstance").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksFromNode", "NodeInstance").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.LinksFromNode", "GraphicInstance").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksFromNode", "NodeInstance").Value = value;
             }
         }
         /// <summary>
@@ -314,17 +314,17 @@ namespace QReal.Web.Database
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<GraphicInstance> NodeFromReference
+        public EntityReference<NodeInstance> NodeFromReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.LinksFromNode", "GraphicInstance");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksFromNode", "NodeInstance");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<GraphicInstance>("QRealModel.LinksFromNode", "GraphicInstance", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<NodeInstance>("QRealModel.LinksFromNode", "NodeInstance", value);
                 }
             }
         }
@@ -335,16 +335,16 @@ namespace QReal.Web.Database
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksToNode", "GraphicInstance")]
-        public GraphicInstance NodeTo
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksToNode", "NodeInstance")]
+        public NodeInstance NodeTo
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.LinksToNode", "GraphicInstance").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksToNode", "NodeInstance").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.LinksToNode", "GraphicInstance").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksToNode", "NodeInstance").Value = value;
             }
         }
         /// <summary>
@@ -352,17 +352,17 @@ namespace QReal.Web.Database
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<GraphicInstance> NodeToReference
+        public EntityReference<NodeInstance> NodeToReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GraphicInstance>("QRealModel.LinksToNode", "GraphicInstance");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<NodeInstance>("QRealModel.LinksToNode", "NodeInstance");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<GraphicInstance>("QRealModel.LinksToNode", "GraphicInstance", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<NodeInstance>("QRealModel.LinksToNode", "NodeInstance", value);
                 }
             }
         }
@@ -508,50 +508,6 @@ namespace QReal.Web.Database
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<GraphicVisualizedInstance>("QRealModel.GraphicParents", "GraphicVisualizedInstance", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksFromNode", "EdgeInstance")]
-        public EntityCollection<EdgeInstance> LinksFrom
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<EdgeInstance>("QRealModel.LinksFromNode", "EdgeInstance");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<EdgeInstance>("QRealModel.LinksFromNode", "EdgeInstance", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksToNode", "EdgeInstance")]
-        public EntityCollection<EdgeInstance> LinksTo
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<EdgeInstance>("QRealModel.LinksToNode", "EdgeInstance");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<EdgeInstance>("QRealModel.LinksToNode", "EdgeInstance", value);
                 }
             }
         }
@@ -1095,6 +1051,53 @@ namespace QReal.Web.Database
 
         #endregion
     
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksFromNode", "EdgeInstance")]
+        public EntityCollection<EdgeInstance> LinksFrom
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<EdgeInstance>("QRealModel.LinksFromNode", "EdgeInstance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<EdgeInstance>("QRealModel.LinksFromNode", "EdgeInstance", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "LinksToNode", "EdgeInstance")]
+        public EntityCollection<EdgeInstance> LinksTo
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<EdgeInstance>("QRealModel.LinksToNode", "EdgeInstance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<EdgeInstance>("QRealModel.LinksToNode", "EdgeInstance", value);
+                }
+            }
+        }
+
+        #endregion
     }
 
     #endregion

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 04/13/2010 00:15:08
+-- Date Created: 04/16/2010 13:49:13
 -- Generated from EDMX file: C:\Projects\QReal\silverlight\svn\trunk\QReal.Web\Database\InstancesModel.edmx
 -- --------------------------------------------------
 
@@ -26,20 +26,20 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_GraphicParents]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GraphicInstances_GraphicVisualizedInstance] DROP CONSTRAINT [FK_GraphicParents];
 GO
-IF OBJECT_ID(N'[dbo].[FK_LinksFromNode]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_LinksFromNode];
-GO
 IF OBJECT_ID(N'[dbo].[FK_LinksToNode]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_LinksToNode];
+GO
+IF OBJECT_ID(N'[dbo].[FK_LinksFromNode]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_LinksFromNode];
 GO
 IF OBJECT_ID(N'[dbo].[FK_GraphicVisualizedInstance_inherits_GraphicInstance]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GraphicInstances_GraphicVisualizedInstance] DROP CONSTRAINT [FK_GraphicVisualizedInstance_inherits_GraphicInstance];
 GO
-IF OBJECT_ID(N'[dbo].[FK_NodeInstance_inherits_GraphicVisualizedInstance]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[GraphicInstances_NodeInstance] DROP CONSTRAINT [FK_NodeInstance_inherits_GraphicVisualizedInstance];
-GO
 IF OBJECT_ID(N'[dbo].[FK_EdgeInstance_inherits_GraphicVisualizedInstance]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_EdgeInstance_inherits_GraphicVisualizedInstance];
+GO
+IF OBJECT_ID(N'[dbo].[FK_NodeInstance_inherits_GraphicVisualizedInstance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GraphicInstances_NodeInstance] DROP CONSTRAINT [FK_NodeInstance_inherits_GraphicVisualizedInstance];
 GO
 
 -- --------------------------------------------------
@@ -58,11 +58,11 @@ GO
 IF OBJECT_ID(N'[dbo].[GraphicInstances_GraphicVisualizedInstance]', 'U') IS NOT NULL
     DROP TABLE [dbo].[GraphicInstances_GraphicVisualizedInstance];
 GO
-IF OBJECT_ID(N'[dbo].[GraphicInstances_NodeInstance]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[GraphicInstances_NodeInstance];
-GO
 IF OBJECT_ID(N'[dbo].[GraphicInstances_EdgeInstance]', 'U') IS NOT NULL
     DROP TABLE [dbo].[GraphicInstances_EdgeInstance];
+GO
+IF OBJECT_ID(N'[dbo].[GraphicInstances_NodeInstance]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GraphicInstances_NodeInstance];
 GO
 
 -- --------------------------------------------------
@@ -210,7 +210,7 @@ GO
 ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
 ADD CONSTRAINT [FK_LinksFromNode]
     FOREIGN KEY ([NodeFromId])
-    REFERENCES [dbo].[GraphicInstances]
+    REFERENCES [dbo].[GraphicInstances_NodeInstance]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
@@ -224,7 +224,7 @@ GO
 ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
 ADD CONSTRAINT [FK_LinksToNode]
     FOREIGN KEY ([NodeToId])
-    REFERENCES [dbo].[GraphicInstances]
+    REFERENCES [dbo].[GraphicInstances_NodeInstance]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
