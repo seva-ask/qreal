@@ -10,7 +10,10 @@
     	<TextBlock Margin="78,0,68,38" TextWrapping="Wrap" VerticalAlignment="Bottom" d:LayoutOverrides="Width" Text="{Binding MyProperty, ElementName=objectType, Mode=TwoWay}"/>
     	<base:PointPort Margin="28,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     	<base:PointPort HorizontalAlignment="Right" Margin="0,25,25,0" VerticalAlignment="Top" d:LayoutOverrides="Width, Height"/>
-    	<base:PointPort HorizontalAlignment="Left" Margin="28,0,0,27" VerticalAlignment="Bottom" d:LayoutOverrides="Width, Height"/>
-    	<base:PointPort HorizontalAlignment="Right" Margin="0,0,25,27" VerticalAlignment="Bottom" d:LayoutOverrides="Width, Height"/>
+    	<base:LinePort Margin="26,96,27,97" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+    		<base:LinePort.RenderTransform>
+    			<CompositeTransform Rotation="90"/>
+    		</base:LinePort.RenderTransform>
+    	</base:LinePort>
     </Grid>
 </base:NodeType>

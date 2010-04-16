@@ -15,6 +15,8 @@ namespace ObjectTypes
 {
     public class Port : UserControl
     {
+        protected const double HEIGHT = 7.0;
+
         public Port()
         {
             if (IsNotDesigner())
@@ -57,6 +59,60 @@ namespace ObjectTypes
                 parent = parent.Parent as FrameworkElement;
             }
             return parent as ObjectType;
+        }
+
+        private ObjectType FindObjectTypeParent()
+        {
+            FrameworkElement parent = this.Parent as FrameworkElement;
+            while ((parent != null) && (!(parent is ObjectType)))
+            {
+                parent = parent.Parent as FrameworkElement;
+            }
+            return parent as ObjectType;
+        }
+
+        public Point Position
+        {
+            get
+            {
+                ObjectType objectType = FindObjectTypeParent();
+                Point result = new Point();
+                switch (this.HorizontalAlignment)
+                {
+                    case HorizontalAlignment.Left:
+                    case HorizontalAlignment.Stretch:
+                        result.X = this.Margin.Left;
+                        break;
+                    case HorizontalAlignment.Right:
+                        result.X = objectType.Width - this.Margin.Right;
+                        break;
+                    default:
+                        throw new ArgumentException("Не стоит располагать порт как придется, лучше слева или справа!");
+                }
+                switch (this.VerticalAlignment)
+                {
+                    case VerticalAlignment.Bottom:
+                        result.Y = objectType.Height - this.Margin.Bottom;
+                        break;
+                    case VerticalAlignment.Top:
+                    case VerticalAlignment.Stretch:
+                        result.Y = this.Margin.Top;
+                        break;
+                    default:
+                        throw new ArgumentException("Не стоит располагать порт как придется, лучше сверху или снизу!");
+                }
+                return result;
+            }
+        }
+
+        public virtual double GetDistanceToPosition(Point position)
+        {
+            return this.Position.GetDistanceToPoint(position);
+        }
+
+        public virtual Point GetNearestPointToPosition(Point position)
+        {
+            return this.Position;
         }
     }
 }
