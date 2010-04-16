@@ -17,7 +17,7 @@ using System.Reflection;
 
 namespace QReal.Types
 {
-    public static class TypesProxy
+    public static class TypesHelper
     {
         public static IEnumerable<string> Diagrams
         {

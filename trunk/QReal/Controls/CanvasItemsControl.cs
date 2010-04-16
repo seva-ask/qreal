@@ -44,7 +44,7 @@ namespace QReal.Controls
             if (graphicInstance.LogicalInstance != null)
             {
                 TypeLoader.Instance.Request(() =>
-                contentPresenter.ContentTemplate = Create(TypesProxy.GetType(graphicInstance.LogicalInstance.Type)));
+                contentPresenter.ContentTemplate = Create(TypesHelper.GetType(graphicInstance.LogicalInstance.Type)));
             }
             contentPresenter.Loaded += new RoutedEventHandler(contentPresenter_Loaded);
         }
@@ -53,7 +53,7 @@ namespace QReal.Controls
         {
             ContentPresenter contentPresenter = sender as ContentPresenter;
             GraphicInstance graphicInstance = contentPresenter.Content as GraphicInstance;
-            TypesProxy.InitProperties(graphicInstance);
+            TypesHelper.InitProperties(graphicInstance);
             Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
             SetPropertyBindings(graphicInstance, objectType);
