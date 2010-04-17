@@ -135,12 +135,10 @@ namespace ObjectTypes
 
         protected virtual void Select()
         {
-            (this.Content as Panel).Background = new SolidColorBrush(Colors.Blue);
         }
 
         protected virtual void UnSelect()
         {
-            (this.Content as Panel).Background = null;
         }
     }
 }
