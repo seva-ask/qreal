@@ -12,6 +12,7 @@ using System.Windows.Controls.Primitives;
 using System.Collections.Generic;
 using QReal.Web.Database;
 using System.Linq;
+using System.Windows.Data;
 
 namespace ObjectTypes
 {
@@ -33,6 +34,14 @@ namespace ObjectTypes
             thumb.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
             thumb.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
             thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
+
+            Binding bindingThumbVisibility = new Binding();
+            bindingThumbVisibility.Source = this;
+            bindingThumbVisibility.Path = new PropertyPath("Selected");
+            bindingThumbVisibility.Mode = BindingMode.TwoWay;
+            bindingThumbVisibility.Converter = new VisibilityConverter();
+            thumb.SetBinding(Thumb.VisibilityProperty, bindingThumbVisibility);
+
             (this.Content as Panel).Children.Add(thumb);
         }
 
