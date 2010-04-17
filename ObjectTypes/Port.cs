@@ -15,8 +15,6 @@ namespace ObjectTypes
 {
     public class Port : UserControl
     {
-        protected const double HEIGHT = 7.0;
-
         public Port()
         {
             if (IsNotDesigner())
@@ -80,14 +78,15 @@ namespace ObjectTypes
                 switch (this.HorizontalAlignment)
                 {
                     case HorizontalAlignment.Left:
-                    case HorizontalAlignment.Stretch:
                         result.X = this.Margin.Left;
                         break;
                     case HorizontalAlignment.Right:
                         result.X = objectType.Width - this.Margin.Right;
                         break;
-                    default:
-                        throw new ArgumentException("Не стоит располагать порт как придется, лучше слева или справа!");
+                    case HorizontalAlignment.Stretch:
+                    case HorizontalAlignment.Center:
+                        result.X = (objectType.Width - this.TransformedWidth) / 2;
+                        break;
                 }
                 switch (this.VerticalAlignment)
                 {
@@ -95,11 +94,12 @@ namespace ObjectTypes
                         result.Y = objectType.Height - this.Margin.Bottom;
                         break;
                     case VerticalAlignment.Top:
-                    case VerticalAlignment.Stretch:
                         result.Y = this.Margin.Top;
                         break;
-                    default:
-                        throw new ArgumentException("Не стоит располагать порт как придется, лучше сверху или снизу!");
+                    case VerticalAlignment.Stretch:
+                    case VerticalAlignment.Center:
+                        result.Y = (objectType.Height - this.TransformedHeight) / 2;
+                        break;
                 }
                 return result;
             }
@@ -113,6 +113,22 @@ namespace ObjectTypes
         public virtual Point GetNearestPointToPosition(Point position)
         {
             return this.Position;
+        }
+
+        protected virtual double TransformedWidth
+        {
+            get
+            {
+                return this.Width;
+            }
+        }
+
+        protected virtual double TransformedHeight
+        {
+            get
+            {
+                return this.Height;
+            }
         }
     }
 }

@@ -14,7 +14,6 @@ namespace ObjectTypes
 {
     public partial class LinePort : Port
     {
-        protected const double WIDTH = 7.0;
         protected const double END_OF_LINE_PORT = 0.9999;
 
         public LinePort()
@@ -24,7 +23,7 @@ namespace ObjectTypes
 
         public override double GetDistanceToPosition(Point position)
         {
-            double a = GeometryHelper.GetLineLength(this.RenderSize.Width, this.RenderSize.Height);
+            double a = GeometryHelper.GetLineLength(TransformedWidth, TransformedHeight);
             double b = position.GetDistanceToPoint(this.Position);
             double c = position.GetDistanceToPoint(this.EndPoint);
 
@@ -46,18 +45,56 @@ namespace ObjectTypes
         {
             get
             {
-                return new Point(this.Position.X + this.RenderSize.Width, this.Position.Y + this.RenderSize.Height);
+                return new Point(this.Position.X + TransformedWidth, this.Position.Y + TransformedHeight);
+            }
+        }
+
+        private Rect GetTransformedBoundingRect()
+        {
+            FrameworkElement parent = this.Parent as FrameworkElement;
+            double widthOriginal = this.ActualWidth;
+            if (widthOriginal == 0)
+	        {
+                switch (this.HorizontalAlignment)
+	            {
+		            case HorizontalAlignment.Center:
+                    case HorizontalAlignment.Left:
+                    case HorizontalAlignment.Right:
+                        widthOriginal = this.Width;
+                        break;
+                    case HorizontalAlignment.Stretch:
+                        widthOriginal = parent.ActualWidth - this.Margin.Left - this.Margin.Right;
+                        break;
+	            }
+            }
+            Rect boundingRectOriginal = new Rect(this.Margin.Left, this.Margin.Top, widthOriginal, this.Height);
+            return this.RenderTransform.TransformBounds(boundingRectOriginal);
+        }
+
+        protected override double TransformedWidth
+        {
+            get
+            {
+                return GetTransformedBoundingRect().Width;
+            }
+        }
+
+        protected override double TransformedHeight
+        {
+            get
+            {
+                return GetTransformedBoundingRect().Height;
             }
         }
 
         private double GetNearestPointOfLinePort(Point position)
         {
             double nearestPointOfLinePort = 0;
-            if (this.RenderSize.Width == WIDTH)
+            if (TransformedWidth == this.Height)
             {
                 nearestPointOfLinePort = (position.Y - this.Position.Y) / (this.EndPoint.Y - this.Position.Y);
             }
-            else if (this.RenderSize.Height == HEIGHT)
+            else if (TransformedHeight == this.Height)
             {
                 nearestPointOfLinePort = (position.X - this.Position.X) / (this.EndPoint.X - this.Position.X);
             }
@@ -84,8 +121,8 @@ namespace ObjectTypes
             {
                 k = END_OF_LINE_PORT;
             }
-            result.X = this.Position.X + k * this.RenderSize.Width;
-            result.Y = this.Position.Y + k * this.RenderSize.Height;
+            result.X = this.Position.X + k * TransformedWidth;
+            result.Y = this.Position.Y + k * TransformedHeight;
             return result;
         }
     }
