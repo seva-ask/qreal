@@ -98,6 +98,8 @@ namespace ObjectTypes
 
         private void NodeType_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            AdjustSelectRectanglesPositions();
+
             Canvas canvas = VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(this.Parent)) as Canvas;
             UIElementCollection children = canvas.Children;
             foreach (var linkInstanceFrom in LinksFrom)
@@ -160,5 +162,56 @@ namespace ObjectTypes
 
         public static readonly DependencyProperty LinksToProperty =
             DependencyProperty.Register("LinksTo", typeof(IEnumerable<EdgeInstance>), typeof(NodeType), null);
+
+        private Rectangle rectTopLeft;
+        private Rectangle rectTopRight;
+        private Rectangle rectBottomLeft;
+        private Rectangle rectBottomRight;
+
+        private void CreateSelectRectangles()
+        {
+            CreateSelectRectangle(ref rectTopLeft);
+            CreateSelectRectangle(ref rectTopRight);
+            CreateSelectRectangle(ref rectBottomLeft);
+            CreateSelectRectangle(ref rectBottomRight);
+        }
+
+        private void CreateSelectRectangle(ref Rectangle rect)
+        {
+            Panel parent = this.Parent as Panel;
+            rect = new Rectangle();
+            rect.Width = 5;
+            rect.Height = 5;
+            rect.Fill = new SolidColorBrush(Colors.Blue);
+
+            Binding bindingRectVisibility = new Binding();
+            bindingRectVisibility.Source = this;
+            bindingRectVisibility.Path = new PropertyPath("Selected");
+            bindingRectVisibility.Mode = BindingMode.TwoWay;
+            bindingRectVisibility.Converter = new VisibilityConverter();
+            rect.SetBinding(Thumb.VisibilityProperty, bindingRectVisibility);
+
+            parent.Children.Add(rect);
+        }
+
+        private void AdjustSelectRectanglesPositions()
+        {
+            if (rectTopLeft == null)
+            {
+                CreateSelectRectangles();
+            }
+
+            rectTopLeft.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty));
+            rectTopLeft.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty));
+
+            rectTopRight.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty) + this.ActualWidth - rectTopRight.Width);
+            rectTopRight.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty));
+
+            rectBottomLeft.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty));
+            rectBottomLeft.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty) + this.ActualHeight - rectTopRight.Height);
+
+            rectBottomRight.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty) + this.ActualWidth - rectTopRight.Width);
+            rectBottomRight.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty) + this.ActualHeight - rectTopRight.Height);
+        }
     }
 }
