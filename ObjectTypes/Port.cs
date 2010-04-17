@@ -115,7 +115,7 @@ namespace ObjectTypes
             return this.Position;
         }
 
-        protected virtual double TransformedWidth
+        public virtual double TransformedWidth
         {
             get
             {
@@ -123,12 +123,17 @@ namespace ObjectTypes
             }
         }
 
-        protected virtual double TransformedHeight
+        public virtual double TransformedHeight
         {
             get
             {
                 return this.Height;
             }
+        }
+
+        public virtual double GetNearestPointOfPort(Point position)
+        {
+            return 0;
         }
     }
 }

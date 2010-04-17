@@ -27,7 +27,7 @@ namespace ObjectTypes
             double b = position.GetDistanceToPoint(this.Position);
             double c = position.GetDistanceToPoint(this.EndPoint);
 
-            double nearestPointOfLinePort = GetNearestPointOfLinePort(position);
+            double nearestPointOfLinePort = GetNearestPointOfPort(position);
             if ((nearestPointOfLinePort < 0) || (nearestPointOfLinePort > END_OF_LINE_PORT))
             {
                 return Math.Min(b, c);
@@ -71,7 +71,7 @@ namespace ObjectTypes
             return this.RenderTransform.TransformBounds(boundingRectOriginal);
         }
 
-        protected override double TransformedWidth
+        public override double TransformedWidth
         {
             get
             {
@@ -79,7 +79,7 @@ namespace ObjectTypes
             }
         }
 
-        protected override double TransformedHeight
+        public override double TransformedHeight
         {
             get
             {
@@ -87,7 +87,7 @@ namespace ObjectTypes
             }
         }
 
-        private double GetNearestPointOfLinePort(Point position)
+        public override double GetNearestPointOfPort(Point position)
         {
             double nearestPointOfLinePort = 0;
             if (TransformedWidth == this.Height)
@@ -112,7 +112,7 @@ namespace ObjectTypes
         public override Point GetNearestPointToPosition(Point position)
         {
             Point result = new Point();
-            double k = GetNearestPointOfLinePort(position);
+            double k = GetNearestPointOfPort(position);
             if (k < 0)
             {
                 k = 0;    

@@ -85,6 +85,7 @@ namespace ObjectTypes
                 Y2 = (double)nodeTo.GetValue(Canvas.TopProperty) + nearestPort.GetNearestPointToPosition(positionInNode).Y - (double)this.GetValue(Canvas.TopProperty);
                 X2 = (double)nodeTo.GetValue(Canvas.LeftProperty) + nearestPort.GetNearestPointToPosition(positionInNode).X - (double)this.GetValue(Canvas.LeftProperty);
                 NodeTo = nodeTo.DataContext as NodeInstance;
+                PortTo = GetPortNumber(nearestPort, nodeTo) + nearestPort.GetNearestPointOfPort(positionInNode);
             }
             else
             {
@@ -109,6 +110,7 @@ namespace ObjectTypes
                 Y2 += oldY - (double)this.GetValue(Canvas.TopProperty);
                 X2 += oldX - (double)this.GetValue(Canvas.LeftProperty);
                 NodeFrom = nodeFrom.DataContext as NodeInstance;
+                PortFrom = GetPortNumber(nearestPort, nodeFrom) + nearestPort.GetNearestPointOfPort(positionInNode);
             }
             else
             {
@@ -120,6 +122,21 @@ namespace ObjectTypes
         {
             IEnumerable<UIElement> ports = (nodeType.Content as Panel).Children.Where(item => item is Port);
             return ports.AsQueryable<UIElement>().OrderBy(port => (port as Port), new PortComparer(position)).First() as Port;
+        }
+
+        private int GetPortNumber(Port port, NodeType nodeType)
+        {
+            IEnumerable<UIElement> ports = (nodeType.Content as Panel).Children.Where(item => item is Port);
+            int number = 0;
+            foreach (var item in ports)
+            {
+                if (item == port)
+                {
+                    return number;
+                }
+                number++;
+            }
+            return -1;
         }
 
         private NodeType FindNodeUnderPosition(Point position)
