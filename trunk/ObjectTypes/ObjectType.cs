@@ -46,11 +46,19 @@ namespace ObjectTypes
 
         private void ObjectType_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            mouseY = e.GetPosition(null).Y;
-            mouseX = e.GetPosition(null).X;
-            IsMouseCaptured = true;
-            this.CaptureMouse();
-            SetZIndex(1);
+            if (CanMove())
+            {
+                mouseY = e.GetPosition(null).Y;
+                mouseX = e.GetPosition(null).X;
+                IsMouseCaptured = true;
+                this.CaptureMouse();
+                SetZIndex(1);
+            }
+        }
+
+        protected virtual bool CanMove()
+        {
+            return true;
         }
 
         private void ObjectType_MouseMove(object sender, MouseEventArgs e)

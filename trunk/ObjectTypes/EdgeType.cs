@@ -297,5 +297,10 @@ namespace ObjectTypes
 
         public static readonly DependencyProperty NodeToProperty =
             DependencyProperty.Register("NodeTo", typeof(NodeInstance), typeof(EdgeType), null);
+
+        protected override bool CanMove()
+        {
+            return ((NodeFrom == null) && (NodeTo == null));
+        }
     }
 }
