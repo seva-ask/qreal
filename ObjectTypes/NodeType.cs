@@ -62,8 +62,12 @@ namespace ObjectTypes
                         EdgeType edgeType = GetEdgeType(item);
                         return edgeType == null ? false : edgeType.DataContext == linkInstanceFrom;
                     }));
+                double oldY = (double)linkFrom.GetValue(Canvas.TopProperty);
+                double oldX = (double)linkFrom.GetValue(Canvas.LeftProperty);
                 linkFrom.SetValue(Canvas.TopProperty, (double)linkFrom.GetValue(Canvas.TopProperty) + deltaY);
                 linkFrom.SetValue(Canvas.LeftProperty, (double)linkFrom.GetValue(Canvas.LeftProperty) + deltaX);
+                linkFrom.Y2 += oldY - (double)linkFrom.GetValue(Canvas.TopProperty);
+                linkFrom.X2 += oldX - (double)linkFrom.GetValue(Canvas.LeftProperty);
             }           
             foreach (var linkInstanceTo in LinksTo)
             {
