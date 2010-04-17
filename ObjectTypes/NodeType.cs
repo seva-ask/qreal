@@ -63,6 +63,7 @@ namespace ObjectTypes
         protected override void OnMoving(double deltaX, double deltaY)
         {
             base.OnMoving(deltaX, deltaY);
+            AdjustSelectRectanglesPositions();
             Canvas canvas = VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(this.Parent)) as Canvas;
             UIElementCollection children = canvas.Children;
             foreach (var linkInstanceFrom in LinksFrom)
