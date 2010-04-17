@@ -81,6 +81,7 @@
     <Compile Include="PortComparer.cs" />
     <Compile Include="Port.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VisibilityConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="LinePort.xaml">
