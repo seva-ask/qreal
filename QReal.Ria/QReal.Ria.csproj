@@ -64,7 +64,6 @@
   <ItemGroup>
     <Compile Include="Database\InstancesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Types\DiagramWithTypes.cs" />
     <Compile Include="Types\TypeLoader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />

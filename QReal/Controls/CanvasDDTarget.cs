@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using System.Linq;
 using ObjectTypes;
-using QReal.Ria.Types;
 using QReal.Web.Database;
 using QReal.Ria.Database;
-using System.Diagnostics;
-using QReal.Types;
 
 namespace QReal.Controls
 {
@@ -27,7 +18,7 @@ namespace QReal.Controls
             this.MouseLeftButtonDown += new MouseButtonEventHandler(CanvasDDTarget_MouseLeftButtonDown);
         }
 
-        private void CanvasDDTarget_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private static void CanvasDDTarget_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             UIManager.Instance.SelectedGraphicInstance = null;
         }
@@ -55,7 +46,7 @@ namespace QReal.Controls
             }
         }
 
-        private ObjectType FindObjectType(MouseEventArgs e)
+        private static ObjectType FindObjectType(MouseEventArgs e)
         {
             FrameworkElement parent = (e.OriginalSource as FrameworkElement);
             while ((parent != null) && (!(parent is ObjectType)))
@@ -69,11 +60,15 @@ namespace QReal.Controls
         {
             ItemDragEventArgs rawObject = args.Data.GetData(args.Data.GetFormats()[0]) as ItemDragEventArgs;
             Type type = (rawObject.Data as System.Collections.ObjectModel.SelectionCollection).First().Item as Type;
-            LogicalInstance logicalInstance = new LogicalInstance();
-            logicalInstance.Name = "anonymous " + (Activator.CreateInstance(type) as ObjectType).TypeName;
-            logicalInstance.Type = type.FullName;
+            LogicalInstance logicalInstance = new LogicalInstance
+                                                  {
+                                                      Name =
+                                                          "anonymous " +
+                                                          (Activator.CreateInstance(type) as ObjectType).TypeName,
+                                                      Type = type.FullName
+                                                  };
             InstancesManager.Instance.InstancesContext.LogicalInstances.Add(logicalInstance);
-            GraphicVisualizedInstance graphicVisualizedInstance = null;
+            GraphicVisualizedInstance graphicVisualizedInstance;
             if (type.IsSubclassOf(typeof(NodeType)))
             {
                 graphicVisualizedInstance = new NodeInstance();

@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Windows.Controls.Primitives;
 
 namespace ObjectTypes
 {
@@ -19,7 +11,7 @@ namespace ObjectTypes
     {
         public abstract string TypeName { get; }
 
-        public ObjectType()
+        protected ObjectType()
         {
             IsMouseCaptured = false;
             this.MouseLeftButtonDown += new MouseButtonEventHandler(ObjectType_MouseLeftButtonDown);
@@ -39,8 +31,8 @@ namespace ObjectTypes
 
         public event ZIndexChangedHandler ZIndexChanged;
 
-        private double mouseX = -1;
-        private double mouseY = -1;
+        private double myMouseX = -1;
+        private double myMouseY = -1;
 
         public bool IsMouseCaptured { get; set; }
 
@@ -48,8 +40,8 @@ namespace ObjectTypes
         {
             if (CanMove())
             {
-                mouseY = e.GetPosition(null).Y;
-                mouseX = e.GetPosition(null).X;
+                myMouseY = e.GetPosition(null).Y;
+                myMouseX = e.GetPosition(null).X;
                 IsMouseCaptured = true;
                 this.CaptureMouse();
                 SetZIndex(1);
@@ -75,11 +67,11 @@ namespace ObjectTypes
                 this.SetValue(Canvas.TopProperty, newTop);
                 this.SetValue(Canvas.LeftProperty, newLeft);
 
-                previousMouseX = mouseX != -1 ? mouseX : e.GetPosition(null).X;
-                previousMouseY = mouseY != -1 ? mouseY : e.GetPosition(null).Y;
+                myPreviousMouseX = myMouseX != -1 ? myMouseX : e.GetPosition(null).X;
+                myPreviousMouseY = myMouseY != -1 ? myMouseY : e.GetPosition(null).Y;
 
-                mouseY = e.GetPosition(null).Y;
-                mouseX = e.GetPosition(null).X;
+                myMouseY = e.GetPosition(null).Y;
+                myMouseX = e.GetPosition(null).X;
                 OnMoving(deltaX, deltaY);
             }
         }
@@ -88,17 +80,17 @@ namespace ObjectTypes
         {
         }
 
-        private double previousMouseX = -1;
-        private double previousMouseY = -1;
+        private double myPreviousMouseX = -1;
+        private double myPreviousMouseY = -1;
 
         public void GetDeltaMouseMove(MouseEventArgs e, out double deltaY, out double deltaX)
         {
-            deltaY = e.GetPosition(null).Y - mouseY;
-            deltaX = e.GetPosition(null).X - mouseX;
+            deltaY = e.GetPosition(null).Y - myMouseY;
+            deltaX = e.GetPosition(null).X - myMouseX;
             if ((deltaX == 0) && (deltaY == 0))
             {
-                deltaY = e.GetPosition(null).Y - previousMouseY;
-                deltaX = e.GetPosition(null).X - previousMouseX;
+                deltaY = e.GetPosition(null).Y - myPreviousMouseY;
+                deltaX = e.GetPosition(null).X - myPreviousMouseX;
             }
         }
 
@@ -106,8 +98,8 @@ namespace ObjectTypes
         {
             IsMouseCaptured = false;
             this.ReleaseMouseCapture();
-            mouseY = -1;
-            mouseX = -1;
+            myMouseY = -1;
+            myMouseX = -1;
             SetZIndex(0);
         }
 

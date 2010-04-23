@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.IO;
+using System.Linq;
 
 namespace QReal.Web.Assemblies
 {
@@ -10,13 +9,13 @@ namespace QReal.Web.Assemblies
     {
         public Dictionary<string, byte[]> Assemblies { get; private set; }
 
-        private static AssemblyManager instance = new AssemblyManager();
+        private static readonly AssemblyManager myInstance = new AssemblyManager();
 
         public static AssemblyManager Instance
         {
             get
             {
-                return instance;
+                return myInstance;
             }
         }
 
@@ -28,22 +27,19 @@ namespace QReal.Web.Assemblies
             if (Directory.Exists(diagramsDirectory))
             {
                 string[] files = Directory.GetFiles(diagramsDirectory);
-                foreach (string file in files)
+                foreach (string file in files.Where(file => file.EndsWith(".dll")))
                 {
-                    if (file.EndsWith(".dll"))
-                    {
-                        Assemblies[file] = ReadFileToByteArray(file);
-                    }
+                    Assemblies[file] = ReadFileToByteArray(file);
                 }
             }
         }
 
-        private byte[] ReadFileToByteArray(string filePath)
+        private static byte[] ReadFileToByteArray(string filePath)
         {
             FileStream fs = File.Open(filePath, FileMode.Open, FileAccess.Read);
             MemoryStream ms = new MemoryStream();
             byte[] buffer = new byte[1024];
-            int read = 0;
+            int read;
             while ((read = fs.Read(buffer, 0, 1024)) > 0) ms.Write(buffer, 0, read);
             fs.Close();
             return ms.ToArray();

@@ -1,14 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace ObjectTypes
 {
@@ -89,7 +80,7 @@ namespace ObjectTypes
 
         public override double GetNearestPointOfPort(Point position)
         {
-            double nearestPointOfLinePort = 0;
+            double nearestPointOfLinePort;
             if (TransformedWidth == this.Height)
             {
                 nearestPointOfLinePort = (position.Y - this.Position.Y) / (this.EndPoint.Y - this.Position.Y);

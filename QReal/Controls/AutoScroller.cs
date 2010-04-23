@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 
 namespace QReal.Controls
@@ -19,12 +13,12 @@ namespace QReal.Controls
     public class AutoScroller
     {
         private System.Windows.Threading.DispatcherTimer myDispatcherTimer;
-        private ScrollViewer TargetScrollViewer;
-        private ObservableCollection<FrameworkElement> DraggableObjects;
-        private double testoffset;
-        private double testvoffset;
+        private ScrollViewer myTargetScrollViewer;
+        private ObservableCollection<FrameworkElement> myDraggableObjects;
+        private double myTestoffset;
+        private double myTestvoffset;
 
-        private Canvas _targetCanvas;
+        private Canvas myTargetCanvas;
         /// <summary>
         /// Sets the canvas where objects are dragged/dropped. If null, it will default to the child of TargetScrollViewer when AutoScroll is set to Mode.Drag.
         /// </summary>
@@ -32,16 +26,16 @@ namespace QReal.Controls
         {
             get
             {
-                return _targetCanvas;
+                return myTargetCanvas;
             }
             set
             {
-                _targetCanvas = value;
-                DraggableObjects = new ObservableCollection<FrameworkElement>();
-                foreach (FrameworkElement F in _targetCanvas.Children)
+                myTargetCanvas = value;
+                myDraggableObjects = new ObservableCollection<FrameworkElement>();
+                foreach (FrameworkElement f in myTargetCanvas.Children)
                 {
-                    DraggableObjects.Add(F);
-                };
+                    myDraggableObjects.Add(f);
+                }
             }
         }
 
@@ -76,7 +70,7 @@ namespace QReal.Controls
         /// </summary>
         public double ScrollPixelsPerTick { get; set; }
 
-        private Mode _autoscroll;
+        private Mode myAutoScroll;
         /// <summary>
         /// Sets the mode of automatic scrolling for the targetted ScrollViewer. Auto: Scrolls when the cursor is at the edge of the ScrollViewer. Drag: Scrolls when the the mouse is dragged at the edge of the ScrollViewer.
         /// </summary>
@@ -84,60 +78,60 @@ namespace QReal.Controls
         {
             get
             {
-                return _autoscroll;
+                return myAutoScroll;
             }
             set
             {
-                if (_autoscroll == Mode.Auto)
+                if (myAutoScroll == Mode.Auto)
                 {
-                    TargetScrollViewer.MouseMove -= AutoScrollViewer_MouseMove;
-                    TargetScrollViewer.MouseLeave -= AutoScrollViewer_MouseLeave;
+                    myTargetScrollViewer.MouseMove -= AutoScrollViewer_MouseMove;
+                    myTargetScrollViewer.MouseLeave -= AutoScrollViewer_MouseLeave;
                 }
-                if (_autoscroll == Mode.Drag)
+                if (myAutoScroll == Mode.Drag)
                 {
 
-                    foreach (FrameworkElement F in TargetCanvas.Children)
+                    foreach (FrameworkElement f in TargetCanvas.Children)
                     {
-                        F.MouseLeftButtonDown -= new MouseButtonEventHandler(F_MouseLeftButtonDown);
+                        f.MouseLeftButtonDown -= new MouseButtonEventHandler(F_MouseLeftButtonDown);
                     }
                     TargetCanvas.LayoutUpdated -= new EventHandler(TargetCanvas_LayoutUpdated);
                 }
                 if (value == Mode.Auto)
                 {
-                    TargetScrollViewer.MouseMove += AutoScrollViewer_MouseMove;
-                    TargetScrollViewer.MouseLeave += AutoScrollViewer_MouseLeave;
+                    myTargetScrollViewer.MouseMove += AutoScrollViewer_MouseMove;
+                    myTargetScrollViewer.MouseLeave += AutoScrollViewer_MouseLeave;
                 }
                 if (value == Mode.Drag)
                 {
                     if (TargetCanvas == null)
                     {
-                        if (TargetScrollViewer.Content.GetType().ToString() == "System.Windows.Controls.Canvas")
+                        if (myTargetScrollViewer.Content.GetType().ToString() == "System.Windows.Controls.Canvas")
                         {
-                            TargetCanvas = ((Canvas)(TargetScrollViewer.Content));
+                            TargetCanvas = ((Canvas)(myTargetScrollViewer.Content));
                         }
                     }
-                    foreach (FrameworkElement F in TargetCanvas.Children)
+                    foreach (FrameworkElement f in TargetCanvas.Children)
                     {
-                        F.MouseLeftButtonDown += new MouseButtonEventHandler(F_MouseLeftButtonDown);
+                        f.MouseLeftButtonDown += new MouseButtonEventHandler(F_MouseLeftButtonDown);
                     }
                     TargetCanvas.LayoutUpdated += new EventHandler(TargetCanvas_LayoutUpdated);
 
                 }
-                _autoscroll = value;
+                myAutoScroll = value;
 
             }
         }
 
         void TargetCanvas_LayoutUpdated(object sender, EventArgs e)
         {
-            if (DraggableObjects.Count != TargetCanvas.Children.Count)
+            if (myDraggableObjects.Count != TargetCanvas.Children.Count)
             {
-                foreach (FrameworkElement F in TargetCanvas.Children)
+                foreach (FrameworkElement f in TargetCanvas.Children)
                 {
-                    if (DraggableObjects.Contains(F) == false)
+                    if (myDraggableObjects.Contains(f) == false)
                     {
-                        F.MouseLeftButtonDown += new MouseButtonEventHandler(F_MouseLeftButtonDown);
-                        DraggableObjects.Add(F);
+                        f.MouseLeftButtonDown += new MouseButtonEventHandler(F_MouseLeftButtonDown);
+                        myDraggableObjects.Add(f);
                     }
                 }
             }
@@ -146,7 +140,7 @@ namespace QReal.Controls
         private FrameworkElement DraggedObject
         { get; set; }
 
-        private Boolean _scrollLeft;
+        private Boolean myScrollLeft;
 
         /// <summary>
         /// Causes the targetted ScrollViewer to scroll left, at a rate defined by the ScrollPixelsPerTick property.
@@ -155,13 +149,13 @@ namespace QReal.Controls
         {
             get
             {
-                return _scrollLeft;
+                return myScrollLeft;
             }
             set
             {
-                if (value == true)
+                if (value)
                 {
-                    if (ScrollUp == ScrollDown == ScrollRight == _scrollLeft == false)
+                    if (ScrollUp == ScrollDown == ScrollRight == myScrollLeft == false)
                         StartTimer();
                 }
                 else
@@ -169,12 +163,12 @@ namespace QReal.Controls
                     if (ScrollUp == ScrollDown == ScrollRight == false)
                         StopTimer();
                 }
-                _scrollLeft = value;
+                myScrollLeft = value;
 
             }
         }
 
-        private Boolean _scrollRight;
+        private Boolean myScrollRight;
         /// <summary>
         /// Causes the targetted ScrollViewer to scroll right, at a rate defined by the ScrollPixelsPerTick property.
         /// </summary>
@@ -182,13 +176,13 @@ namespace QReal.Controls
         {
             get
             {
-                return _scrollRight;
+                return myScrollRight;
             }
             set
             {
-                if (value == true)
+                if (value)
                 {
-                    if (ScrollUp == ScrollDown == ScrollRight == _scrollLeft == false)
+                    if (ScrollUp == ScrollDown == ScrollRight == myScrollLeft == false)
                         StartTimer();
                 }
                 else
@@ -196,12 +190,12 @@ namespace QReal.Controls
                     if (ScrollUp == ScrollDown == ScrollLeft == false)
                         StopTimer();
                 }
-                _scrollRight = value;
+                myScrollRight = value;
 
             }
         }
 
-        private Boolean _scrollUp;
+        private Boolean myScrollUp;
         /// <summary>
         /// Causes the targetted ScrollViewer to scroll up, at a rate defined by the ScrollPixelsPerTick property.
         /// </summary>
@@ -209,13 +203,13 @@ namespace QReal.Controls
         {
             get
             {
-                return _scrollUp;
+                return myScrollUp;
             }
             set
             {
-                if (value == true)
+                if (value)
                 {
-                    if (ScrollUp == ScrollDown == ScrollRight == _scrollLeft == false)
+                    if (ScrollUp == ScrollDown == ScrollRight == myScrollLeft == false)
                         StartTimer();
                 }
                 else
@@ -223,12 +217,12 @@ namespace QReal.Controls
                     if (ScrollRight == ScrollDown == ScrollLeft == false)
                         StopTimer();
                 }
-                _scrollUp = value;
+                myScrollUp = value;
 
             }
         }
 
-        private Boolean _scrollDown;
+        private Boolean myScrollDown;
         /// <summary>
         /// Causes the targetted ScrollViewer to scroll down, at a rate defined by the ScrollPixelsPerTick property.
         /// </summary>
@@ -236,13 +230,13 @@ namespace QReal.Controls
         {
             get
             {
-                return _scrollDown;
+                return myScrollDown;
             }
             set
             {
-                if (value == true)
+                if (value)
                 {
-                    if (ScrollUp == ScrollDown == ScrollRight == _scrollLeft == false)
+                    if (ScrollUp == ScrollDown == ScrollRight == myScrollLeft == false)
                         StartTimer();
                 }
                 else
@@ -250,7 +244,7 @@ namespace QReal.Controls
                     if (ScrollUp == ScrollRight == ScrollLeft == false)
                         StopTimer();
                 }
-                _scrollDown = value;
+                myScrollDown = value;
 
             }
         }
@@ -262,12 +256,12 @@ namespace QReal.Controls
         /// <summary>
         /// Enables automatic scrolling on a targetted ScrollViewer. 
         /// </summary>
-        /// <param name="TargetScrollViewer">
+        /// <param name="targetScrollViewer">
         /// The ScrollViewer to use automatic scrolling.
         /// </param>
-        public AutoScroller(ScrollViewer TargetScrollViewer)
+        public AutoScroller(ScrollViewer targetScrollViewer)
         {
-            this.TargetScrollViewer = TargetScrollViewer;
+            this.myTargetScrollViewer = targetScrollViewer;
             ScrollPixelsPerTick = 5;
             ScrollArea = 40;
         }
@@ -275,41 +269,42 @@ namespace QReal.Controls
         /// <summary>
         /// Enables automatic scrolling on a targetted ScrollViewer. 
         /// </summary>
-        /// <param name="TargetScrollViewer">The ScrollViewer to use automatic scrolling.</param>
-        /// <param name="AutoScroll">The AutoScroll mode. Auto: Scrolls when the cursor is at the edge of the ScrollViewer. Drag: Scrolls when the the mouse is dragged at the edge of the ScrollViewer.</param>
-        public AutoScroller(ScrollViewer TargetScrollViewer, Mode AutoScroll)
+        /// <param name="targetScrollViewer">The ScrollViewer to use automatic scrolling.</param>
+        /// <param name="autoScroll">The AutoScroll mode. Auto: Scrolls when the cursor is at the edge of the ScrollViewer. Drag: Scrolls when the the mouse is dragged at the edge of the ScrollViewer.</param>
+        public AutoScroller(ScrollViewer targetScrollViewer, Mode autoScroll)
         {
-            this.TargetScrollViewer = TargetScrollViewer;
+            this.myTargetScrollViewer = targetScrollViewer;
             ScrollPixelsPerTick = 5;
             ScrollArea = 40;
-            this.AutoScroll = AutoScroll;
+            this.AutoScroll = autoScroll;
         }
 
         /// <summary>
         /// Enables automatic scrolling on a targetted ScrollViewer.
         /// </summary>
-        /// <param name="TargetScrollViewer">The ScrollViewer to use automatic scrolling.</param>
-        /// <param name="ScrollPixelsPerTick">The number of pixels per 100 milliseconds that the ScrollViewer moves while autoscrolling.</param>
-        /// <param name="ScrollArea">/// Defines the width (in pixels) of the zone at the edge of the ScrollViewer that will trigger automatic scrolling.</param>
-        public AutoScroller(ScrollViewer TargetScrollViewer, double ScrollPixelsPerTick, double ScrollArea)
+        /// <param name="targetScrollViewer">The ScrollViewer to use automatic scrolling.</param>
+        /// <param name="scrollPixelsPerTick">The number of pixels per 100 milliseconds that the ScrollViewer moves while autoscrolling.</param>
+        /// <param name="scrollArea">/// Defines the width (in pixels) of the zone at the edge of the ScrollViewer that will trigger automatic scrolling.</param>
+        public AutoScroller(ScrollViewer targetScrollViewer, double scrollPixelsPerTick, double scrollArea)
         {
-            this.TargetScrollViewer = TargetScrollViewer;
-            this.ScrollPixelsPerTick = ScrollPixelsPerTick;
-            this.ScrollArea = ScrollArea;
+            this.myTargetScrollViewer = targetScrollViewer;
+            this.ScrollPixelsPerTick = scrollPixelsPerTick;
+            this.ScrollArea = scrollArea;
         }
         /// <summary>
         /// Enables automatic scrolling on a targetted ScrollViewer.
         /// </summary>
-        /// <param name="TargetScrollViewer">The ScrollViewer to use automatic scrolling.</param>
-        /// <param name="ScrollPixelsPerTick">The number of pixels per 100 milliseconds that the ScrollViewer moves while autoscrolling.</param>
-        /// <param name="ScrollArea">/// Defines the width (in pixels) of the zone at the edge of the ScrollViewer that will trigger automatic scrolling.</param>
-        /// <param name="AutoScroll">The AutoScroll mode. Auto: Scrolls when the cursor is at the edge of the ScrollViewer. Drag: Scrolls when the the mouse is dragged at the edge of the ScrollViewer.</param>
-        public AutoScroller(ScrollViewer TargetScrollViewer, double ScrollPixelsPerTick, double ScrollArea, Mode AutoScroll)
+        /// <param name="targetScrollViewer">The ScrollViewer to use automatic scrolling.</param>
+        /// <param name="scrollPixelsPerTick">The number of pixels per 100 milliseconds that the ScrollViewer moves while autoscrolling.</param>
+        /// <param name="scrollArea">/// Defines the width (in pixels) of the zone at the edge of the ScrollViewer that will trigger automatic scrolling.</param>
+        /// <param name="autoScroll">The AutoScroll mode. Auto: Scrolls when the cursor is at the edge of the ScrollViewer. Drag: Scrolls when the the mouse is dragged at the edge of the ScrollViewer.</param>
+        public AutoScroller(ScrollViewer targetScrollViewer, double scrollPixelsPerTick, double scrollArea, Mode autoScroll)
         {
-            this.TargetScrollViewer = TargetScrollViewer;
-            this.ScrollPixelsPerTick = ScrollPixelsPerTick;
-            this.ScrollArea = ScrollArea;
-            this.AutoScroll = AutoScroll;
+            this.myTargetScrollViewer = targetScrollViewer;
+            myAutoScroll = autoScroll;
+            this.ScrollPixelsPerTick = scrollPixelsPerTick;
+            this.ScrollArea = scrollArea;
+            this.AutoScroll = autoScroll;
         }
 
         #endregion
@@ -318,86 +313,86 @@ namespace QReal.Controls
 
         private void Each_Tick(object o, EventArgs sender)
         {
-            if (ScrollRight == true)
+            if (ScrollRight)
             {
-                if (TargetScrollViewer.HorizontalOffset == TargetScrollViewer.ScrollableWidth)
+                if (myTargetScrollViewer.HorizontalOffset == myTargetScrollViewer.ScrollableWidth)
                     ScrollRight = false;
                 else
                 {
-                    TargetScrollViewer.ScrollToHorizontalOffset(TargetScrollViewer.HorizontalOffset + ScrollPixelsPerTick);
+                    myTargetScrollViewer.ScrollToHorizontalOffset(myTargetScrollViewer.HorizontalOffset + ScrollPixelsPerTick);
 
-                    if (DraggedObject != null && testoffset != TargetScrollViewer.HorizontalOffset)
+                    if (DraggedObject != null && myTestoffset != myTargetScrollViewer.HorizontalOffset)
                     {
                         DraggedObject.SetValue(Canvas.LeftProperty, (double)(DraggedObject.GetValue(Canvas.LeftProperty)) + (ScrollPixelsPerTick));
                     }
-                    testoffset = TargetScrollViewer.HorizontalOffset;
+                    myTestoffset = myTargetScrollViewer.HorizontalOffset;
                 }
             }
-            if (ScrollLeft == true)
+            if (ScrollLeft)
             {
-                if (TargetScrollViewer.HorizontalOffset == 0)
+                if (myTargetScrollViewer.HorizontalOffset == 0)
                 {
                     ScrollLeft = false;
                 }
                 else
                 {
-                    TargetScrollViewer.ScrollToHorizontalOffset(TargetScrollViewer.HorizontalOffset - ScrollPixelsPerTick);
-                    if (DraggedObject != null && testoffset != TargetScrollViewer.HorizontalOffset)
+                    myTargetScrollViewer.ScrollToHorizontalOffset(myTargetScrollViewer.HorizontalOffset - ScrollPixelsPerTick);
+                    if (DraggedObject != null && myTestoffset != myTargetScrollViewer.HorizontalOffset)
                     {
                         DraggedObject.SetValue(Canvas.LeftProperty, (double)(DraggedObject.GetValue(Canvas.LeftProperty)) - (ScrollPixelsPerTick));
                     }
-                    testoffset = TargetScrollViewer.HorizontalOffset;
+                    myTestoffset = myTargetScrollViewer.HorizontalOffset;
                 }
             }
-            if (ScrollDown == true)
+            if (ScrollDown)
             {
-                TargetScrollViewer.ScrollToVerticalOffset(TargetScrollViewer.VerticalOffset + ScrollPixelsPerTick);
-                if (DraggedObject != null && testvoffset != TargetScrollViewer.VerticalOffset)
+                myTargetScrollViewer.ScrollToVerticalOffset(myTargetScrollViewer.VerticalOffset + ScrollPixelsPerTick);
+                if (DraggedObject != null && myTestvoffset != myTargetScrollViewer.VerticalOffset)
                 {
                     DraggedObject.SetValue(Canvas.TopProperty, (double)(DraggedObject.GetValue(Canvas.TopProperty)) + (ScrollPixelsPerTick));
                 }
-                testvoffset = TargetScrollViewer.VerticalOffset;
+                myTestvoffset = myTargetScrollViewer.VerticalOffset;
             }
-            if (ScrollUp == true)
+            if (ScrollUp)
             {
-                if (TargetScrollViewer.VerticalOffset == 0)
+                if (myTargetScrollViewer.VerticalOffset == 0)
                 {
                     ScrollUp = false;
                 }
                 else
                 {
-                    TargetScrollViewer.ScrollToVerticalOffset(TargetScrollViewer.VerticalOffset - ScrollPixelsPerTick);
-                    if (DraggedObject != null && testvoffset != TargetScrollViewer.VerticalOffset)
+                    myTargetScrollViewer.ScrollToVerticalOffset(myTargetScrollViewer.VerticalOffset - ScrollPixelsPerTick);
+                    if (DraggedObject != null && myTestvoffset != myTargetScrollViewer.VerticalOffset)
                     {
                         DraggedObject.SetValue(Canvas.TopProperty, (double)(DraggedObject.GetValue(Canvas.TopProperty)) - (ScrollPixelsPerTick));
                     }
-                    testvoffset = TargetScrollViewer.VerticalOffset;
+                    myTestvoffset = myTargetScrollViewer.VerticalOffset;
                 }
             }
         }
 
         private void AutoScrollViewer_MouseMove(object sender, MouseEventArgs e)
         {
-            Point mousepos = e.GetPosition(TargetScrollViewer);
+            Point mousepos = e.GetPosition(myTargetScrollViewer);
 
-            if (mousepos.X < ScrollArea && TargetScrollViewer.HorizontalOffset > 0)
+            if (mousepos.X < ScrollArea && myTargetScrollViewer.HorizontalOffset > 0)
                 ScrollLeft = true;
-            else if (ScrollLeft == true)
+            else if (ScrollLeft)
                 ScrollLeft = false;
 
-            if (mousepos.Y < ScrollArea && TargetScrollViewer.VerticalOffset > 0)
+            if (mousepos.Y < ScrollArea && myTargetScrollViewer.VerticalOffset > 0)
                 ScrollUp = true;
-            else if (ScrollUp == true)
+            else if (ScrollUp)
                 ScrollUp = false;
 
-            if (mousepos.X > ((double)TargetScrollViewer.ActualWidth - ScrollArea))
+            if (mousepos.X > (myTargetScrollViewer.ActualWidth - ScrollArea))
                 ScrollRight = true;
-            else if (ScrollRight == true)
+            else if (ScrollRight)
                 ScrollRight = false;
 
-            if (mousepos.Y > ((double)TargetScrollViewer.ActualHeight - ScrollArea))
+            if (mousepos.Y > (myTargetScrollViewer.ActualHeight - ScrollArea))
                 ScrollDown = true;
-            else if (ScrollDown == true)
+            else if (ScrollDown)
                 ScrollDown = false;
 
         }
@@ -409,18 +404,18 @@ namespace QReal.Controls
 
         private void F_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            testoffset = TargetScrollViewer.HorizontalOffset;
-            testvoffset = TargetScrollViewer.VerticalOffset;
+            myTestoffset = myTargetScrollViewer.HorizontalOffset;
+            myTestvoffset = myTargetScrollViewer.VerticalOffset;
             DraggedObject = (FrameworkElement)sender;
-            TargetScrollViewer.MouseMove += AutoScrollViewer_MouseMove;
-            TargetScrollViewer.MouseLeave += AutoScrollViewer_MouseLeave;
+            myTargetScrollViewer.MouseMove += AutoScrollViewer_MouseMove;
+            myTargetScrollViewer.MouseLeave += AutoScrollViewer_MouseLeave;
             DraggedObject.MouseLeftButtonUp += new MouseButtonEventHandler(AutoScrollViewer_MouseLeftButtonUp);
         }
 
         private void AutoScrollViewer_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            TargetScrollViewer.MouseMove -= AutoScrollViewer_MouseMove;
-            TargetScrollViewer.MouseLeave -= AutoScrollViewer_MouseLeave;
+            myTargetScrollViewer.MouseMove -= AutoScrollViewer_MouseMove;
+            myTargetScrollViewer.MouseLeave -= AutoScrollViewer_MouseLeave;
             ScrollLeft = ScrollDown = ScrollUp = ScrollRight = false;
             DraggedObject = null;
         }
@@ -431,8 +426,7 @@ namespace QReal.Controls
 
         private void StartTimer()
         {
-            myDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            myDispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100); // 100 Milliseconds 
+            myDispatcherTimer = new System.Windows.Threading.DispatcherTimer {Interval = new TimeSpan(0, 0, 0, 0, 100)};
             myDispatcherTimer.Tick += new EventHandler(Each_Tick);
             myDispatcherTimer.Start();
         }
@@ -456,7 +450,7 @@ namespace QReal.Controls
             ScrollRight = false;
             ScrollLeft = false;
             ScrollDown = false;
-            TargetScrollViewer = null;
+            myTargetScrollViewer = null;
         }
 
         #endregion

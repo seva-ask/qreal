@@ -1,14 +1,6 @@
-﻿using System;
-using System.Net;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Windows.Controls.Primitives;
 using System.Windows.Browser;
 
 namespace ObjectTypes
@@ -34,17 +26,17 @@ namespace ObjectTypes
             ObjectType parent = GetParent();
             if (parent != null)
             {
-                parent.MouseEnter += new MouseEventHandler(parent_MouseEnter);
-                parent.MouseLeave += new MouseEventHandler(parent_MouseLeave);
+                parent.MouseEnter += new MouseEventHandler(ParentMouseEnter);
+                parent.MouseLeave += new MouseEventHandler(ParentMouseLeave);
             }
         }
 
-        private void parent_MouseLeave(object sender, MouseEventArgs e)
+        private void ParentMouseLeave(object sender, MouseEventArgs e)
         {
             this.Visibility = Visibility.Collapsed;
         }
 
-        private void parent_MouseEnter(object sender, MouseEventArgs e)
+        private void ParentMouseEnter(object sender, MouseEventArgs e)
         {
             this.Visibility = Visibility.Visible;
         }

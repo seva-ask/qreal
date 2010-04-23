@@ -1,29 +1,20 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using System.Collections.Generic;
 
 namespace ObjectTypes
 {
     public class PortComparer : IComparer<Port>
     {
-        private Point position;
+        private readonly Point myPosition;
 
         public PortComparer(Point position)
         {
-            this.position = position;
+            this.myPosition = position;
         }
 
         public int Compare(Port first, Port second)
         {
-            double lengthDiff = first.GetDistanceToPosition(position) - second.GetDistanceToPosition(position);
+            double lengthDiff = first.GetDistanceToPosition(myPosition) - second.GetDistanceToPosition(myPosition);
             if (lengthDiff > 0)
 	        {
                 return 1;
