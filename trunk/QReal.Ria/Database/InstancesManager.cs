@@ -1,33 +1,24 @@
 ﻿using System;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Linq;
-using System.Windows.Shapes;
 using QReal.Web.Database;
 using System.Windows.Threading;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.ServiceModel.DomainServices.Client;
-using System.Reflection;
 using System.Windows.Browser;
 
 namespace QReal.Ria.Database
 {
     public class InstancesManager : DependencyObject
     {
-        private static InstancesManager instance = new InstancesManager();
+        private static readonly InstancesManager myInstance = new InstancesManager();
 
         public static InstancesManager Instance
         {
             get
             {
-                return instance;
+                return myInstance;
             }
         }
 
@@ -38,9 +29,8 @@ namespace QReal.Ria.Database
             if (IsNotDesigner())
             {
                 InstancesContext.GraphicInstances.PropertyChanged += new PropertyChangedEventHandler(GraphicInstances_PropertyChanged);
-                DispatcherTimer timer = new DispatcherTimer();
-                timer.Interval = new TimeSpan(0, 0, 0, 0, 1000);
-                timer.Tick += new EventHandler(timer_Tick);
+                DispatcherTimer timer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 0, 0, 1000)};
+                timer.Tick += new EventHandler(TimerTick);
                 timer.Start();                
             }
         }
@@ -58,7 +48,7 @@ namespace QReal.Ria.Database
             }
         }
 
-        private void timer_Tick(object sender, EventArgs e)
+        private void TimerTick(object sender, EventArgs e)
         {
             InstancesContext.Load(InstancesContext.GetLogicalInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
             InstancesContext.Load(InstancesContext.GetInstancePropertiesQuery(), LoadBehavior.MergeIntoCurrent, false);

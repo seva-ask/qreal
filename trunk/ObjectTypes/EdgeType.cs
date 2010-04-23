@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using System.IO;
 using QReal.Web.Database;
 using System.Linq;
 using System.Collections.Generic;
@@ -19,60 +13,65 @@ namespace ObjectTypes
 {
     public abstract class EdgeType : ObjectType
     {
-        public EdgeType()
+        protected EdgeType()
         {
-            Grid grid = new Grid();
-            grid.Name = "LayoutRoot";
+            Grid grid = new Grid {Name = "LayoutRoot"};
             this.Content = grid;
             this.Loaded += new RoutedEventHandler(EdgeType_Loaded);
         }
 
-        private Line mainLine;
+        private Line myMainLine;
 
         private void EdgeType_Loaded(object sender, RoutedEventArgs e)
         {
-            mainLine = new Line();
-            mainLine.StrokeThickness = 5;
-            mainLine.Stroke = new SolidColorBrush(Colors.Black);
+            myMainLine = new Line {StrokeThickness = 5, Stroke = new SolidColorBrush(Colors.Black)};
 
-            Binding bindingX2 = new Binding();
-            bindingX2.Source = this;
-            bindingX2.Path = new PropertyPath("X2");
-            bindingX2.Mode = BindingMode.TwoWay;
-            bindingX2.Converter = new AbsConverter();
-            mainLine.SetBinding(Line.X2Property, bindingX2);
+            Binding bindingX2 = new Binding
+                                    {
+                                        Source = this,
+                                        Path = new PropertyPath("X2"),
+                                        Mode = BindingMode.TwoWay,
+                                        Converter = new AbsConverter()
+                                    };
+            myMainLine.SetBinding(Line.X2Property, bindingX2);
 
-            Binding bindingY2 = new Binding();
-            bindingY2.Source = this;
-            bindingY2.Path = new PropertyPath("Y2");
-            bindingY2.Mode = BindingMode.TwoWay;
-            bindingY2.Converter = new AbsConverter();
-            mainLine.SetBinding(Line.Y2Property, bindingY2);
+            Binding bindingY2 = new Binding
+                                    {
+                                        Source = this,
+                                        Path = new PropertyPath("Y2"),
+                                        Mode = BindingMode.TwoWay,
+                                        Converter = new AbsConverter()
+                                    };
+            myMainLine.SetBinding(Line.Y2Property, bindingY2);
 
-            (this.Content as Panel).Children.Add(mainLine);
+            (this.Content as Panel).Children.Add(myMainLine);
 
-            LinkBoundaryPointPort endPort = new LinkBoundaryPointPort();
-            endPort.Width = 7;
-            endPort.Height = 7;
-            endPort.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
-            endPort.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-            endPort.DragStarted += new DragStartedEventHandler(boundaryPort_DragStarted);
-            endPort.DragDelta += new DragDeltaEventHandler(endPort_DragDelta);
-            endPort.DragCompleted += new DragCompletedEventHandler(endPort_DragCompleted);
+            LinkBoundaryPointPort endPort = new LinkBoundaryPointPort
+                                                {
+                                                    Width = 7,
+                                                    Height = 7,
+                                                    VerticalAlignment = VerticalAlignment.Bottom,
+                                                    HorizontalAlignment = HorizontalAlignment.Right
+                                                };
+            endPort.DragStarted += new DragStartedEventHandler(BoundaryPortDragStarted);
+            endPort.DragDelta += new DragDeltaEventHandler(EndPortDragDelta);
+            endPort.DragCompleted += new DragCompletedEventHandler(EndPortDragCompleted);
             (this.Content as Panel).Children.Add(endPort);
 
-            LinkBoundaryPointPort startPort = new LinkBoundaryPointPort();
-            startPort.Width = 7;
-            startPort.Height = 7;
-            startPort.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            startPort.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            startPort.DragStarted += new DragStartedEventHandler(boundaryPort_DragStarted);
-            startPort.DragDelta += new DragDeltaEventHandler(startPort_DragDelta);
-            startPort.DragCompleted += new DragCompletedEventHandler(startPort_DragCompleted);
+            LinkBoundaryPointPort startPort = new LinkBoundaryPointPort
+                                                  {
+                                                      Width = 7,
+                                                      Height = 7,
+                                                      VerticalAlignment = VerticalAlignment.Top,
+                                                      HorizontalAlignment = HorizontalAlignment.Left
+                                                  };
+            startPort.DragStarted += new DragStartedEventHandler(BoundaryPortDragStarted);
+            startPort.DragDelta += new DragDeltaEventHandler(StartPortDragDelta);
+            startPort.DragCompleted += new DragCompletedEventHandler(StartPortDragCompleted);
             (this.Content as Panel).Children.Add(startPort);
         }
 
-        private void endPort_DragCompleted(object sender, DragCompletedEventArgs e)
+        private void EndPortDragCompleted(object sender, DragCompletedEventArgs e)
         {
             double y = (double)this.GetValue(Canvas.TopProperty) + Y2;
             double x = (double)this.GetValue(Canvas.LeftProperty) + X2;
@@ -93,7 +92,7 @@ namespace ObjectTypes
             }
         }
 
-        private void startPort_DragCompleted(object sender, DragCompletedEventArgs e)
+        private void StartPortDragCompleted(object sender, DragCompletedEventArgs e)
         {
             double y = (double)this.GetValue(Canvas.TopProperty);
             double x = (double)this.GetValue(Canvas.LeftProperty);
@@ -118,13 +117,13 @@ namespace ObjectTypes
             }
         }
 
-        private Port GetNearestPort(Point position, NodeType nodeType)
+        private static Port GetNearestPort(Point position, NodeType nodeType)
         {
             IEnumerable<UIElement> ports = (nodeType.Content as Panel).Children.Where(item => item is Port);
-            return ports.AsQueryable<UIElement>().OrderBy(port => (port as Port), new PortComparer(position)).First() as Port;
+            return ports.AsQueryable().OrderBy(port => (port as Port), new PortComparer(position)).First() as Port;
         }
 
-        private int GetPortNumber(Port port, NodeType nodeType)
+        private static int GetPortNumber(Port port, NodeType nodeType)
         {
             IEnumerable<UIElement> ports = (nodeType.Content as Panel).Children.Where(item => item is Port);
             int number = 0;
@@ -160,12 +159,12 @@ namespace ObjectTypes
             return null;
         }
 
-        private void startPort_DragDelta(object sender, DragDeltaEventArgs e)
+        private void StartPortDragDelta(object sender, DragDeltaEventArgs e)
         {
             Point deltaTempPoint = new Point(e.HorizontalChange, e.VerticalChange);
-            if (mouseTransform != null)
+            if (myMouseTransform != null)
             {
-                Point deltaTempPointTransformed = mouseTransform.Transform(deltaTempPoint);
+                Point deltaTempPointTransformed = myMouseTransform.Transform(deltaTempPoint);
                 X2 -= deltaTempPointTransformed.X;
                 Y2 -= deltaTempPointTransformed.Y;
                 double newTop = deltaTempPointTransformed.Y + (double)this.GetValue(Canvas.TopProperty);
@@ -184,19 +183,19 @@ namespace ObjectTypes
             this.SetValue(Canvas.LeftProperty, newLeft2);
         }
 
-        private void boundaryPort_DragStarted(object sender, DragStartedEventArgs e)
+        private void BoundaryPortDragStarted(object sender, DragStartedEventArgs e)
         {
-            mouseTransform = this.RenderTransform;
+            myMouseTransform = this.RenderTransform;
         }
 
-        private GeneralTransform mouseTransform;
+        private GeneralTransform myMouseTransform;
 
-        private void endPort_DragDelta(object sender, DragDeltaEventArgs e)
+        private void EndPortDragDelta(object sender, DragDeltaEventArgs e)
         {
             Point deltaTempPoint = new Point(e.HorizontalChange, e.VerticalChange);
-            if (mouseTransform != null)
+            if (myMouseTransform != null)
             {
-                Point deltaTempPointTransformed = mouseTransform.Transform(deltaTempPoint);
+                Point deltaTempPointTransformed = myMouseTransform.Transform(deltaTempPoint);
                 X2 += deltaTempPointTransformed.X;
                 Y2 += deltaTempPointTransformed.Y;
                 return;
@@ -239,7 +238,7 @@ namespace ObjectTypes
             }
             else if ((edgeType.X2 < 0) && (edgeType.Y2 < 0))
             {
-                double angle = 180;
+                const double angle = 180;
                 generalTransform = GetTransform(edgeType, angle, true, true);
             }
             edgeType.RenderTransform = generalTransform;
@@ -249,10 +248,12 @@ namespace ObjectTypes
         {
             TransformGroup transformGroup = new TransformGroup();
 
-            RotateTransform rotateTransform = new RotateTransform();
-            rotateTransform.Angle = angle;
-            rotateTransform.CenterX = Math.Abs(edgeType.X2) / 2;
-            rotateTransform.CenterY = Math.Abs(edgeType.Y2) / 2;
+            RotateTransform rotateTransform = new RotateTransform
+                                                  {
+                                                      Angle = angle,
+                                                      CenterX = Math.Abs(edgeType.X2)/2,
+                                                      CenterY = Math.Abs(edgeType.Y2)/2
+                                                  };
             transformGroup.Children.Add(rotateTransform);
 
             TranslateTransform translateTransform = new TranslateTransform();
@@ -271,49 +272,61 @@ namespace ObjectTypes
 
         protected override void Select()
         {
-            mainLine.Stroke = new SolidColorBrush(Colors.Blue);
+            myMainLine.Stroke = new SolidColorBrush(Colors.Blue);
         }
 
         protected override void UnSelect()
         {
-            mainLine.Stroke = new SolidColorBrush(Colors.Black);
+            myMainLine.Stroke = new SolidColorBrush(Colors.Black);
         }
 
         public double PortFrom
         {
-            get { return (double)GetValue(PortFromProperty); }
-            set { SetValue(PortFromProperty, value); }
+            get
+            {
+                return (double) (this.DataContext as EdgeInstance).PortFrom;
+            }
+            set
+            {
+                (this.DataContext as EdgeInstance).PortFrom = value;
+            }
         }
-
-        public static readonly DependencyProperty PortFromProperty =
-            DependencyProperty.Register("PortFrom", typeof(double), typeof(EdgeType), null);
 
         public double PortTo
         {
-            get { return (double)GetValue(PortToProperty); }
-            set { SetValue(PortToProperty, value); }
+            get
+            {
+                return (double)(this.DataContext as EdgeInstance).PortTo;
+            }
+            set
+            {
+                (this.DataContext as EdgeInstance).PortTo = value;
+            }
         }
-
-        public static readonly DependencyProperty PortToProperty =
-            DependencyProperty.Register("PortTo", typeof(double), typeof(EdgeType), null);
 
         public NodeInstance NodeFrom
         {
-            get { return (NodeInstance)GetValue(NodeFromProperty); }
-            set { SetValue(NodeFromProperty, value); }
+            get
+            {
+                return (this.DataContext as EdgeInstance).NodeFrom;
+            }
+            set
+            {
+                (this.DataContext as EdgeInstance).NodeFrom = value;
+            }
         }
-
-        public static readonly DependencyProperty NodeFromProperty =
-            DependencyProperty.Register("NodeFrom", typeof(NodeInstance), typeof(EdgeType), null);
 
         public NodeInstance NodeTo
         {
-            get { return (NodeInstance)GetValue(NodeToProperty); }
-            set { SetValue(NodeToProperty, value); }
+            get
+            {
+                return (this.DataContext as EdgeInstance).NodeTo;
+            }
+            set
+            {
+                (this.DataContext as EdgeInstance).NodeTo = value;
+            }
         }
-
-        public static readonly DependencyProperty NodeToProperty =
-            DependencyProperty.Register("NodeTo", typeof(NodeInstance), typeof(EdgeType), null);
 
         protected override bool CanMove()
         {

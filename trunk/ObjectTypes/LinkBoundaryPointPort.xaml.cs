@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Windows.Controls.Primitives;
+﻿using System.Windows.Controls.Primitives;
 
 namespace ObjectTypes
 {
@@ -22,12 +11,12 @@ namespace ObjectTypes
         public LinkBoundaryPointPort()
         {
             InitializeComponent();
-            thumb.DragCompleted += new DragCompletedEventHandler(thumb_DragCompleted);
-            thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
-            thumb.DragStarted += new DragStartedEventHandler(thumb_DragStarted);
+            thumb.DragCompleted += new DragCompletedEventHandler(ThumbDragCompleted);
+            thumb.DragDelta += new DragDeltaEventHandler(ThumbDragDelta);
+            thumb.DragStarted += new DragStartedEventHandler(ThumbDragStarted);
         }
 
-        private void thumb_DragStarted(object sender, DragStartedEventArgs e)
+        private void ThumbDragStarted(object sender, DragStartedEventArgs e)
         {
             if (DragStarted != null)
             {
@@ -35,7 +24,7 @@ namespace ObjectTypes
             }
         }
 
-        private void thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void ThumbDragDelta(object sender, DragDeltaEventArgs e)
         {
             if (DragDelta != null)
             {
@@ -43,7 +32,7 @@ namespace ObjectTypes
             }
         }
 
-        private void thumb_DragCompleted(object sender, DragCompletedEventArgs e)
+        private void ThumbDragCompleted(object sender, DragCompletedEventArgs e)
         {
             if (DragCompleted != null)
             {

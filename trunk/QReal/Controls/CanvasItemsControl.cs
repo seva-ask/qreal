@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using System.Windows.Markup;
 using System.Linq;
 using ObjectTypes;
@@ -46,10 +41,10 @@ namespace QReal.Controls
                 TypeLoader.Instance.Request(() =>
                 contentPresenter.ContentTemplate = Create(TypesHelper.GetType(graphicInstance.LogicalInstance.Type)));
             }
-            contentPresenter.Loaded += new RoutedEventHandler(contentPresenter_Loaded);
+            contentPresenter.Loaded += new RoutedEventHandler(ContentPresenterLoaded);
         }
 
-        private void contentPresenter_Loaded(object sender, RoutedEventArgs e)
+        private void ContentPresenterLoaded(object sender, RoutedEventArgs e)
         {
             ContentPresenter contentPresenter = sender as ContentPresenter;
             GraphicInstance graphicInstance = contentPresenter.Content as GraphicInstance;
@@ -57,17 +52,19 @@ namespace QReal.Controls
             Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
             SetPropertyBindings(graphicInstance, objectType);
-            objectType.MouseLeftButtonDown += new MouseButtonEventHandler(objectType_MouseLeftButtonDown);
-            Binding bindingSelected = new Binding();
-            bindingSelected.Mode = BindingMode.TwoWay;
-            bindingSelected.Path = new PropertyPath("SelectedGraphicInstance");
-            bindingSelected.Source = UIManager.Instance;
-            bindingSelected.Converter = new IdToSelectedConverter(objectType);
+            objectType.MouseLeftButtonDown += new MouseButtonEventHandler(ObjectTypeMouseLeftButtonDown);
+            Binding bindingSelected = new Binding
+                                          {
+                                              Mode = BindingMode.TwoWay,
+                                              Path = new PropertyPath("SelectedGraphicInstance"),
+                                              Source = UIManager.Instance,
+                                              Converter = new IdToSelectedConverter(objectType)
+                                          };
             objectType.SetBinding(ObjectType.SelectedProperty, bindingSelected);
-            objectType.ZIndexChanged += new ZIndexChangedHandler(objectType_ZIndexChanged);
+            objectType.ZIndexChanged += new ZIndexChangedHandler(ObjectTypeZIndexChanged);
         }
 
-        private void objectType_ZIndexChanged(ObjectType objectType, int newZIndex)
+        private void ObjectTypeZIndexChanged(ObjectType objectType, int newZIndex)
         {
             foreach (var item in GetChildren(objectType))
             {
@@ -87,13 +84,13 @@ namespace QReal.Controls
             }
         }
 
-        private void objectType_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private static void ObjectTypeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             UIManager.Instance.SelectedGraphicInstance = (sender as ObjectType).DataContext as GraphicInstance;
             e.Handled = true;
         }
 
-        private void SetPropertyBindings(GraphicInstance graphicInstance, ObjectType objectType)
+        private static void SetPropertyBindings(GraphicInstance graphicInstance, ObjectType objectType)
         {
             Type type = objectType.GetType();
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
@@ -103,10 +100,12 @@ namespace QReal.Controls
                 {
                     string propertyName = field.Name.Substring(0, field.Name.LastIndexOf("Property"));
                     InstanceProperty instanceProperty = graphicInstance.LogicalInstance.InstanceProperties.Single(item => item.Name == propertyName);
-                    Binding binding = new Binding();
-                    binding.Path = new PropertyPath("Value");
-                    binding.Mode = BindingMode.TwoWay;
-                    binding.Source = instanceProperty;
+                    Binding binding = new Binding
+                                          {
+                                              Path = new PropertyPath("Value"),
+                                              Mode = BindingMode.TwoWay,
+                                              Source = instanceProperty
+                                          };
                     DependencyProperty dependencyProperty = field.GetValue(objectType) as DependencyProperty;
                     objectType.SetBinding(dependencyProperty, binding);
                 }
@@ -123,7 +122,7 @@ namespace QReal.Controls
 
         public AutoScroller Autoscroller { get; set; }
 
-        private DataTemplate Create(Type type)
+        private static DataTemplate Create(Type type)
         {
             string xaml = @"<DataTemplate 
                 xmlns=""http://schemas.microsoft.com/client/2007""
@@ -135,15 +134,15 @@ namespace QReal.Controls
             return (DataTemplate)XamlReader.Load(xaml);
         }
 
-        private string GetTypeSpecificBinding(Type type)
+        private static string GetTypeSpecificBinding(Type type)
         {
             if (type.IsSubclassOf(typeof(NodeType)))
             {
-                return @"Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}"" LinksFrom=""{Binding LinksFrom, Mode=TwoWay}"" LinksTo=""{Binding LinksTo, Mode=TwoWay}""";
+                return @"Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}""";
             }
             else
             {
-                return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}"" PortTo=""{Binding PortTo, Mode=TwoWay}"" PortFrom=""{Binding PortFrom, Mode=TwoWay}"" NodeTo=""{Binding NodeTo, Mode=TwoWay}"" NodeFrom=""{Binding NodeFrom, Mode=TwoWay}""";
+                return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}""";
             }
         }
     }

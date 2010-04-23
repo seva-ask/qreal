@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using System.Collections.Generic;
 using QReal.Ria.Types;
 using System.Linq;
@@ -54,19 +46,18 @@ namespace QReal.Types
         {
             Type type = GetType(graphicInstance.LogicalInstance.Type);
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
-            foreach (var field in fields)
+            foreach (var field in fields.Where(item => item.FieldType == typeof(DependencyProperty)))
             {
-                if (field.FieldType == typeof(DependencyProperty))
+                string propertyName = field.Name.Substring(0, field.Name.LastIndexOf("Property"));
+                int count = graphicInstance.LogicalInstance.InstanceProperties.Count(property => property.Name == propertyName);
+                if (count == 0)
                 {
-                    string propertyName = field.Name.Substring(0, field.Name.LastIndexOf("Property"));
-                    int count = graphicInstance.LogicalInstance.InstanceProperties.Count(property => property.Name == propertyName);
-                    if (count == 0)
-                    {
-                        InstanceProperty instanceProperty = new InstanceProperty();
-                        instanceProperty.Name = propertyName;
-                        instanceProperty.LogicalInstance = graphicInstance.LogicalInstance;
-                        graphicInstance.LogicalInstance.InstanceProperties.Add(instanceProperty);
-                    }
+                    InstanceProperty instanceProperty = new InstanceProperty
+                                                            {
+                                                                Name = propertyName,
+                                                                LogicalInstance = graphicInstance.LogicalInstance
+                                                            };
+                    graphicInstance.LogicalInstance.InstanceProperties.Add(instanceProperty);
                 }
             }
         }

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using System.Collections.Generic;
+using QReal.Ria.Database;
 using QReal.Web.Database;
 using System.Linq;
 using System.Windows.Data;
@@ -18,7 +15,7 @@ namespace ObjectTypes
 {
     public abstract class NodeType : ObjectType
     {
-        public NodeType()
+        protected NodeType()
         {
             this.Loaded += new RoutedEventHandler(NodeType_Loaded);
             this.SizeChanged += new SizeChangedEventHandler(NodeType_SizeChanged);
@@ -28,25 +25,29 @@ namespace ObjectTypes
 
         private void NodeType_Loaded(object sender, RoutedEventArgs e)
         {
-            Thumb thumb = new Thumb();
-            thumb.Width = 7;
-            thumb.Height = 7;
-            thumb.Cursor = Cursors.SizeNWSE;
-            thumb.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
-            thumb.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-            thumb.DragDelta += new DragDeltaEventHandler(thumb_DragDelta);
+            Thumb thumb = new Thumb
+                              {
+                                  Width = 7,
+                                  Height = 7,
+                                  Cursor = Cursors.SizeNWSE,
+                                  VerticalAlignment = VerticalAlignment.Bottom,
+                                  HorizontalAlignment = HorizontalAlignment.Right
+                              };
+            thumb.DragDelta += new DragDeltaEventHandler(ThumbDragDelta);
 
-            Binding bindingThumbVisibility = new Binding();
-            bindingThumbVisibility.Source = this;
-            bindingThumbVisibility.Path = new PropertyPath("Selected");
-            bindingThumbVisibility.Mode = BindingMode.TwoWay;
-            bindingThumbVisibility.Converter = new VisibilityConverter();
-            thumb.SetBinding(Thumb.VisibilityProperty, bindingThumbVisibility);
+            Binding bindingThumbVisibility = new Binding
+                                                 {
+                                                     Source = this,
+                                                     Path = new PropertyPath("Selected"),
+                                                     Mode = BindingMode.TwoWay,
+                                                     Converter = new VisibilityConverter()
+                                                 };
+            thumb.SetBinding(VisibilityProperty, bindingThumbVisibility);
 
             (this.Content as Panel).Children.Add(thumb);
         }
 
-        private void thumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void ThumbDragDelta(object sender, DragDeltaEventArgs e)
         {
             double newWidth = this.Width + e.HorizontalChange;
             if (newWidth > 0)
@@ -92,7 +93,7 @@ namespace ObjectTypes
             }
         }
 
-        private EdgeType GetEdgeType(object item)
+        private static EdgeType GetEdgeType(object item)
         {
             return (VisualTreeHelper.GetChild((item as ContentPresenter), 0) as Canvas).Children[0] as EdgeType;
         }
@@ -148,71 +149,72 @@ namespace ObjectTypes
 
         public IEnumerable<EdgeInstance> LinksFrom
         {
-            get { return (IEnumerable<EdgeInstance>)GetValue(LinksFromProperty); }
-            set { SetValue(LinksFromProperty, value); }
+            get
+            {
+                return
+                    InstancesManager.Instance.InstancesContext.GraphicInstances.OfType<EdgeInstance>().Where(
+                        item => item.NodeFrom == this.DataContext);
+            }
         }
-
-        public static readonly DependencyProperty LinksFromProperty =
-            DependencyProperty.Register("LinksFrom", typeof(IEnumerable<EdgeInstance>), typeof(NodeType), null);
 
         public IEnumerable<EdgeInstance> LinksTo
         {
-            get { return (IEnumerable<EdgeInstance>)GetValue(LinksToProperty); }
-            set { SetValue(LinksToProperty, value); }
+            get
+            {
+                return
+                    InstancesManager.Instance.InstancesContext.GraphicInstances.OfType<EdgeInstance>().Where(
+                        item => item.NodeTo == this.DataContext);
+            }
         }
 
-        public static readonly DependencyProperty LinksToProperty =
-            DependencyProperty.Register("LinksTo", typeof(IEnumerable<EdgeInstance>), typeof(NodeType), null);
-
-        private Rectangle rectTopLeft;
-        private Rectangle rectTopRight;
-        private Rectangle rectBottomLeft;
-        private Rectangle rectBottomRight;
+        private Rectangle myRectTopLeft;
+        private Rectangle myRectTopRight;
+        private Rectangle myRectBottomLeft;
+        private Rectangle myRectBottomRight;
 
         private void CreateSelectRectangles()
         {
-            CreateSelectRectangle(ref rectTopLeft);
-            CreateSelectRectangle(ref rectTopRight);
-            CreateSelectRectangle(ref rectBottomLeft);
-            CreateSelectRectangle(ref rectBottomRight);
+            CreateSelectRectangle(ref myRectTopLeft);
+            CreateSelectRectangle(ref myRectTopRight);
+            CreateSelectRectangle(ref myRectBottomLeft);
+            CreateSelectRectangle(ref myRectBottomRight);
         }
 
         private void CreateSelectRectangle(ref Rectangle rect)
         {
             Panel parent = this.Parent as Panel;
-            rect = new Rectangle();
-            rect.Width = 5;
-            rect.Height = 5;
-            rect.Fill = new SolidColorBrush(Colors.Blue);
+            rect = new Rectangle {Width = 5, Height = 5, Fill = new SolidColorBrush(Colors.Blue)};
 
-            Binding bindingRectVisibility = new Binding();
-            bindingRectVisibility.Source = this;
-            bindingRectVisibility.Path = new PropertyPath("Selected");
-            bindingRectVisibility.Mode = BindingMode.TwoWay;
-            bindingRectVisibility.Converter = new VisibilityConverter();
-            rect.SetBinding(Thumb.VisibilityProperty, bindingRectVisibility);
+            Binding bindingRectVisibility = new Binding
+                                                {
+                                                    Source = this,
+                                                    Path = new PropertyPath("Selected"),
+                                                    Mode = BindingMode.TwoWay,
+                                                    Converter = new VisibilityConverter()
+                                                };
+            rect.SetBinding(VisibilityProperty, bindingRectVisibility);
 
             parent.Children.Add(rect);
         }
 
         private void AdjustSelectRectanglesPositions()
         {
-            if (rectTopLeft == null)
+            if (myRectTopLeft == null)
             {
                 CreateSelectRectangles();
             }
 
-            rectTopLeft.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty));
-            rectTopLeft.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty));
+            myRectTopLeft.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty));
+            myRectTopLeft.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty));
 
-            rectTopRight.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty) + this.ActualWidth - rectTopRight.Width);
-            rectTopRight.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty));
+            myRectTopRight.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty) + this.ActualWidth - myRectTopRight.Width);
+            myRectTopRight.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty));
 
-            rectBottomLeft.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty));
-            rectBottomLeft.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty) + this.ActualHeight - rectTopRight.Height);
+            myRectBottomLeft.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty));
+            myRectBottomLeft.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty) + this.ActualHeight - myRectTopRight.Height);
 
-            rectBottomRight.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty) + this.ActualWidth - rectTopRight.Width);
-            rectBottomRight.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty) + this.ActualHeight - rectTopRight.Height);
+            myRectBottomRight.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty) + this.ActualWidth - myRectTopRight.Width);
+            myRectBottomRight.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty) + this.ActualHeight - myRectTopRight.Height);
         }
     }
 }

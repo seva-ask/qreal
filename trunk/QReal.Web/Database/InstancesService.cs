@@ -1,27 +1,18 @@
 ﻿
 namespace QReal.Web.Database
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
     using System.Data;
     using System.Linq;
     using System.ServiceModel.DomainServices.EntityFramework;
     using System.ServiceModel.DomainServices.Hosting;
-    using System.ServiceModel.DomainServices.Server;
-
 
     // Implements application logic using the QRealEntities context.
-    // TODO: Add your application logic to these methods or in additional methods.
-    // TODO: Wire up authentication (Windows/ASP.NET Forms) and uncomment the following to disable anonymous access
     // Also consider adding roles to restrict access as appropriate.
     // [RequiresAuthentication]
-    [EnableClientAccess()]
+    [EnableClientAccess]
     public class InstancesService : LinqToEntitiesDomainService<QRealEntities>
     {
 
-        // TODO: Consider
         // 1. Adding parameters to this method and constraining returned results, and/or
         // 2. Adding query methods taking different parameters.
         public IQueryable<GraphicInstance> GetGraphicInstances()
@@ -55,7 +46,6 @@ namespace QReal.Web.Database
             this.ObjectContext.GraphicInstances.DeleteObject(graphicInstance);
         }
 
-        // TODO: Consider
         // 1. Adding parameters to this method and constraining returned results, and/or
         // 2. Adding query methods taking different parameters.
         public IQueryable<InstanceProperty> GetInstanceProperties()
@@ -89,7 +79,6 @@ namespace QReal.Web.Database
             this.ObjectContext.InstanceProperties.DeleteObject(instanceProperty);
         }
 
-        // TODO: Consider
         // 1. Adding parameters to this method and constraining returned results, and/or
         // 2. Adding query methods taking different parameters.
         public IQueryable<LogicalInstance> GetLogicalInstances()

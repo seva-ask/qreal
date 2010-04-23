@@ -1,13 +1,5 @@
-﻿using System;
-using System.Net;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using QReal.Controls;
 using QReal.Web.Database;
 using System.Collections.Generic;
@@ -20,13 +12,13 @@ namespace QReal
 
     public class UIManager : DependencyObject
     {
-        private static UIManager instance = new UIManager();
+        private static readonly UIManager myInstance = new UIManager();
 
         public static UIManager Instance
         {
             get
             {
-                return instance;
+                return myInstance;
             }
         }
 
@@ -43,9 +35,11 @@ namespace QReal
             set
             {
                 myCanvas = value;
-                AutoScroller autoScroller = new AutoScroller(MainPage.scrollViewer, AutoScroller.Mode.Auto);
-                autoScroller.TargetCanvas = myCanvas;
-                autoScroller.AutoScroll = AutoScroller.Mode.Drag;
+                new AutoScroller(MainPage.scrollViewer, AutoScroller.Mode.Auto)
+                    {
+                        TargetCanvas = myCanvas,
+                        AutoScroll = AutoScroller.Mode.Drag
+                    };
             }
         }
 
@@ -65,14 +59,7 @@ namespace QReal
             {
                 uiManager.SelectedItemChanged(uiManager.SelectedGraphicInstance);
             }
-            if (uiManager.SelectedGraphicInstance != null)
-            {
-                uiManager.InstancePropertiesSource = InstancesManager.Instance.InstancesContext.InstanceProperties.Where(item => item.LogicalInstance == uiManager.SelectedGraphicInstance.LogicalInstance);
-            }
-            else
-            {
-                uiManager.InstancePropertiesSource = null;
-            }
+            uiManager.InstancePropertiesSource = uiManager.SelectedGraphicInstance != null ? InstancesManager.Instance.InstancesContext.InstanceProperties.Where(item => item.LogicalInstance == uiManager.SelectedGraphicInstance.LogicalInstance) : null;
         }
 
         public event SelectedItemChangedHandler SelectedItemChanged;

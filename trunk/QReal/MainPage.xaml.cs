@@ -2,19 +2,8 @@
 using System.Windows.Controls;
 using QReal.Web.Database;
 using QReal.Ria.Types;
-using ObjectTypes;
-using System.Windows.Data;
-using System;
-using System.ComponentModel;
-using System.Collections;
-using System.Collections.Generic;
-using System.Windows.Threading;
-using System.ServiceModel.DomainServices.Client;
 using System.Windows;
 using QReal.Ria.Database;
-using System.Threading;
-using System.Windows.Media;
-using QReal.Controls;
 using QReal.Types;
 
 namespace QReal
@@ -47,30 +36,30 @@ namespace QReal
 
         private void InitializeToolBox()
         {
-            TypeLoader.Instance.Request(delegate()
-            {
-                toolboxDiagramComboBox.ItemsSource = TypesHelper.Diagrams;
-                toolboxDiagramComboBox.SelectedIndex = 0;
-            });
+            TypeLoader.Instance.Request(() =>
+                                            {
+                                                toolboxDiagramComboBox.ItemsSource = TypesHelper.Diagrams;
+                                                toolboxDiagramComboBox.SelectedIndex = 0;
+                                            });
         }
 
-        private void toolboxDiagramComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ToolboxDiagramComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string diagram = (string) toolboxDiagramComboBox.SelectedItem;
             toolboxObjectsDataGrid.ItemsSource = TypesHelper.GetDiagramTypes(diagram);
         }
 
-        private void button1_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Button1Click(object sender, RoutedEventArgs e)
         {
             InstancesManager.Instance.InstancesContext.SubmitChanges();
         }
 
-        private void button2_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Button2Click(object sender, RoutedEventArgs e)
         {
             InstancesManager.Instance.InstancesContext.RejectChanges();
         }
 
-        private void button3_Click(object sender, RoutedEventArgs e)
+        private void Button3Click(object sender, RoutedEventArgs e)
         {
             while (InstancesManager.Instance.InstancesContext.GraphicInstances.Count > 0)
             {
@@ -79,7 +68,7 @@ namespace QReal
             InstancesManager.Instance.InstancesContext.SubmitChanges();
         }
 
-        private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void TreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             UIManager.Instance.SelectedGraphicInstance = treeView.SelectedItem as GraphicInstance;
         }

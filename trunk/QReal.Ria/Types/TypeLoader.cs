@@ -1,21 +1,9 @@
 ﻿using System;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
 using QReal.Web.Assemblies;
-using System.Diagnostics;
-using System.Threading;
-using QReal.Web.Database;
-using System.Linq;
 
 namespace QReal.Ria.Types
 {
@@ -23,25 +11,25 @@ namespace QReal.Ria.Types
 
     public class TypeLoader
     {
-        private List<Type> types;
+        private readonly List<Type> myTypes;
 
-        private static TypeLoader instance = new TypeLoader();
+        private static readonly TypeLoader myInstance = new TypeLoader();
 
         public static TypeLoader Instance
         {
             get
             {
-                return instance;
+                return myInstance;
             }
         }
 
         private TypeLoader()
         {
-            types = new List<Type>();
+            myTypes = new List<Type>();
             AssembliesContext assembliesContext = new AssembliesContext();
             assembliesContext.GetAssemblies(operation =>
             {
-                mReady = operation.Value.Length;
+                myReady = operation.Value.Length;
                 foreach (string file in operation.Value)
                 {
                     GetSerializedAssembly(file);
@@ -49,19 +37,14 @@ namespace QReal.Ria.Types
             }, null);
         }
 
-        private int mReady = -1;
-
-        private void SetReady(int value)
-        {
-            mReady = value;
-        }
+        private int myReady = -1;
 
         private void DecreaseReady()
         {
-            mReady--;
-            if (mReady == 0)
+            myReady--;
+            if (myReady == 0)
             {
-                foreach (LoadingComplete action in actions)
+                foreach (LoadingComplete action in myActions)
                 {
                     action();
                 }
@@ -77,16 +60,16 @@ namespace QReal.Ria.Types
                 AssemblyPart part = new AssemblyPart();
                 Assembly assembly = part.Load(ms);
                 Type[] availableTypes = assembly.GetTypes();
-                types.AddRange(availableTypes);
+                myTypes.AddRange(availableTypes);
                 DecreaseReady();
             }, null);
         }
 
         public void Request(LoadingComplete action)
         {
-            if (mReady != 0)
+            if (myReady != 0)
             {
-	            actions.Add(action);
+	            myActions.Add(action);
             }
             else
             {
@@ -94,13 +77,13 @@ namespace QReal.Ria.Types
             }
         }
 
-        List<LoadingComplete> actions = new List<LoadingComplete>();
+        readonly List<LoadingComplete> myActions = new List<LoadingComplete>();
 
         public IEnumerable<Type> Types
         {
             get
             {
-                return types;
+                return myTypes;
             }
         }
     }
