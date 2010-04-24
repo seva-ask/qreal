@@ -90,7 +90,7 @@ namespace QReal.Controls
 
         private static void ObjectTypeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            UIManager.Instance.SelectedGraphicInstance = (sender as ObjectType).DataContext as GraphicInstance;
+            UIManager.Instance.SelectedGraphicInstance = (sender as ObjectType).DataContext as Entity;
             e.Handled = true;
         }
 
