@@ -1,0 +1,742 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="QRealModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="QRealModelStoreContainer">
+    <EntitySet Name="LogicalInstances" EntityType="QRealModel.Store.LogicalInstances" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InstanceProperties" EntityType="QRealModel.Store.InstanceProperties" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GraphicInstances" EntityType="QRealModel.Store.GraphicInstances" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ParentableInstanceSet" EntityType="QRealModel.Store.ParentableInstanceSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RootInstanceSet" EntityType="QRealModel.Store.RootInstanceSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="NodeInstanceSet" EntityType="QRealModel.Store.NodeInstanceSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="EdgeInstanceSet" EntityType="QRealModel.Store.EdgeInstanceSet" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GeometryInformationSet" EntityType="QRealModel.Store.GeometryInformationSet" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="LogicalInstanceProperties" Association="QRealModel.Store.LogicalInstanceProperties">
+      <End Role="LogicalInstance" EntitySet="LogicalInstances" />
+      <End Role="InstanceProperty" EntitySet="InstanceProperties" />
+    </AssociationSet>
+    <AssociationSet Name="GraphicToLogical" Association="QRealModel.Store.GraphicToLogical">
+      <End Role="GraphicInstance" EntitySet="GraphicInstances" />
+      <End Role="LogicalInstance" EntitySet="LogicalInstances" />
+    </AssociationSet>
+    <AssociationSet Name="RootInstanceEdgeInstance" Association="QRealModel.Store.RootInstanceEdgeInstance">
+      <End Role="RootInstance" EntitySet="RootInstanceSet" />
+      <End Role="EdgeInstance" EntitySet="EdgeInstanceSet" />
+    </AssociationSet>
+    <AssociationSet Name="EdgesFromNode" Association="QRealModel.Store.EdgesFromNode">
+      <End Role="NodeInstance" EntitySet="NodeInstanceSet" />
+      <End Role="EdgeInstance" EntitySet="EdgeInstanceSet" />
+    </AssociationSet>
+    <AssociationSet Name="EdgesToNode" Association="QRealModel.Store.EdgesToNode">
+      <End Role="NodeInstance" EntitySet="NodeInstanceSet" />
+      <End Role="EdgeInstance" EntitySet="EdgeInstanceSet" />
+    </AssociationSet>
+    <AssociationSet Name="EdgeInstanceGeometryInformation" Association="QRealModel.Store.EdgeInstanceGeometryInformation">
+      <End Role="EdgeInstance" EntitySet="EdgeInstanceSet" />
+      <End Role="GeometryInformation" EntitySet="GeometryInformationSet" />
+    </AssociationSet>
+    <AssociationSet Name="NodeInstanceGeometryInformation" Association="QRealModel.Store.NodeInstanceGeometryInformation">
+      <End Role="NodeInstance" EntitySet="NodeInstanceSet" />
+      <End Role="GeometryInformation" EntitySet="GeometryInformationSet" />
+    </AssociationSet>
+    <AssociationSet Name="NodeParents" Association="QRealModel.Store.NodeParents">
+      <End Role="ParentableInstance" EntitySet="ParentableInstanceSet" />
+      <End Role="NodeInstance" EntitySet="NodeInstanceSet" />
+    </AssociationSet>
+    <AssociationSet Name="GraphicInstanceParentableInstanceInheritance" Association="QRealModel.Store.GraphicInstanceParentableInstanceInheritance">
+      <End Role="GraphicInstance" EntitySet="GraphicInstances" />
+      <End Role="ParentableInstance" EntitySet="ParentableInstanceSet" />
+    </AssociationSet>
+    <AssociationSet Name="GraphicInstanceEdgeInstanceInheritance" Association="QRealModel.Store.GraphicInstanceEdgeInstanceInheritance">
+      <End Role="GraphicInstance" EntitySet="GraphicInstances" />
+      <End Role="EdgeInstance" EntitySet="EdgeInstanceSet" />
+    </AssociationSet>
+    <AssociationSet Name="ParentableInstanceRootInstanceInheritance" Association="QRealModel.Store.ParentableInstanceRootInstanceInheritance">
+      <End Role="ParentableInstance" EntitySet="ParentableInstanceSet" />
+      <End Role="RootInstance" EntitySet="RootInstanceSet" />
+    </AssociationSet>
+    <AssociationSet Name="ParentableInstanceNodeInstanceInheritance" Association="QRealModel.Store.ParentableInstanceNodeInstanceInheritance">
+      <End Role="ParentableInstance" EntitySet="ParentableInstanceSet" />
+      <End Role="NodeInstance" EntitySet="NodeInstanceSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="LogicalInstances">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Type" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InstanceProperties">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Value" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="LogicalInstanceId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GraphicInstances">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LogicalInstanceId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ParentableInstanceSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InheritanceId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RootInstanceSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InheritanceId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="NodeInstanceSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ParentId" Type="int" Nullable="true" />
+    <Property Name="InheritanceId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EdgeInstanceSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ParentId" Type="int" Nullable="false" />
+    <Property Name="NodeFromId" Type="int" Nullable="true" />
+    <Property Name="NodeToId" Type="int" Nullable="true" />
+    <Property Name="PortFrom" Type="float" Nullable="true" />
+    <Property Name="PortTo" Type="float" Nullable="true" />
+    <Property Name="InheritanceId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GeometryInformationSet">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="X" Type="float" Nullable="false" />
+    <Property Name="Y" Type="float" Nullable="false" />
+    <Property Name="Width" Type="float" Nullable="false" />
+    <Property Name="Height" Type="float" Nullable="false" />
+  </EntityType>
+  <Association Name="LogicalInstanceProperties">
+    <End Role="LogicalInstance" Type="QRealModel.Store.LogicalInstances" Multiplicity="1" />
+    <End Role="InstanceProperty" Type="QRealModel.Store.InstanceProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LogicalInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InstanceProperty">
+        <PropertyRef Name="LogicalInstanceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GraphicToLogical">
+    <End Role="GraphicInstance" Type="QRealModel.Store.GraphicInstances" Multiplicity="*" />
+    <End Role="LogicalInstance" Type="QRealModel.Store.LogicalInstances" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="LogicalInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="GraphicInstance">
+        <PropertyRef Name="LogicalInstanceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="RootInstanceEdgeInstance">
+    <End Role="RootInstance" Type="QRealModel.Store.RootInstanceSet" Multiplicity="1" />
+    <End Role="EdgeInstance" Type="QRealModel.Store.EdgeInstanceSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RootInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EdgeInstance">
+        <PropertyRef Name="ParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EdgesFromNode">
+    <End Role="NodeInstance" Type="QRealModel.Store.NodeInstanceSet" Multiplicity="0..1" />
+    <End Role="EdgeInstance" Type="QRealModel.Store.EdgeInstanceSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NodeInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EdgeInstance">
+        <PropertyRef Name="NodeFromId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EdgesToNode">
+    <End Role="NodeInstance" Type="QRealModel.Store.NodeInstanceSet" Multiplicity="0..1" />
+    <End Role="EdgeInstance" Type="QRealModel.Store.EdgeInstanceSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NodeInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EdgeInstance">
+        <PropertyRef Name="NodeToId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EdgeInstanceGeometryInformation">
+    <End Role="EdgeInstance" Type="QRealModel.Store.EdgeInstanceSet" Multiplicity="0..1" />
+    <End Role="GeometryInformation" Type="QRealModel.Store.GeometryInformationSet" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GeometryInformation">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EdgeInstance">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="NodeInstanceGeometryInformation">
+    <End Role="NodeInstance" Type="QRealModel.Store.NodeInstanceSet" Multiplicity="0..1" />
+    <End Role="GeometryInformation" Type="QRealModel.Store.GeometryInformationSet" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GeometryInformation">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NodeInstance">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="NodeParents">
+    <End Role="ParentableInstance" Type="QRealModel.Store.ParentableInstanceSet" Multiplicity="0..1" />
+    <End Role="NodeInstance" Type="QRealModel.Store.NodeInstanceSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ParentableInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NodeInstance">
+        <PropertyRef Name="ParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GraphicInstanceParentableInstanceInheritance">
+    <End Role="GraphicInstance" Type="QRealModel.Store.GraphicInstances" Multiplicity="1" />
+    <End Role="ParentableInstance" Type="QRealModel.Store.ParentableInstanceSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GraphicInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ParentableInstance">
+        <PropertyRef Name="InheritanceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GraphicInstanceEdgeInstanceInheritance">
+    <End Role="GraphicInstance" Type="QRealModel.Store.GraphicInstances" Multiplicity="1" />
+    <End Role="EdgeInstance" Type="QRealModel.Store.EdgeInstanceSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GraphicInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EdgeInstance">
+        <PropertyRef Name="InheritanceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ParentableInstanceRootInstanceInheritance">
+    <End Role="ParentableInstance" Type="QRealModel.Store.ParentableInstanceSet" Multiplicity="1" />
+    <End Role="RootInstance" Type="QRealModel.Store.RootInstanceSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ParentableInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RootInstance">
+        <PropertyRef Name="InheritanceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ParentableInstanceNodeInstanceInheritance">
+    <End Role="ParentableInstance" Type="QRealModel.Store.ParentableInstanceSet" Multiplicity="1" />
+    <End Role="NodeInstance" Type="QRealModel.Store.NodeInstanceSet" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ParentableInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NodeInstance">
+        <PropertyRef Name="InheritanceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="QRealModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="QRealEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="LogicalInstances" EntityType="QRealModel.LogicalInstance" />
+          <EntitySet Name="InstanceProperties" EntityType="QRealModel.InstanceProperty" />
+          <AssociationSet Name="LogicalInstanceProperties" Association="QRealModel.LogicalInstanceProperties">
+            <End Role="LogicalInstance" EntitySet="LogicalInstances" />
+            <End Role="InstanceProperty" EntitySet="InstanceProperties" />
+          </AssociationSet>
+          <EntitySet Name="GraphicInstances" EntityType="QRealModel.GraphicInstance" />
+          <AssociationSet Name="GraphicToLogical" Association="QRealModel.GraphicToLogical">
+            <End Role="GraphicInstance" EntitySet="GraphicInstances" />
+            <End Role="LogicalInstance" EntitySet="LogicalInstances" />
+          </AssociationSet>
+          <EntitySet Name="ParentableInstanceSet" EntityType="QRealModel.ParentableInstance" />
+          <EntitySet Name="RootInstanceSet" EntityType="QRealModel.RootInstance" />
+          <EntitySet Name="NodeInstanceSet" EntityType="QRealModel.NodeInstance" />
+          <EntitySet Name="EdgeInstanceSet" EntityType="QRealModel.EdgeInstance" />
+          <EntitySet Name="GeometryInformationSet" EntityType="QRealModel.GeometryInformation" />
+          <AssociationSet Name="RootInstanceEdgeInstance" Association="QRealModel.RootInstanceEdgeInstance">
+            <End Role="RootInstance" EntitySet="RootInstanceSet" />
+            <End Role="EdgeInstance" EntitySet="EdgeInstanceSet" />
+          </AssociationSet>
+          <AssociationSet Name="EdgesFromNode" Association="QRealModel.EdgesFromNode">
+            <End Role="NodeInstance" EntitySet="NodeInstanceSet" />
+            <End Role="EdgeInstance" EntitySet="EdgeInstanceSet" />
+          </AssociationSet>
+          <AssociationSet Name="EdgesToNode" Association="QRealModel.EdgesToNode">
+            <End Role="NodeInstance" EntitySet="NodeInstanceSet" />
+            <End Role="EdgeInstance" EntitySet="EdgeInstanceSet" />
+          </AssociationSet>
+          <AssociationSet Name="EdgeInstanceGeometryInformation" Association="QRealModel.EdgeInstanceGeometryInformation">
+            <End Role="EdgeInstance" EntitySet="EdgeInstanceSet" />
+            <End Role="GeometryInformation" EntitySet="GeometryInformationSet" />
+          </AssociationSet>
+          <AssociationSet Name="NodeInstanceGeometryInformation" Association="QRealModel.NodeInstanceGeometryInformation">
+            <End Role="NodeInstance" EntitySet="NodeInstanceSet" />
+            <End Role="GeometryInformation" EntitySet="GeometryInformationSet" />
+          </AssociationSet>
+          <AssociationSet Name="NodeParents" Association="QRealModel.NodeParents">
+            <End Role="ParentableInstance" EntitySet="ParentableInstanceSet" />
+            <End Role="NodeInstance" EntitySet="NodeInstanceSet" />
+          </AssociationSet>
+          <AssociationSet Name="GraphicInstanceParentableInstanceInheritance" Association="QRealModel.GraphicInstanceParentableInstanceInheritance">
+            <End Role="GraphicInstance" EntitySet="GraphicInstances" />
+            <End Role="ParentableInstance" EntitySet="ParentableInstanceSet" />
+          </AssociationSet>
+          <AssociationSet Name="GraphicInstanceEdgeInstanceInheritance" Association="QRealModel.GraphicInstanceEdgeInstanceInheritance">
+            <End Role="GraphicInstance" EntitySet="GraphicInstances" />
+            <End Role="EdgeInstance" EntitySet="EdgeInstanceSet" />
+          </AssociationSet>
+          <AssociationSet Name="ParentableInstanceRootInstanceInheritance" Association="QRealModel.ParentableInstanceRootInstanceInheritance">
+            <End Role="ParentableInstance" EntitySet="ParentableInstanceSet" />
+            <End Role="RootInstance" EntitySet="RootInstanceSet" />
+          </AssociationSet>
+          <AssociationSet Name="ParentableInstanceNodeInstanceInheritance" Association="QRealModel.ParentableInstanceNodeInstanceInheritance">
+            <End Role="ParentableInstance" EntitySet="ParentableInstanceSet" />
+            <End Role="NodeInstance" EntitySet="NodeInstanceSet" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="LogicalInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Type" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="InstanceProperties" Relationship="QRealModel.LogicalInstanceProperties" FromRole="LogicalInstance" ToRole="InstanceProperty" />
+          <NavigationProperty Name="GraphicInstance" Relationship="QRealModel.GraphicToLogical" FromRole="LogicalInstance" ToRole="GraphicInstance" />
+        </EntityType>
+        <EntityType Name="InstanceProperty">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="Value" Nullable="true" />
+          <NavigationProperty Name="LogicalInstance" Relationship="QRealModel.LogicalInstanceProperties" FromRole="InstanceProperty" ToRole="LogicalInstance" />
+          <Property Type="Int32" Name="LogicalInstanceId" Nullable="false" />
+        </EntityType>
+        <Association Name="LogicalInstanceProperties">
+          <End Type="QRealModel.LogicalInstance" Role="LogicalInstance" Multiplicity="1" />
+          <End Type="QRealModel.InstanceProperty" Role="InstanceProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LogicalInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InstanceProperty">
+              <PropertyRef Name="LogicalInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="GraphicInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="LogicalInstance" Relationship="QRealModel.GraphicToLogical" FromRole="GraphicInstance" ToRole="LogicalInstance" />
+          <Property Type="Int32" Name="LogicalInstanceId" Nullable="false" />
+          <NavigationProperty Name="ParentableInstanceInheritance" Relationship="QRealModel.GraphicInstanceParentableInstanceInheritance" FromRole="GraphicInstance" ToRole="ParentableInstance" />
+          <NavigationProperty Name="EdgeInstance" Relationship="QRealModel.GraphicInstanceEdgeInstanceInheritance" FromRole="GraphicInstance" ToRole="EdgeInstance" />
+        </EntityType>
+        <Association Name="GraphicToLogical">
+          <End Type="QRealModel.GraphicInstance" Role="GraphicInstance" Multiplicity="*" />
+          <End Type="QRealModel.LogicalInstance" Role="LogicalInstance" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="LogicalInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GraphicInstance">
+              <PropertyRef Name="LogicalInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ParentableInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="NodeChildren" Relationship="QRealModel.NodeParents" FromRole="ParentableInstance" ToRole="NodeInstance" />
+          <NavigationProperty Name="InheritanceParent" Relationship="QRealModel.GraphicInstanceParentableInstanceInheritance" FromRole="ParentableInstance" ToRole="GraphicInstance" />
+          <Property Type="Int32" Name="InheritanceId" Nullable="false" />
+          <NavigationProperty Name="RootInstanceInheritance" Relationship="QRealModel.ParentableInstanceRootInstanceInheritance" FromRole="ParentableInstance" ToRole="RootInstance" />
+        </EntityType>
+        <EntityType Name="RootInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="EdgeChildren" Relationship="QRealModel.RootInstanceEdgeInstance" FromRole="RootInstance" ToRole="EdgeInstance" />
+          <NavigationProperty Name="InheritanceParent" Relationship="QRealModel.ParentableInstanceRootInstanceInheritance" FromRole="RootInstance" ToRole="ParentableInstance" />
+          <Property Type="Int32" Name="InheritanceId" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NodeInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="EdgesFrom" Relationship="QRealModel.EdgesFromNode" FromRole="NodeInstance" ToRole="EdgeInstance" />
+          <NavigationProperty Name="EdgesTo" Relationship="QRealModel.EdgesToNode" FromRole="NodeInstance" ToRole="EdgeInstance" />
+          <NavigationProperty Name="GeometryInformation" Relationship="QRealModel.NodeInstanceGeometryInformation" FromRole="NodeInstance" ToRole="GeometryInformation" />
+          <NavigationProperty Name="Parent" Relationship="QRealModel.NodeParents" FromRole="NodeInstance" ToRole="ParentableInstance" />
+          <Property Type="Int32" Name="ParentId" Nullable="true" />
+          <NavigationProperty Name="InheritanceParent" Relationship="QRealModel.ParentableInstanceNodeInstanceInheritance" FromRole="NodeInstance" ToRole="ParentableInstance" />
+          <Property Type="Int32" Name="InheritanceId" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EdgeInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Parent" Relationship="QRealModel.RootInstanceEdgeInstance" FromRole="EdgeInstance" ToRole="RootInstance" />
+          <Property Type="Int32" Name="ParentId" Nullable="false" />
+          <NavigationProperty Name="NodeFrom" Relationship="QRealModel.EdgesFromNode" FromRole="EdgeInstance" ToRole="NodeInstance" />
+          <Property Type="Int32" Name="NodeFromId" Nullable="true" />
+          <NavigationProperty Name="NodeTo" Relationship="QRealModel.EdgesToNode" FromRole="EdgeInstance" ToRole="NodeInstance" />
+          <Property Type="Int32" Name="NodeToId" Nullable="true" />
+          <NavigationProperty Name="GeometryInformation" Relationship="QRealModel.EdgeInstanceGeometryInformation" FromRole="EdgeInstance" ToRole="GeometryInformation" />
+          <Property Type="Double" Name="PortFrom" Nullable="true" />
+          <Property Type="Double" Name="PortTo" Nullable="true" />
+          <NavigationProperty Name="InheritanceParent" Relationship="QRealModel.GraphicInstanceEdgeInstanceInheritance" FromRole="EdgeInstance" ToRole="GraphicInstance" />
+          <Property Type="Int32" Name="InheritanceId" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GeometryInformation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Double" Name="X" Nullable="false" />
+          <Property Type="Double" Name="Y" Nullable="false" />
+          <Property Type="Double" Name="Width" Nullable="false" />
+          <Property Type="Double" Name="Height" Nullable="false" />
+        </EntityType>
+        <Association Name="RootInstanceEdgeInstance">
+          <End Type="QRealModel.RootInstance" Role="RootInstance" Multiplicity="1" />
+          <End Type="QRealModel.EdgeInstance" Role="EdgeInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RootInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EdgeInstance">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EdgesFromNode">
+          <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="0..1" />
+          <End Type="QRealModel.EdgeInstance" Role="EdgeInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NodeInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EdgeInstance">
+              <PropertyRef Name="NodeFromId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EdgesToNode">
+          <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="0..1" />
+          <End Type="QRealModel.EdgeInstance" Role="EdgeInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NodeInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EdgeInstance">
+              <PropertyRef Name="NodeToId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EdgeInstanceGeometryInformation">
+          <End Type="QRealModel.EdgeInstance" Role="EdgeInstance" Multiplicity="0..1" />
+          <End Type="QRealModel.GeometryInformation" Role="GeometryInformation" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="GeometryInformation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EdgeInstance">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="NodeInstanceGeometryInformation">
+          <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="0..1" />
+          <End Type="QRealModel.GeometryInformation" Role="GeometryInformation" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="GeometryInformation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NodeInstance">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="NodeParents">
+          <End Type="QRealModel.ParentableInstance" Role="ParentableInstance" Multiplicity="0..1" />
+          <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ParentableInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NodeInstance">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GraphicInstanceParentableInstanceInheritance">
+          <End Type="QRealModel.GraphicInstance" Role="GraphicInstance" Multiplicity="1" />
+          <End Type="QRealModel.ParentableInstance" Role="ParentableInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GraphicInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ParentableInstance">
+              <PropertyRef Name="InheritanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GraphicInstanceEdgeInstanceInheritance">
+          <End Type="QRealModel.GraphicInstance" Role="GraphicInstance" Multiplicity="1" />
+          <End Type="QRealModel.EdgeInstance" Role="EdgeInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GraphicInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EdgeInstance">
+              <PropertyRef Name="InheritanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ParentableInstanceRootInstanceInheritance">
+          <End Type="QRealModel.ParentableInstance" Role="ParentableInstance" Multiplicity="1" />
+          <End Type="QRealModel.RootInstance" Role="RootInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ParentableInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RootInstance">
+              <PropertyRef Name="InheritanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ParentableInstanceNodeInstanceInheritance">
+          <End Type="QRealModel.ParentableInstance" Role="ParentableInstance" Multiplicity="1" />
+          <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ParentableInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NodeInstance">
+              <PropertyRef Name="InheritanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="QRealModelStoreContainer" CdmEntityContainer="QRealEntities">
+    <EntitySetMapping Name="LogicalInstances">
+      <EntityTypeMapping TypeName="IsTypeOf(QRealModel.LogicalInstance)">
+        <MappingFragment StoreEntitySet="LogicalInstances">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InstanceProperties">
+      <EntityTypeMapping TypeName="IsTypeOf(QRealModel.InstanceProperty)">
+        <MappingFragment StoreEntitySet="InstanceProperties">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="LogicalInstanceId" ColumnName="LogicalInstanceId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GraphicInstances">
+      <EntityTypeMapping TypeName="IsTypeOf(QRealModel.GraphicInstance)">
+        <MappingFragment StoreEntitySet="GraphicInstances">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="LogicalInstanceId" ColumnName="LogicalInstanceId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ParentableInstanceSet">
+      <EntityTypeMapping TypeName="IsTypeOf(QRealModel.ParentableInstance)">
+        <MappingFragment StoreEntitySet="ParentableInstanceSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="InheritanceId" ColumnName="InheritanceId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RootInstanceSet">
+      <EntityTypeMapping TypeName="IsTypeOf(QRealModel.RootInstance)">
+        <MappingFragment StoreEntitySet="RootInstanceSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="InheritanceId" ColumnName="InheritanceId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="NodeInstanceSet">
+      <EntityTypeMapping TypeName="IsTypeOf(QRealModel.NodeInstance)">
+        <MappingFragment StoreEntitySet="NodeInstanceSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+          <ScalarProperty Name="InheritanceId" ColumnName="InheritanceId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EdgeInstanceSet">
+      <EntityTypeMapping TypeName="IsTypeOf(QRealModel.EdgeInstance)">
+        <MappingFragment StoreEntitySet="EdgeInstanceSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+          <ScalarProperty Name="NodeFromId" ColumnName="NodeFromId" />
+          <ScalarProperty Name="NodeToId" ColumnName="NodeToId" />
+          <ScalarProperty Name="PortFrom" ColumnName="PortFrom" />
+          <ScalarProperty Name="PortTo" ColumnName="PortTo" />
+          <ScalarProperty Name="InheritanceId" ColumnName="InheritanceId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GeometryInformationSet">
+      <EntityTypeMapping TypeName="IsTypeOf(QRealModel.GeometryInformation)">
+        <MappingFragment StoreEntitySet="GeometryInformationSet">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="X" ColumnName="X" />
+          <ScalarProperty Name="Y" ColumnName="Y" />
+          <ScalarProperty Name="Width" ColumnName="Width" />
+          <ScalarProperty Name="Height" ColumnName="Height" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="InstancesModel">
+        <EntityTypeShape EntityType="QRealModel.LogicalInstance" Width="1.5" PointX="1.375" PointY="3.5" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="QRealModel.InstanceProperty" Width="1.5" PointX="1.375" PointY="5.875" Height="1.5956835937499996" />
+        <AssociationConnector Association="QRealModel.LogicalInstanceProperties">
+          <ConnectorPoint PointX="2.125" PointY="5.2879850260416665" />
+          <ConnectorPoint PointX="2.125" PointY="5.875" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="QRealModel.GraphicInstance" Width="1.5" PointX="3.625" PointY="3.75" Height="1.7879850260416657" />
+        <AssociationConnector Association="QRealModel.GraphicToLogical">
+          <ConnectorPoint PointX="3.625" PointY="4.6151432291666659" />
+          <ConnectorPoint PointX="2.875" PointY="4.6151432291666659" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="QRealModel.ParentableInstance" Width="1.5" PointX="4.375" PointY="7.25" Height="1.9802864583333335" />
+        <EntityTypeShape EntityType="QRealModel.RootInstance" Width="1.5" PointX="6.625" PointY="9" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="QRealModel.NodeInstance" Width="1.5" PointX="6.625" PointY="6" Height="1.9802864583333335" />
+        <EntityTypeShape EntityType="QRealModel.EdgeInstance" Width="1.5" PointX="6.625" PointY="2.125" Height="3.1340950520833326" />
+        <EntityTypeShape EntityType="QRealModel.GeometryInformation" Width="1.5" PointX="10.125" PointY="4.75" Height="1.9802864583333326" />
+        <AssociationConnector Association="QRealModel.RootInstanceEdgeInstance">
+          <ConnectorPoint PointX="8.125" PointY="9.928417664442069" />
+          <ConnectorPoint PointX="8.5" PointY="9.928417664442069" />
+          <ConnectorPoint PointX="8.5" PointY="3.8000508615631889" />
+          <ConnectorPoint PointX="8.125" PointY="3.8000508615631889" />
+        </AssociationConnector>
+        <AssociationConnector Association="QRealModel.EdgesFromNode">
+          <ConnectorPoint PointX="7.0833333333320754" PointY="6" />
+          <ConnectorPoint PointX="7.0833333333320754" PointY="5.2590950520833326" />
+        </AssociationConnector>
+        <AssociationConnector Association="QRealModel.EdgesToNode">
+          <ConnectorPoint PointX="7.6861994791666266" PointY="6" />
+          <ConnectorPoint PointX="7.6861994791666266" PointY="5.2590950520833326" />
+        </AssociationConnector>
+        <AssociationConnector Association="QRealModel.EdgeInstanceGeometryInformation">
+          <ConnectorPoint PointX="8.125" PointY="5.1006982421875" />
+          <ConnectorPoint PointX="8.4166666666666661" PointY="5.1006982421874989" />
+          <ConnectorPoint PointX="8.5833333333333339" PointY="5.1006982421875" />
+          <ConnectorPoint PointX="10.125" PointY="5.1006982421875" />
+        </AssociationConnector>
+        <AssociationConnector Association="QRealModel.NodeInstanceGeometryInformation">
+          <ConnectorPoint PointX="8.125" PointY="6.3651432291666659" />
+          <ConnectorPoint PointX="8.4166666666666661" PointY="6.365143229166665" />
+          <ConnectorPoint PointX="8.5833333333333339" PointY="6.3651432291666659" />
+          <ConnectorPoint PointX="10.125" PointY="6.3651432291666659" />
+        </AssociationConnector>
+        <AssociationConnector Association="QRealModel.NodeParents">
+          <ConnectorPoint PointX="5.4262071577052753" PointY="7.25" />
+          <ConnectorPoint PointX="5.4262071577052753" PointY="6.6249994999999995" />
+          <ConnectorPoint PointX="6.625" PointY="6.6249994999999995" />
+        </AssociationConnector>
+        <AssociationConnector Association="QRealModel.GraphicInstanceParentableInstanceInheritance">
+          <ConnectorPoint PointX="4.75" PointY="5.5379850260416656" />
+          <ConnectorPoint PointX="4.75" PointY="7.25" />
+        </AssociationConnector>
+        <AssociationConnector Association="QRealModel.GraphicInstanceEdgeInstanceInheritance">
+          <ConnectorPoint PointX="5.125" PointY="4.6006982421875" />
+          <ConnectorPoint PointX="6.625" PointY="4.6006982421875" />
+        </AssociationConnector>
+        <AssociationConnector Association="QRealModel.ParentableInstanceRootInstanceInheritance">
+          <ConnectorPoint PointX="5.125" PointY="9.2302864583333335" />
+          <ConnectorPoint PointX="5.125" PointY="10.009136242187498" />
+          <ConnectorPoint PointX="6.625" PointY="10.009136242187498" />
+        </AssociationConnector>
+        <AssociationConnector Association="QRealModel.ParentableInstanceNodeInstanceInheritance">
+          <ConnectorPoint PointX="5.875" PointY="7.9035953776041667" />
+          <ConnectorPoint PointX="6.625" PointY="7.9035953776041667" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>
