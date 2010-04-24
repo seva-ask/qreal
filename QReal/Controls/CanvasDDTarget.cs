@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ServiceModel.DomainServices.Client;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -6,6 +7,7 @@ using System.Linq;
 using ObjectTypes;
 using QReal.Web.Database;
 using QReal.Ria.Database;
+using DragEventArgs = Microsoft.Windows.DragEventArgs;
 
 namespace QReal.Controls
 {
@@ -33,13 +35,13 @@ namespace QReal.Controls
                     double deltaY;
                     double deltaX;
                     objectType.GetDeltaMouseMove(e, out deltaY, out deltaX);
-                    NodeInstance nodeInstance = (this.Content as CanvasItemsControl).Items.Single(item => item as GraphicInstance == objectType.DataContext) as NodeInstance;
+                    NodeInstance nodeInstance = (this.Content as CanvasItemsControl).Items.Single(item => item == objectType.DataContext) as NodeInstance;
                     if (nodeInstance != null)
                     {
-                        foreach (var instanceChild in nodeInstance.Children)
+                        foreach (var instanceChild in nodeInstance.GetParent<ParentableInstance>().NodeChildren)
                         {
-                            instanceChild.X += deltaX;
-                            instanceChild.Y += deltaY;
+                            instanceChild.GeometryInformation.X += deltaX;
+                            instanceChild.GeometryInformation.Y += deltaY;
                         }
                     }
                 }
@@ -56,39 +58,81 @@ namespace QReal.Controls
             return parent as ObjectType;
         }
 
+        protected override bool CanAddItem(CanvasItemsControl itemsControl, object data)
+        {
+            Type type = data as Type;
+            return (InstancesManager.Instance.CanvasRootElement != null) || ((Activator.CreateInstance(type) as ObjectType).CanBeRootItem);
+        }
+
         protected override void OnDropOverride(Microsoft.Windows.DragEventArgs args)
         {
             ItemDragEventArgs rawObject = args.Data.GetData(args.Data.GetFormats()[0]) as ItemDragEventArgs;
             Type type = (rawObject.Data as System.Collections.ObjectModel.SelectionCollection).First().Item as Type;
-            LogicalInstance logicalInstance = new LogicalInstance
-                                                  {
-                                                      Name =
-                                                          "anonymous " +
-                                                          (Activator.CreateInstance(type) as ObjectType).TypeName,
-                                                      Type = type.FullName
-                                                  };
-            InstancesManager.Instance.InstancesContext.LogicalInstances.Add(logicalInstance);
-            GraphicVisualizedInstance graphicVisualizedInstance;
+
+            if (CanAddItem(null, type))
+            {
+                LogicalInstance logicalInstance = new LogicalInstance
+                {
+                    Name =
+                        "anonymous " +
+                        (Activator.CreateInstance(type) as ObjectType).TypeName,
+                    Type = type.FullName
+                };
+                InstancesManager.Instance.InstancesContext.LogicalInstances.Add(logicalInstance);
+
+                GraphicInstance graphicInstance = new GraphicInstance { LogicalInstance = logicalInstance };
+                InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicInstance);
+                if (InstancesManager.Instance.CanvasRootElement == null)
+                {
+                    ParentableInstance parentableInstance = new ParentableInstance {InheritanceParent = graphicInstance};
+                    RootInstance rootInstance = new RootInstance {InheritanceParent = parentableInstance};
+                    InstancesManager.Instance.InstancesContext.RootInstances.Add(rootInstance);
+                }
+                else
+                {
+                    AddGraphicVisualizedInstance(type, graphicInstance, args);
+                }
+            }
+            InstancesManager.Instance.InstancesContext.SubmitChanges(
+                action => InstancesManager.Instance.UpdateCanvasInstancesSource(), null);
+        }
+
+        private void AddGraphicVisualizedInstance(Type type, GraphicInstance graphicInstance, DragEventArgs args)
+        {
+            Point position = args.GetPosition(this);
+            GeometryInformation geometryInformation = new GeometryInformation
+                                                          {
+                                                              X = position.X,
+                                                              Y = position.Y,
+                                                              Width = 200,
+                                                              Height = 200
+                                                          };
+            InstancesManager.Instance.InstancesContext.GeometryInformations.Add(geometryInformation);
             if (type.IsSubclassOf(typeof(NodeType)))
             {
-                graphicVisualizedInstance = new NodeInstance();
+                ParentableInstance parentableInstance = new ParentableInstance {InheritanceParent = graphicInstance};
+                InstancesManager.Instance.InstancesContext.ParentableInstances.Add(parentableInstance);
+                NodeInstance nodeInstance = new NodeInstance
+                                                {
+                                                    InheritanceParent = parentableInstance,
+                                                    GeometryInformation = geometryInformation
+                                                };
+                InstancesManager.Instance.InstancesContext.NodeInstances.Add(nodeInstance);
+                nodeInstance.Parent = FindParent(position, nodeInstance);
             }
             else
             {
-                graphicVisualizedInstance = new EdgeInstance();
+                EdgeInstance edgeInstance = new EdgeInstance
+                                                {
+                                                    GeometryInformation = geometryInformation,
+                                                    InheritanceParent = graphicInstance,
+                                                    Parent = InstancesManager.Instance.CanvasRootElement
+                                                };
+                InstancesManager.Instance.InstancesContext.EdgeInstances.Add(edgeInstance);
             }
-            graphicVisualizedInstance.LogicalInstance = logicalInstance;
-            Point position = args.GetPosition(this);
-            graphicVisualizedInstance.Parent = FindParent(position, graphicVisualizedInstance);
-            graphicVisualizedInstance.X = position.X;
-            graphicVisualizedInstance.Y = position.Y;
-            graphicVisualizedInstance.Width = 200;
-            graphicVisualizedInstance.Height = 200;
-            InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicVisualizedInstance);
         }
 
-
-        private NodeInstance FindParent(Point position, GraphicInstance instance)
+        private ParentableInstance FindParent(Point position, NodeInstance instance)
         {
             foreach (var item in (this.Content as CanvasItemsControl).Items)
             {
@@ -97,13 +141,14 @@ namespace QReal.Controls
                 {
                     continue;
                 }
-                Rect itemBoundingRect = new Rect(nodeInstance.X, nodeInstance.Y, nodeInstance.Width, nodeInstance.Height);
+                GeometryInformation geom = nodeInstance.GeometryInformation;
+                Rect itemBoundingRect = new Rect(geom.X, geom.Y, geom.Width, geom.Height);
                 if (itemBoundingRect.Contains(position))
                 {
-                    return nodeInstance;
+                    return nodeInstance.GetParent<ParentableInstance>();
                 }
             }
-            return null;
+            return InstancesManager.Instance.CanvasRootElement.GetParent<ParentableInstance>();
         }
 
         private void CanvasDDTarget_MouseMove(object sender, MouseEventArgs e)
@@ -114,11 +159,11 @@ namespace QReal.Controls
             double topBound = double.PositiveInfinity;
             foreach (var item in (this.Content as CanvasItemsControl).Items)
             {
-                GraphicVisualizedInstance graphicVisualizedInstance = item as GraphicVisualizedInstance;
-                rightBound = Math.Max(rightBound, graphicVisualizedInstance.X + graphicVisualizedInstance.Width + 10);
-                leftBound = Math.Min(leftBound, graphicVisualizedInstance.X - 10);
-                topBound = Math.Min(topBound, graphicVisualizedInstance.Y - 10);
-                bottomBound = Math.Max(bottomBound, graphicVisualizedInstance.Y + graphicVisualizedInstance.Height + 10);
+                GeometryInformation geom = (item as Entity).GetGeometryInformation();
+                rightBound = Math.Max(rightBound, geom.X + geom.Width + 10);
+                leftBound = Math.Min(leftBound, geom.X - 10);
+                topBound = Math.Min(topBound, geom.Y - 10);
+                bottomBound = Math.Max(bottomBound, geom.Y + geom.Height + 10);
             }
             if (rightBound > this.Width)
             {
@@ -132,16 +177,16 @@ namespace QReal.Controls
             {
                 foreach (var item in (this.Content as CanvasItemsControl).Items)
                 {
-                    GraphicVisualizedInstance graphicVisualizedInstance = item as GraphicVisualizedInstance;
-                    graphicVisualizedInstance.X -= leftBound;
+                    GeometryInformation geom = (item as Entity).GetGeometryInformation();
+                    geom.X -= leftBound;
                 }
             }
             if (topBound < 0)
             {
                 foreach (var item in (this.Content as CanvasItemsControl).Items)
                 {
-                    GraphicVisualizedInstance graphicVisualizedInstance = item as GraphicVisualizedInstance;
-                    graphicVisualizedInstance.Y -= topBound;
+                    GeometryInformation geom = (item as Entity).GetGeometryInformation();
+                    geom.Y -= topBound;
                 }
             }
         }

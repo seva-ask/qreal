@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ServiceModel.DomainServices.Client;
+using System.Windows;
 using System.Windows.Controls;
 using QReal.Controls;
 using QReal.Web.Database;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace QReal
 {
-    public delegate void SelectedItemChangedHandler(GraphicInstance newSelectedGraphicInstance);
+    public delegate void SelectedItemChangedHandler(Entity newSelectedGraphicInstance);
 
     public class UIManager : DependencyObject
     {
@@ -43,23 +44,26 @@ namespace QReal
             }
         }
 
-        public GraphicInstance SelectedGraphicInstance
+        public Entity SelectedGraphicInstance
         {
-            get { return (GraphicInstance)GetValue(SelectedGraphicInstanceProperty); }
+            get { return (Entity)GetValue(SelectedGraphicInstanceProperty); }
             set { SetValue(SelectedGraphicInstanceProperty, value); }
         }
 
         public static readonly DependencyProperty SelectedGraphicInstanceProperty =
-            DependencyProperty.Register("SelectedGraphicInstance", typeof(GraphicInstance), typeof(UIManager), new PropertyMetadata(null, OnSelectedGraphicInstancePropertyChanged));
+            DependencyProperty.Register("SelectedGraphicInstance", typeof(Entity), typeof(UIManager), new PropertyMetadata(null, OnSelectedGraphicInstancePropertyChanged));
 
         private static void OnSelectedGraphicInstancePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            UIManager uiManager = obj as UIManager;
-            if (uiManager.SelectedItemChanged != null)
+            if (UIManager.Instance.SelectedGraphicInstance != null)
             {
-                uiManager.SelectedItemChanged(uiManager.SelectedGraphicInstance);
+                InstancesManager.Instance.SetCanvasRootItem(UIManager.Instance.SelectedGraphicInstance);
             }
-            uiManager.InstancePropertiesSource = uiManager.SelectedGraphicInstance != null ? InstancesManager.Instance.InstancesContext.InstanceProperties.Where(item => item.LogicalInstance == uiManager.SelectedGraphicInstance.LogicalInstance) : null;
+            if (UIManager.Instance.SelectedItemChanged != null)
+            {
+                UIManager.Instance.SelectedItemChanged(UIManager.Instance.SelectedGraphicInstance);
+            }
+            UIManager.Instance.InstancePropertiesSource = UIManager.Instance.SelectedGraphicInstance != null ? InstancesManager.Instance.InstancesContext.InstanceProperties.Where(item => item.LogicalInstance == UIManager.Instance.SelectedGraphicInstance.GetParent<GraphicInstance>().LogicalInstance) : null;
         }
 
         public event SelectedItemChangedHandler SelectedItemChanged;

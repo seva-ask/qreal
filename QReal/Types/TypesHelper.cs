@@ -42,22 +42,22 @@ namespace QReal.Types
             return TypeLoader.Instance.Types.Single(item => item.FullName == typeName);
         }
 
-        public static void InitProperties(GraphicInstance graphicInstance)
+        public static void InitProperties(LogicalInstance logicalInstance)
         {
-            Type type = GetType(graphicInstance.LogicalInstance.Type);
+            Type type = GetType(logicalInstance.Type);
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
             foreach (var field in fields.Where(item => item.FieldType == typeof(DependencyProperty)))
             {
                 string propertyName = field.Name.Substring(0, field.Name.LastIndexOf("Property"));
-                int count = graphicInstance.LogicalInstance.InstanceProperties.Count(property => property.Name == propertyName);
+                int count = logicalInstance.InstanceProperties.Count(property => property.Name == propertyName);
                 if (count == 0)
                 {
                     InstanceProperty instanceProperty = new InstanceProperty
                                                             {
                                                                 Name = propertyName,
-                                                                LogicalInstance = graphicInstance.LogicalInstance
+                                                                LogicalInstance = logicalInstance
                                                             };
-                    graphicInstance.LogicalInstance.InstanceProperties.Add(instanceProperty);
+                    logicalInstance.InstanceProperties.Add(instanceProperty);
                 }
             }
         }

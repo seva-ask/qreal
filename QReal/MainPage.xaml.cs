@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.ServiceModel.DomainServices.Client;
 using System.Windows.Controls;
 using QReal.Web.Database;
 using QReal.Ria.Types;
@@ -18,7 +19,7 @@ namespace QReal
             UIManager.Instance.SelectedItemChanged += new SelectedItemChangedHandler(Instance_SelectedItemChanged);
         }
 
-        private void Instance_SelectedItemChanged(GraphicInstance newSelectedGraphicInstance)
+        private void Instance_SelectedItemChanged(Entity newSelectedGraphicInstance)
         {
             if (newSelectedGraphicInstance != null)
             {
@@ -70,7 +71,7 @@ namespace QReal
 
         private void TreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            UIManager.Instance.SelectedGraphicInstance = treeView.SelectedItem as GraphicInstance;
+            UIManager.Instance.SelectedGraphicInstance = treeView.SelectedItem as Entity;
         }
     }
 }
