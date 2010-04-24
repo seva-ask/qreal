@@ -25,6 +25,14 @@ namespace KernelDiagram
 
         // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MyPropertyProperty =
-            DependencyProperty.Register("MyProperty", typeof(string), typeof(ObjectType), null);        
+            DependencyProperty.Register("MyProperty", typeof(string), typeof(ObjectType), null);
+
+        public override bool CanBeRootItem
+        {
+            get
+            {
+                return true;
+            }
+        }
     }
 }

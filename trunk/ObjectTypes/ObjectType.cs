@@ -132,5 +132,13 @@ namespace ObjectTypes
         protected virtual void UnSelect()
         {
         }
+
+        public virtual bool CanBeRootItem
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }

@@ -59,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ClientBin\QReal.xap" />
-    <Content Include="Database\CleanDatabase.sql" />
     <Content Include="Database\InstancesModel.edmx.sql" />
     <Content Include="Default.aspx" />
     <Content Include="Silverlight.js" />

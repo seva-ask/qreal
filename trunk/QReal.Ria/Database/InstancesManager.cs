@@ -22,13 +22,15 @@ namespace QReal.Ria.Database
             }
         }
 
-        public InstancesContext InstancesContext = new InstancesContext();
+        public InstancesContext InstancesContext { get; set; }
 
         public InstancesManager()
 	    {
             if (IsNotDesigner())
             {
-                InstancesContext.GraphicInstances.PropertyChanged += new PropertyChangedEventHandler(GraphicInstances_PropertyChanged);
+                InstancesContext = new InstancesContext();
+                InstancesContext.EdgeInstances.PropertyChanged += GraphicInstances_PropertyChanged;
+                InstancesContext.NodeInstances.PropertyChanged += GraphicInstances_PropertyChanged;
                 DispatcherTimer timer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 0, 0, 1000)};
                 timer.Tick += new EventHandler(TimerTick);
                 timer.Start();                
@@ -44,41 +46,109 @@ namespace QReal.Ria.Database
         {
             if (e.PropertyName == "Count")
             {
-                UpdateProperties();
+                UpdateCanvasInstancesSource();
             }
         }
 
         private void TimerTick(object sender, EventArgs e)
         {
-            InstancesContext.Load(InstancesContext.GetLogicalInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            //InstancesContext.Load(InstancesContext.GetGeometryInformationsQuery(), LoadBehavior.MergeIntoCurrent,
+            //    action => InstancesContext.Load(InstancesContext.GetInstancePropertiesQuery(), LoadBehavior.MergeIntoCurrent,
+            //        action2 => InstancesContext.Load(InstancesContext.GetLogicalInstancesQuery(), LoadBehavior.MergeIntoCurrent,
+            //            action3 => InstancesContext.Load(InstancesContext.GetGraphicInstancesQuery(), LoadBehavior.MergeIntoCurrent, 
+            //                action4 => InstancesContext.Load(InstancesContext.GetParentableInstancesQuery(), LoadBehavior.MergeIntoCurrent,
+            //                    action5 => InstancesContext.Load(InstancesContext.GetNodeInstancesQuery(), LoadBehavior.MergeIntoCurrent,
+            //                        action6=> InstancesContext.Load(InstancesContext.GetEdgeInstancesQuery(), LoadBehavior.MergeIntoCurrent, 
+            //                            action7 => InstancesContext.Load(InstancesContext.GetRootInstancesQuery(), LoadBehavior.MergeIntoCurrent,
+            //                                false), false),false),false),false), false), false), false);
+
+            InstancesContext.Load(InstancesContext.GetGeometryInformationsQuery(), LoadBehavior.MergeIntoCurrent, false);
             InstancesContext.Load(InstancesContext.GetInstancePropertiesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetLogicalInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
             InstancesContext.Load(InstancesContext.GetGraphicInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetParentableInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetNodeInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetEdgeInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetRootInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
         }
 
-        public IEnumerable<GraphicInstance> TreeviewInstancesSource
+        public IEnumerable<Entity> CanvasInstancesSource
         {
-            get { return (IEnumerable<GraphicInstance>)GetValue(TreeviewInstancesSourceProperty); }
-            set { SetValue(TreeviewInstancesSourceProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TreeviewInstancesSourceProperty =
-            DependencyProperty.Register("TreeviewInstancesSource", typeof(IEnumerable<GraphicInstance>), typeof(InstancesManager), null);
-
-        public IEnumerable<GraphicInstance> CanvasInstancesSource
-        {
-            get { return (IEnumerable<GraphicInstance>)GetValue(CanvasInstancesSourceProperty); }
+            get { return (IEnumerable<Entity>)GetValue(CanvasInstancesSourceProperty); }
             set { SetValue(CanvasInstancesSourceProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CanvasInstancesSourceProperty =
-            DependencyProperty.Register("CanvasInstancesSource", typeof(IEnumerable<GraphicInstance>), typeof(InstancesManager), null);
+            DependencyProperty.Register("CanvasInstancesSource", typeof(IEnumerable<Entity>), typeof(InstancesManager), null);
 
-        public void UpdateProperties()
+        public RootInstance CanvasRootElement
         {
-            TreeviewInstancesSource = InstancesContext.GraphicInstances.Where(instance => (instance as GraphicVisualizedInstance).Parent == null);
-            CanvasInstancesSource = InstancesContext.GraphicInstances;
+            get { return (RootInstance) GetValue(CanvasRootElementProperty); }
+            set { SetValue(CanvasRootElementProperty, value); }
+        }
+
+        public static readonly DependencyProperty CanvasRootElementProperty =
+            DependencyProperty.Register("CanvasRootElement", typeof (RootInstance), typeof (InstancesManager), new PropertyMetadata(OnCanvasRootElementPropertyChanged));
+
+        private static void OnCanvasRootElementPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            InstancesManager.Instance.UpdateCanvasInstancesSource();
+        }
+
+        public void UpdateCanvasInstancesSource()
+        {
+            List<Entity> canvasSource = new List<Entity>();
+            if (CanvasRootElement != null)
+            {
+                foreach (var entity in CanvasRootElement.GetParent<ParentableInstance>().NodeChildren)
+                {
+                    canvasSource.Add(entity);
+                    AddChildren(canvasSource, entity);
+                }
+                foreach (var entity in CanvasRootElement.EdgeChildren)
+                {
+                    canvasSource.Add(entity);
+                }
+            }
+            CanvasInstancesSource = canvasSource;
+        }
+
+        private static void AddChildren(List<Entity> canvasSource, NodeInstance nodeInstance)
+        {
+            foreach (var entity in nodeInstance.GetParent<ParentableInstance>().NodeChildren)
+            {
+                canvasSource.Add(entity);
+                AddChildren(canvasSource, entity);
+            }
+        }
+
+        public void SetCanvasRootItem(Entity selectedGraphicInstance)
+        {
+            if (selectedGraphicInstance is RootInstance)
+            {
+                CanvasRootElement = selectedGraphicInstance as RootInstance;
+            }
+            else if (selectedGraphicInstance is EdgeInstance)
+            {
+                CanvasRootElement = (selectedGraphicInstance as EdgeInstance).Parent;
+            }
+            else
+            {
+                CanvasRootElement = GetRootParent((selectedGraphicInstance as NodeInstance).Parent);
+            }
+        }
+
+        private static RootInstance GetRootParent(ParentableInstance parentableInstance)
+        {
+            if (parentableInstance.RootInstanceInheritance.Any())
+            {
+                return parentableInstance.RootInstanceInheritance.Single();
+            }
+            else
+            {
+                return GetRootParent(parentableInstance.NodeInstanceInheritance.Single().Parent);
+            }
         }
     }
 }

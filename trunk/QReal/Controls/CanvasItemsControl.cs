@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ServiceModel.DomainServices.Client;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,6 +10,7 @@ using ObjectTypes;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Data;
+using QReal.Ria.Database;
 using QReal.Web.Database;
 using QReal.Ria.Types;
 using QReal.Types;
@@ -34,12 +36,13 @@ namespace QReal.Controls
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);
-            GraphicInstance graphicInstance = item as GraphicInstance;
+            Entity entity = item as Entity;
             ContentPresenter contentPresenter = element as ContentPresenter;
-            if (graphicInstance.LogicalInstance != null)
+            LogicalInstance logicalInstance = entity.GetLogicalInstance();
+            if (logicalInstance != null)
             {
                 TypeLoader.Instance.Request(() =>
-                contentPresenter.ContentTemplate = Create(TypesHelper.GetType(graphicInstance.LogicalInstance.Type)));
+                contentPresenter.ContentTemplate = Create(TypesHelper.GetType(logicalInstance.Type)));
             }
             contentPresenter.Loaded += new RoutedEventHandler(ContentPresenterLoaded);
         }
@@ -47,11 +50,12 @@ namespace QReal.Controls
         private void ContentPresenterLoaded(object sender, RoutedEventArgs e)
         {
             ContentPresenter contentPresenter = sender as ContentPresenter;
-            GraphicInstance graphicInstance = contentPresenter.Content as GraphicInstance;
-            TypesHelper.InitProperties(graphicInstance);
+            Entity entity = contentPresenter.Content as Entity;
+            LogicalInstance logicalInstance = entity.GetLogicalInstance();
+            TypesHelper.InitProperties(logicalInstance);
             Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
-            SetPropertyBindings(graphicInstance, objectType);
+            SetPropertyBindings(logicalInstance, objectType);
             objectType.MouseLeftButtonDown += new MouseButtonEventHandler(ObjectTypeMouseLeftButtonDown);
             Binding bindingSelected = new Binding
                                           {
@@ -77,20 +81,20 @@ namespace QReal.Controls
             NodeInstance nodeInstance = parent.DataContext as NodeInstance;
             if (nodeInstance != null)
             {
-                foreach (var child in nodeInstance.Children)
+                foreach (var child in nodeInstance.InheritanceParent.NodeChildren)
                 {
                     yield return GetObjectTypes().Single(item => item.DataContext == child);
-                }                
+                }
             }
         }
 
         private static void ObjectTypeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            UIManager.Instance.SelectedGraphicInstance = (sender as ObjectType).DataContext as GraphicInstance;
+            UIManager.Instance.SelectedGraphicInstance = (sender as ObjectType).DataContext as Entity;
             e.Handled = true;
         }
 
-        private static void SetPropertyBindings(GraphicInstance graphicInstance, ObjectType objectType)
+        private static void SetPropertyBindings(LogicalInstance logicalInstance, ObjectType objectType)
         {
             Type type = objectType.GetType();
             var fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
@@ -99,7 +103,7 @@ namespace QReal.Controls
                 if (field.FieldType == typeof(DependencyProperty))
                 {
                     string propertyName = field.Name.Substring(0, field.Name.LastIndexOf("Property"));
-                    InstanceProperty instanceProperty = graphicInstance.LogicalInstance.InstanceProperties.Single(item => item.Name == propertyName);
+                    InstanceProperty instanceProperty = logicalInstance.InstanceProperties.Single(item => item.Name == propertyName);
                     Binding binding = new Binding
                                           {
                                               Path = new PropertyPath("Value"),
@@ -128,7 +132,7 @@ namespace QReal.Controls
                 xmlns=""http://schemas.microsoft.com/client/2007""
                 xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @""">
                 <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">
-                    <controls:" + type.Name + @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" " + GetTypeSpecificBinding(type) +  @" />
+                    <controls:" + type.Name + @" Canvas.Left=""{Binding GeometryInformation.X, Mode=TwoWay}"" Canvas.Top=""{Binding GeometryInformation.Y, Mode=TwoWay}"" " + GetTypeSpecificBinding(type) + @" />
                 </Canvas>
                 </DataTemplate>";
             return (DataTemplate)XamlReader.Load(xaml);
@@ -138,11 +142,11 @@ namespace QReal.Controls
         {
             if (type.IsSubclassOf(typeof(NodeType)))
             {
-                return @"Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}""";
+                return @"Width=""{Binding GeometryInformation.Width, Mode=TwoWay}"" Height=""{Binding GeometryInformation.Height, Mode=TwoWay}""";
             }
             else
             {
-                return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}""";
+                return @"X2=""{Binding GeometryInformation.Width, Mode=TwoWay}"" Y2=""{Binding GeometryInformation.Height, Mode=TwoWay}""";
             }
         }
     }
