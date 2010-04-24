@@ -93,6 +93,8 @@ namespace QReal.Controls
                     AddGraphicVisualizedInstance(type, graphicInstance, args);
                 }
             }
+            InstancesManager.Instance.InstancesContext.SubmitChanges(
+                action => InstancesManager.Instance.UpdateCanvasInstancesSource(), null);
         }
 
         private void AddGraphicVisualizedInstance(Type type, GraphicInstance graphicInstance, DragEventArgs args)
@@ -115,8 +117,8 @@ namespace QReal.Controls
                                                     InheritanceParent = parentableInstance,
                                                     GeometryInformation = geometryInformation
                                                 };
-                nodeInstance.Parent = FindParent(position, nodeInstance);
                 InstancesManager.Instance.InstancesContext.NodeInstances.Add(nodeInstance);
+                nodeInstance.Parent = FindParent(position, nodeInstance);
             }
             else
             {

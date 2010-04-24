@@ -12,12 +12,11 @@ namespace QReal.Web.Database
     [EnableClientAccess]
     public class InstancesService : LinqToEntitiesDomainService<QRealEntities>
     {
-
         // 1. Adding parameters to this method and constraining returned results, and/or
         // 2. Adding query methods taking different parameters.
-        public IQueryable<EdgeInstance> GetEdgeInstanceSet()
+        public IQueryable<EdgeInstance> GetEdgeInstances()
         {
-            return this.ObjectContext.EdgeInstanceSet;
+            return this.ObjectContext.EdgeInstances;
         }
 
         public void InsertEdgeInstance(EdgeInstance edgeInstance)
@@ -28,29 +27,29 @@ namespace QReal.Web.Database
             }
             else
             {
-                this.ObjectContext.EdgeInstanceSet.AddObject(edgeInstance);
+                this.ObjectContext.EdgeInstances.AddObject(edgeInstance);
             }
         }
 
         public void UpdateEdgeInstance(EdgeInstance currentEdgeInstance)
         {
-            this.ObjectContext.EdgeInstanceSet.AttachAsModified(currentEdgeInstance, this.ChangeSet.GetOriginal(currentEdgeInstance));
+            this.ObjectContext.EdgeInstances.AttachAsModified(currentEdgeInstance, this.ChangeSet.GetOriginal(currentEdgeInstance));
         }
 
         public void DeleteEdgeInstance(EdgeInstance edgeInstance)
         {
             if ((edgeInstance.EntityState == EntityState.Detached))
             {
-                this.ObjectContext.EdgeInstanceSet.Attach(edgeInstance);
+                this.ObjectContext.EdgeInstances.Attach(edgeInstance);
             }
-            this.ObjectContext.EdgeInstanceSet.DeleteObject(edgeInstance);
+            this.ObjectContext.EdgeInstances.DeleteObject(edgeInstance);
         }
 
         // 1. Adding parameters to this method and constraining returned results, and/or
         // 2. Adding query methods taking different parameters.
-        public IQueryable<GeometryInformation> GetGeometryInformationSet()
+        public IQueryable<GeometryInformation> GetGeometryInformations()
         {
-            return this.ObjectContext.GeometryInformationSet;
+            return this.ObjectContext.GeometryInformations;
         }
 
         public void InsertGeometryInformation(GeometryInformation geometryInformation)
@@ -61,22 +60,22 @@ namespace QReal.Web.Database
             }
             else
             {
-                this.ObjectContext.GeometryInformationSet.AddObject(geometryInformation);
+                this.ObjectContext.GeometryInformations.AddObject(geometryInformation);
             }
         }
 
         public void UpdateGeometryInformation(GeometryInformation currentGeometryInformation)
         {
-            this.ObjectContext.GeometryInformationSet.AttachAsModified(currentGeometryInformation, this.ChangeSet.GetOriginal(currentGeometryInformation));
+            this.ObjectContext.GeometryInformations.AttachAsModified(currentGeometryInformation, this.ChangeSet.GetOriginal(currentGeometryInformation));
         }
 
         public void DeleteGeometryInformation(GeometryInformation geometryInformation)
         {
             if ((geometryInformation.EntityState == EntityState.Detached))
             {
-                this.ObjectContext.GeometryInformationSet.Attach(geometryInformation);
+                this.ObjectContext.GeometryInformations.Attach(geometryInformation);
             }
-            this.ObjectContext.GeometryInformationSet.DeleteObject(geometryInformation);
+            this.ObjectContext.GeometryInformations.DeleteObject(geometryInformation);
         }
 
         // 1. Adding parameters to this method and constraining returned results, and/or
@@ -180,9 +179,9 @@ namespace QReal.Web.Database
 
         // 1. Adding parameters to this method and constraining returned results, and/or
         // 2. Adding query methods taking different parameters.
-        public IQueryable<NodeInstance> GetNodeInstanceSet()
+        public IQueryable<NodeInstance> GetNodeInstances()
         {
-            return this.ObjectContext.NodeInstanceSet;
+            return this.ObjectContext.NodeInstances;
         }
 
         public void InsertNodeInstance(NodeInstance nodeInstance)
@@ -193,29 +192,29 @@ namespace QReal.Web.Database
             }
             else
             {
-                this.ObjectContext.NodeInstanceSet.AddObject(nodeInstance);
+                this.ObjectContext.NodeInstances.AddObject(nodeInstance);
             }
         }
 
         public void UpdateNodeInstance(NodeInstance currentNodeInstance)
         {
-            this.ObjectContext.NodeInstanceSet.AttachAsModified(currentNodeInstance, this.ChangeSet.GetOriginal(currentNodeInstance));
+            this.ObjectContext.NodeInstances.AttachAsModified(currentNodeInstance, this.ChangeSet.GetOriginal(currentNodeInstance));
         }
 
         public void DeleteNodeInstance(NodeInstance nodeInstance)
         {
             if ((nodeInstance.EntityState == EntityState.Detached))
             {
-                this.ObjectContext.NodeInstanceSet.Attach(nodeInstance);
+                this.ObjectContext.NodeInstances.Attach(nodeInstance);
             }
-            this.ObjectContext.NodeInstanceSet.DeleteObject(nodeInstance);
+            this.ObjectContext.NodeInstances.DeleteObject(nodeInstance);
         }
 
         // 1. Adding parameters to this method and constraining returned results, and/or
         // 2. Adding query methods taking different parameters.
-        public IQueryable<ParentableInstance> GetParentableInstanceSet()
+        public IQueryable<ParentableInstance> GetParentableInstances()
         {
-            return this.ObjectContext.ParentableInstanceSet;
+            return this.ObjectContext.ParentableInstances;
         }
 
         public void InsertParentableInstance(ParentableInstance parentableInstance)
@@ -226,29 +225,29 @@ namespace QReal.Web.Database
             }
             else
             {
-                this.ObjectContext.ParentableInstanceSet.AddObject(parentableInstance);
+                this.ObjectContext.ParentableInstances.AddObject(parentableInstance);
             }
         }
 
         public void UpdateParentableInstance(ParentableInstance currentParentableInstance)
         {
-            this.ObjectContext.ParentableInstanceSet.AttachAsModified(currentParentableInstance, this.ChangeSet.GetOriginal(currentParentableInstance));
+            this.ObjectContext.ParentableInstances.AttachAsModified(currentParentableInstance, this.ChangeSet.GetOriginal(currentParentableInstance));
         }
 
         public void DeleteParentableInstance(ParentableInstance parentableInstance)
         {
             if ((parentableInstance.EntityState == EntityState.Detached))
             {
-                this.ObjectContext.ParentableInstanceSet.Attach(parentableInstance);
+                this.ObjectContext.ParentableInstances.Attach(parentableInstance);
             }
-            this.ObjectContext.ParentableInstanceSet.DeleteObject(parentableInstance);
+            this.ObjectContext.ParentableInstances.DeleteObject(parentableInstance);
         }
 
         // 1. Adding parameters to this method and constraining returned results, and/or
         // 2. Adding query methods taking different parameters.
-        public IQueryable<RootInstance> GetRootInstanceSet()
+        public IQueryable<RootInstance> GetRootInstances()
         {
-            return this.ObjectContext.RootInstanceSet;
+            return this.ObjectContext.RootInstances;
         }
 
         public void InsertRootInstance(RootInstance rootInstance)
@@ -259,22 +258,22 @@ namespace QReal.Web.Database
             }
             else
             {
-                this.ObjectContext.RootInstanceSet.AddObject(rootInstance);
+                this.ObjectContext.RootInstances.AddObject(rootInstance);
             }
         }
 
         public void UpdateRootInstance(RootInstance currentRootInstance)
         {
-            this.ObjectContext.RootInstanceSet.AttachAsModified(currentRootInstance, this.ChangeSet.GetOriginal(currentRootInstance));
+            this.ObjectContext.RootInstances.AttachAsModified(currentRootInstance, this.ChangeSet.GetOriginal(currentRootInstance));
         }
 
         public void DeleteRootInstance(RootInstance rootInstance)
         {
             if ((rootInstance.EntityState == EntityState.Detached))
             {
-                this.ObjectContext.RootInstanceSet.Attach(rootInstance);
+                this.ObjectContext.RootInstances.Attach(rootInstance);
             }
-            this.ObjectContext.RootInstanceSet.DeleteObject(rootInstance);
+            this.ObjectContext.RootInstances.DeleteObject(rootInstance);
         }
     }
 }

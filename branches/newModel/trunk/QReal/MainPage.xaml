@@ -17,23 +17,17 @@
     <UserControl.Resources>
         <localDatabase:InstancesManager x:Key="InstancesManager"/>
         <local:UIManager x:Key="UIManager"/>
-        <local:VisibilityConverter x:Key="NameConverter"/>
     </UserControl.Resources>
     <Grid x:Name="LayoutRoot">
         <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" Background="#FFE60D0D" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.InstancesContext.RootInstances, Mode=TwoWay}" SelectedItemChanged="TreeViewSelectedItemChanged">
             <controls:TreeView.Resources>
                 <local:TypeToIconConverter x:Key="TypeToIconConverter"/>
-                <local:ChildrenConverter x:Key="ChildrenConverter"/>
-                <local:VisibilityConverter x:Key="VisibilityConverter"/>
             </controls:TreeView.Resources>
             <controls:TreeView.ItemTemplate>
-                <common:HierarchicalDataTemplate ItemsSource="{Binding Converter={StaticResource ChildrenConverter}}">
+                <common:HierarchicalDataTemplate ItemsSource="{Binding InheritanceParent.Children}">
                     <StackPanel Height="20" Width="166" Orientation="Horizontal">
-                    	<Image Height="20" Source="{Binding Converter={StaticResource TypeToIconConverter}}" HorizontalAlignment="Left" Width="40"/>
-                        <TextBox x:Name="EdgeText" Text="{Binding InheritanceParent.LogicalInstance.Name, Mode=TwoWay}" Height="25"
-                                Visibility="{Binding InheritanceParent.InheritanceParent, Converter={StaticResource VisibilityConverter}, ConverterParameter=false, Mode=OneWay}"/>
-                        <TextBox x:Name="ParentableText" Text="{Binding InheritanceParent.InheritanceParent.LogicalInstance.Name, Mode=TwoWay}" Height="25"
-                                 Visibility="{Binding InheritanceParent.InheritanceParent, Converter={StaticResource VisibilityConverter}, ConverterParameter=true, Mode=OneWay}"/>
+                        <Image Height="20" Source="{Binding LogicalInstance.Type, Converter={StaticResource TypeToIconConverter}}" HorizontalAlignment="Left" Width="40"/>
+                        <TextBox Text="{Binding LogicalInstance.Name, Mode=TwoWay}" Height="25"/>
                     </StackPanel>
                 </common:HierarchicalDataTemplate>
             </controls:TreeView.ItemTemplate>

@@ -151,9 +151,7 @@ namespace ObjectTypes
         {
             get
             {
-                return
-                    InstancesManager.Instance.InstancesContext.GraphicInstances.OfType<EdgeInstance>().Where(
-                        item => item.NodeFrom == this.DataContext);
+                return (this.DataContext as NodeInstance).EdgesFrom;
             }
         }
 
@@ -161,9 +159,7 @@ namespace ObjectTypes
         {
             get
             {
-                return
-                    InstancesManager.Instance.InstancesContext.GraphicInstances.OfType<EdgeInstance>().Where(
-                        item => item.NodeTo == this.DataContext);
+                return (this.DataContext as NodeInstance).EdgesTo;
             }
         }
 

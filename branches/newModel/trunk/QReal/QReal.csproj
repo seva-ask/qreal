@@ -83,8 +83,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ChildrenConverter.cs" />
-    <Compile Include="VisibilityConverter.cs" />
     <Compile Include="ToolBoxTypeConverter.cs" />
     <Compile Include="Controls\AutoScroller.cs" />
     <Compile Include="Controls\CanvasDDTarget.cs" />

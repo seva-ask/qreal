@@ -29,7 +29,8 @@ namespace QReal.Ria.Database
             if (IsNotDesigner())
             {
                 InstancesContext = new InstancesContext();
-                InstancesContext.GraphicInstances.PropertyChanged += new PropertyChangedEventHandler(GraphicInstances_PropertyChanged);
+                InstancesContext.EdgeInstances.PropertyChanged += GraphicInstances_PropertyChanged;
+                InstancesContext.NodeInstances.PropertyChanged += GraphicInstances_PropertyChanged;
                 DispatcherTimer timer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 0, 0, 1000)};
                 timer.Tick += new EventHandler(TimerTick);
                 timer.Start();                
@@ -45,20 +46,30 @@ namespace QReal.Ria.Database
         {
             if (e.PropertyName == "Count")
             {
-                UpdateProperties();
+                UpdateCanvasInstancesSource();
             }
         }
 
         private void TimerTick(object sender, EventArgs e)
         {
-            InstancesContext.Load(InstancesContext.GetGeometryInformationSetQuery(), LoadBehavior.MergeIntoCurrent, false);
-            InstancesContext.Load(InstancesContext.GetLogicalInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            //InstancesContext.Load(InstancesContext.GetGeometryInformationsQuery(), LoadBehavior.MergeIntoCurrent,
+            //    action => InstancesContext.Load(InstancesContext.GetInstancePropertiesQuery(), LoadBehavior.MergeIntoCurrent,
+            //        action2 => InstancesContext.Load(InstancesContext.GetLogicalInstancesQuery(), LoadBehavior.MergeIntoCurrent,
+            //            action3 => InstancesContext.Load(InstancesContext.GetGraphicInstancesQuery(), LoadBehavior.MergeIntoCurrent, 
+            //                action4 => InstancesContext.Load(InstancesContext.GetParentableInstancesQuery(), LoadBehavior.MergeIntoCurrent,
+            //                    action5 => InstancesContext.Load(InstancesContext.GetNodeInstancesQuery(), LoadBehavior.MergeIntoCurrent,
+            //                        action6=> InstancesContext.Load(InstancesContext.GetEdgeInstancesQuery(), LoadBehavior.MergeIntoCurrent, 
+            //                            action7 => InstancesContext.Load(InstancesContext.GetRootInstancesQuery(), LoadBehavior.MergeIntoCurrent,
+            //                                false), false),false),false),false), false), false), false);
+
+            InstancesContext.Load(InstancesContext.GetGeometryInformationsQuery(), LoadBehavior.MergeIntoCurrent, false);
             InstancesContext.Load(InstancesContext.GetInstancePropertiesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetLogicalInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
             InstancesContext.Load(InstancesContext.GetGraphicInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
-            InstancesContext.Load(InstancesContext.GetParentableInstanceSetQuery(), LoadBehavior.MergeIntoCurrent, false);
-            InstancesContext.Load(InstancesContext.GetRootInstanceSetQuery(), LoadBehavior.MergeIntoCurrent, false);
-            InstancesContext.Load(InstancesContext.GetNodeInstanceSetQuery(), LoadBehavior.MergeIntoCurrent, false);
-            InstancesContext.Load(InstancesContext.GetEdgeInstanceSetQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetParentableInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetNodeInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetEdgeInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetRootInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
         }
 
         public IEnumerable<Entity> CanvasInstancesSource
@@ -82,10 +93,10 @@ namespace QReal.Ria.Database
 
         private static void OnCanvasRootElementPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            InstancesManager.Instance.UpdateProperties();
+            InstancesManager.Instance.UpdateCanvasInstancesSource();
         }
 
-        public void UpdateProperties()
+        public void UpdateCanvasInstancesSource()
         {
             List<Entity> canvasSource = new List<Entity>();
             if (CanvasRootElement != null)
@@ -114,25 +125,29 @@ namespace QReal.Ria.Database
 
         public void SetCanvasRootItem(Entity selectedGraphicInstance)
         {
-            if (selectedGraphicInstance is EdgeInstance)
+            if (selectedGraphicInstance is RootInstance)
+            {
+                CanvasRootElement = selectedGraphicInstance as RootInstance;
+            }
+            else if (selectedGraphicInstance is EdgeInstance)
             {
                 CanvasRootElement = (selectedGraphicInstance as EdgeInstance).Parent;
             }
             else
             {
-                CanvasRootElement = GetRootParent(selectedGraphicInstance);
+                CanvasRootElement = GetRootParent((selectedGraphicInstance as NodeInstance).Parent);
             }
         }
 
-        private static RootInstance GetRootParent(Entity graphicInstance)
+        private static RootInstance GetRootParent(ParentableInstance parentableInstance)
         {
-            if (graphicInstance is RootInstance)
+            if (parentableInstance.RootInstanceInheritance.Any())
             {
-                return graphicInstance as RootInstance;
+                return parentableInstance.RootInstanceInheritance.Single();
             }
             else
             {
-                return GetRootParent((graphicInstance as NodeInstance).Parent);
+                return GetRootParent(parentableInstance.NodeInstanceInheritance.Single().Parent);
             }
         }
     }

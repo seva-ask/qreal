@@ -24,7 +24,15 @@ namespace ObjectTypes
 
         private void EdgeType_Loaded(object sender, RoutedEventArgs e)
         {
-            myMainLine = new Line {StrokeThickness = 5, Stroke = new SolidColorBrush(Colors.Black)};
+            myMainLine = new Line {StrokeThickness = 5};
+
+            Binding bindingColor = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("LineBrush"),
+                Mode = BindingMode.TwoWay
+            };
+            myMainLine.SetBinding(Line.StrokeProperty, bindingColor);
 
             Binding bindingX2 = new Binding
                                     {
@@ -272,13 +280,22 @@ namespace ObjectTypes
 
         protected override void Select()
         {
-            myMainLine.Stroke = new SolidColorBrush(Colors.Blue);
+            LineBrush = new SolidColorBrush(Colors.Blue);
         }
 
         protected override void UnSelect()
         {
-            myMainLine.Stroke = new SolidColorBrush(Colors.Black);
+            LineBrush = new SolidColorBrush(Colors.Black);
         }
+
+        public Brush LineBrush
+        {
+            get { return (Brush) GetValue(LineBrushProperty); }
+            set { SetValue(LineBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty LineBrushProperty =
+            DependencyProperty.Register("LineBrush", typeof (Brush), typeof (EdgeType), new PropertyMetadata(new SolidColorBrush(Colors.Black)));
 
         public double PortFrom
         {

@@ -23,13 +23,13 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("QRealModel", "RootInstanceEdgeInstance", "RootInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.RootInstance), "EdgeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.EdgeInstance), true)]
 [assembly: EdmRelationshipAttribute("QRealModel", "EdgesFromNode", "NodeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.NodeInstance), "EdgeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.EdgeInstance), true)]
 [assembly: EdmRelationshipAttribute("QRealModel", "EdgesToNode", "NodeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.NodeInstance), "EdgeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.EdgeInstance), true)]
-[assembly: EdmRelationshipAttribute("QRealModel", "EdgeInstanceGeometryInformation", "EdgeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.EdgeInstance), "GeometryInformation", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.GeometryInformation), true)]
-[assembly: EdmRelationshipAttribute("QRealModel", "NodeInstanceGeometryInformation", "NodeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.NodeInstance), "GeometryInformation", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.GeometryInformation), true)]
 [assembly: EdmRelationshipAttribute("QRealModel", "NodeParents", "ParentableInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(QReal.Web.Database.ParentableInstance), "NodeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.NodeInstance), true)]
 [assembly: EdmRelationshipAttribute("QRealModel", "GraphicInstanceParentableInstanceInheritance", "GraphicInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.GraphicInstance), "ParentableInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.ParentableInstance), true)]
 [assembly: EdmRelationshipAttribute("QRealModel", "GraphicInstanceEdgeInstanceInheritance", "GraphicInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.GraphicInstance), "EdgeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.EdgeInstance), true)]
 [assembly: EdmRelationshipAttribute("QRealModel", "ParentableInstanceRootInstanceInheritance", "ParentableInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.ParentableInstance), "RootInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.RootInstance), true)]
 [assembly: EdmRelationshipAttribute("QRealModel", "ParentableInstanceNodeInstanceInheritance", "ParentableInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.ParentableInstance), "NodeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.NodeInstance), true)]
+[assembly: EdmRelationshipAttribute("QRealModel", "NodeInstanceGeometryInformation", "NodeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.NodeInstance), "GeometryInformation", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.GeometryInformation), true)]
+[assembly: EdmRelationshipAttribute("QRealModel", "EdgeInstanceGeometryInformation", "EdgeInstance", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(QReal.Web.Database.EdgeInstance), "GeometryInformation", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(QReal.Web.Database.GeometryInformation), true)]
 
 #endregion
 
@@ -132,82 +132,82 @@ namespace QReal.Web.Database
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<ParentableInstance> ParentableInstanceSet
+        public ObjectSet<ParentableInstance> ParentableInstances
         {
             get
             {
-                if ((_ParentableInstanceSet == null))
+                if ((_ParentableInstances == null))
                 {
-                    _ParentableInstanceSet = base.CreateObjectSet<ParentableInstance>("ParentableInstanceSet");
+                    _ParentableInstances = base.CreateObjectSet<ParentableInstance>("ParentableInstances");
                 }
-                return _ParentableInstanceSet;
+                return _ParentableInstances;
             }
         }
-        private ObjectSet<ParentableInstance> _ParentableInstanceSet;
+        private ObjectSet<ParentableInstance> _ParentableInstances;
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<RootInstance> RootInstanceSet
+        public ObjectSet<RootInstance> RootInstances
         {
             get
             {
-                if ((_RootInstanceSet == null))
+                if ((_RootInstances == null))
                 {
-                    _RootInstanceSet = base.CreateObjectSet<RootInstance>("RootInstanceSet");
+                    _RootInstances = base.CreateObjectSet<RootInstance>("RootInstances");
                 }
-                return _RootInstanceSet;
+                return _RootInstances;
             }
         }
-        private ObjectSet<RootInstance> _RootInstanceSet;
+        private ObjectSet<RootInstance> _RootInstances;
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<NodeInstance> NodeInstanceSet
+        public ObjectSet<NodeInstance> NodeInstances
         {
             get
             {
-                if ((_NodeInstanceSet == null))
+                if ((_NodeInstances == null))
                 {
-                    _NodeInstanceSet = base.CreateObjectSet<NodeInstance>("NodeInstanceSet");
+                    _NodeInstances = base.CreateObjectSet<NodeInstance>("NodeInstances");
                 }
-                return _NodeInstanceSet;
+                return _NodeInstances;
             }
         }
-        private ObjectSet<NodeInstance> _NodeInstanceSet;
+        private ObjectSet<NodeInstance> _NodeInstances;
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<EdgeInstance> EdgeInstanceSet
+        public ObjectSet<EdgeInstance> EdgeInstances
         {
             get
             {
-                if ((_EdgeInstanceSet == null))
+                if ((_EdgeInstances == null))
                 {
-                    _EdgeInstanceSet = base.CreateObjectSet<EdgeInstance>("EdgeInstanceSet");
+                    _EdgeInstances = base.CreateObjectSet<EdgeInstance>("EdgeInstances");
                 }
-                return _EdgeInstanceSet;
+                return _EdgeInstances;
             }
         }
-        private ObjectSet<EdgeInstance> _EdgeInstanceSet;
+        private ObjectSet<EdgeInstance> _EdgeInstances;
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<GeometryInformation> GeometryInformationSet
+        public ObjectSet<GeometryInformation> GeometryInformations
         {
             get
             {
-                if ((_GeometryInformationSet == null))
+                if ((_GeometryInformations == null))
                 {
-                    _GeometryInformationSet = base.CreateObjectSet<GeometryInformation>("GeometryInformationSet");
+                    _GeometryInformations = base.CreateObjectSet<GeometryInformation>("GeometryInformations");
                 }
-                return _GeometryInformationSet;
+                return _GeometryInformations;
             }
         }
-        private ObjectSet<GeometryInformation> _GeometryInformationSet;
+        private ObjectSet<GeometryInformation> _GeometryInformations;
 
         #endregion
         #region AddTo Methods
@@ -237,43 +237,43 @@ namespace QReal.Web.Database
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the ParentableInstanceSet EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the ParentableInstances EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToParentableInstanceSet(ParentableInstance parentableInstance)
+        public void AddToParentableInstances(ParentableInstance parentableInstance)
         {
-            base.AddObject("ParentableInstanceSet", parentableInstance);
+            base.AddObject("ParentableInstances", parentableInstance);
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the RootInstanceSet EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the RootInstances EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToRootInstanceSet(RootInstance rootInstance)
+        public void AddToRootInstances(RootInstance rootInstance)
         {
-            base.AddObject("RootInstanceSet", rootInstance);
+            base.AddObject("RootInstances", rootInstance);
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the NodeInstanceSet EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the NodeInstances EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToNodeInstanceSet(NodeInstance nodeInstance)
+        public void AddToNodeInstances(NodeInstance nodeInstance)
         {
-            base.AddObject("NodeInstanceSet", nodeInstance);
+            base.AddObject("NodeInstances", nodeInstance);
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the EdgeInstanceSet EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the EdgeInstances EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToEdgeInstanceSet(EdgeInstance edgeInstance)
+        public void AddToEdgeInstances(EdgeInstance edgeInstance)
         {
-            base.AddObject("EdgeInstanceSet", edgeInstance);
+            base.AddObject("EdgeInstances", edgeInstance);
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the GeometryInformationSet EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the GeometryInformations EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToGeometryInformationSet(GeometryInformation geometryInformation)
+        public void AddToGeometryInformations(GeometryInformation geometryInformation)
         {
-            base.AddObject("GeometryInformationSet", geometryInformation);
+            base.AddObject("GeometryInformations", geometryInformation);
         }
 
         #endregion
@@ -300,12 +300,14 @@ namespace QReal.Web.Database
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="parentId">Initial value of the ParentId property.</param>
         /// <param name="inheritanceId">Initial value of the InheritanceId property.</param>
-        public static EdgeInstance CreateEdgeInstance(global::System.Int32 id, global::System.Int32 parentId, global::System.Int32 inheritanceId)
+        /// <param name="geometryInformationId">Initial value of the GeometryInformationId property.</param>
+        public static EdgeInstance CreateEdgeInstance(global::System.Int32 id, global::System.Int32 parentId, global::System.Int32 inheritanceId, global::System.Int32 geometryInformationId)
         {
             EdgeInstance edgeInstance = new EdgeInstance();
             edgeInstance.Id = id;
             edgeInstance.ParentId = parentId;
             edgeInstance.InheritanceId = inheritanceId;
+            edgeInstance.GeometryInformationId = geometryInformationId;
             return edgeInstance;
         }
 
@@ -482,6 +484,30 @@ namespace QReal.Web.Database
         private global::System.Int32 _InheritanceId;
         partial void OnInheritanceIdChanging(global::System.Int32 value);
         partial void OnInheritanceIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 GeometryInformationId
+        {
+            get
+            {
+                return _GeometryInformationId;
+            }
+            set
+            {
+                OnGeometryInformationIdChanging(value);
+                ReportPropertyChanging("GeometryInformationId");
+                _GeometryInformationId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("GeometryInformationId");
+                OnGeometryInformationIdChanged();
+            }
+        }
+        private global::System.Int32 _GeometryInformationId;
+        partial void OnGeometryInformationIdChanging(global::System.Int32 value);
+        partial void OnGeometryInformationIdChanged();
 
         #endregion
     
@@ -607,44 +633,6 @@ namespace QReal.Web.Database
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "EdgeInstanceGeometryInformation", "GeometryInformation")]
-        public GeometryInformation GeometryInformation
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.EdgeInstanceGeometryInformation", "GeometryInformation").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.EdgeInstanceGeometryInformation", "GeometryInformation").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<GeometryInformation> GeometryInformationReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.EdgeInstanceGeometryInformation", "GeometryInformation");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<GeometryInformation>("QRealModel.EdgeInstanceGeometryInformation", "GeometryInformation", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("QRealModel", "GraphicInstanceEdgeInstanceInheritance", "GraphicInstance")]
         public GraphicInstance InheritanceParent
         {
@@ -673,6 +661,44 @@ namespace QReal.Web.Database
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<GraphicInstance>("QRealModel.GraphicInstanceEdgeInstanceInheritance", "GraphicInstance", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "EdgeInstanceGeometryInformation", "GeometryInformation")]
+        public GeometryInformation GeometryInformation
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.EdgeInstanceGeometryInformation", "GeometryInformation").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.EdgeInstanceGeometryInformation", "GeometryInformation").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<GeometryInformation> GeometryInformationReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.EdgeInstanceGeometryInformation", "GeometryInformation");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<GeometryInformation>("QRealModel.EdgeInstanceGeometryInformation", "GeometryInformation", value);
                 }
             }
         }
@@ -1346,11 +1372,13 @@ namespace QReal.Web.Database
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="inheritanceId">Initial value of the InheritanceId property.</param>
-        public static NodeInstance CreateNodeInstance(global::System.Int32 id, global::System.Int32 inheritanceId)
+        /// <param name="geometryInformationId">Initial value of the GeometryInformationId property.</param>
+        public static NodeInstance CreateNodeInstance(global::System.Int32 id, global::System.Int32 inheritanceId, global::System.Int32 geometryInformationId)
         {
             NodeInstance nodeInstance = new NodeInstance();
             nodeInstance.Id = id;
             nodeInstance.InheritanceId = inheritanceId;
+            nodeInstance.GeometryInformationId = geometryInformationId;
             return nodeInstance;
         }
 
@@ -1431,6 +1459,30 @@ namespace QReal.Web.Database
         private global::System.Int32 _InheritanceId;
         partial void OnInheritanceIdChanging(global::System.Int32 value);
         partial void OnInheritanceIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 GeometryInformationId
+        {
+            get
+            {
+                return _GeometryInformationId;
+            }
+            set
+            {
+                OnGeometryInformationIdChanging(value);
+                ReportPropertyChanging("GeometryInformationId");
+                _GeometryInformationId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("GeometryInformationId");
+                OnGeometryInformationIdChanged();
+            }
+        }
+        private global::System.Int32 _GeometryInformationId;
+        partial void OnGeometryInformationIdChanging(global::System.Int32 value);
+        partial void OnGeometryInformationIdChanged();
 
         #endregion
     
@@ -1476,44 +1528,6 @@ namespace QReal.Web.Database
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<EdgeInstance>("QRealModel.EdgesToNode", "EdgeInstance", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "NodeInstanceGeometryInformation", "GeometryInformation")]
-        public GeometryInformation GeometryInformation
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.NodeInstanceGeometryInformation", "GeometryInformation").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.NodeInstanceGeometryInformation", "GeometryInformation").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<GeometryInformation> GeometryInformationReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.NodeInstanceGeometryInformation", "GeometryInformation");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<GeometryInformation>("QRealModel.NodeInstanceGeometryInformation", "GeometryInformation", value);
                 }
             }
         }
@@ -1590,6 +1604,44 @@ namespace QReal.Web.Database
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<ParentableInstance>("QRealModel.ParentableInstanceNodeInstanceInheritance", "ParentableInstance", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "NodeInstanceGeometryInformation", "GeometryInformation")]
+        public GeometryInformation GeometryInformation
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.NodeInstanceGeometryInformation", "GeometryInformation").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.NodeInstanceGeometryInformation", "GeometryInformation").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<GeometryInformation> GeometryInformationReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<GeometryInformation>("QRealModel.NodeInstanceGeometryInformation", "GeometryInformation");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<GeometryInformation>("QRealModel.NodeInstanceGeometryInformation", "GeometryInformation", value);
                 }
             }
         }
@@ -1756,6 +1808,28 @@ namespace QReal.Web.Database
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<RootInstance>("QRealModel.ParentableInstanceRootInstanceInheritance", "RootInstance", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("QRealModel", "ParentableInstanceNodeInstanceInheritance", "NodeInstance")]
+        public EntityCollection<NodeInstance> NodeInstanceInheritance
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<NodeInstance>("QRealModel.ParentableInstanceNodeInstanceInheritance", "NodeInstance");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<NodeInstance>("QRealModel.ParentableInstanceNodeInstanceInheritance", "NodeInstance", value);
                 }
             }
         }

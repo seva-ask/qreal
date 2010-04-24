@@ -55,13 +55,13 @@ namespace QReal
 
         private static void OnSelectedGraphicInstancePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            if (UIManager.Instance.SelectedItemChanged != null)
-            {
-                UIManager.Instance.SelectedItemChanged(UIManager.Instance.SelectedGraphicInstance);
-            }
             if (UIManager.Instance.SelectedGraphicInstance != null)
             {
                 InstancesManager.Instance.SetCanvasRootItem(UIManager.Instance.SelectedGraphicInstance);
+            }
+            if (UIManager.Instance.SelectedItemChanged != null)
+            {
+                UIManager.Instance.SelectedItemChanged(UIManager.Instance.SelectedGraphicInstance);
             }
             UIManager.Instance.InstancePropertiesSource = UIManager.Instance.SelectedGraphicInstance != null ? InstancesManager.Instance.InstancesContext.InstanceProperties.Where(item => item.LogicalInstance == UIManager.Instance.SelectedGraphicInstance.GetParent<GraphicInstance>().LogicalInstance) : null;
         }
