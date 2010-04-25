@@ -2,7 +2,6 @@
 using System.ServiceModel.DomainServices.Client;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Markup;
 using System.Linq;
@@ -56,7 +55,7 @@ namespace QReal.Controls
             Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
             SetPropertyBindings(logicalInstance, objectType);
-            objectType.MouseLeftButtonDown += new MouseButtonEventHandler(ObjectTypeMouseLeftButtonDown);
+            objectType.MousePressed += new MouseLeftButtonEventHandler(ObjectTypeMousePressed);
             Binding bindingSelected = new Binding
                                           {
                                               Mode = BindingMode.TwoWay,
@@ -88,10 +87,9 @@ namespace QReal.Controls
             }
         }
 
-        private static void ObjectTypeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private static void ObjectTypeMousePressed(ObjectType sender)
         {
-            UIManager.Instance.SelectedGraphicInstance = (sender as ObjectType).DataContext as Entity;
-            e.Handled = true;
+            UIManager.Instance.SelectedGraphicInstance = sender.DataContext as Entity;
         }
 
         private static void SetPropertyBindings(LogicalInstance logicalInstance, ObjectType objectType)
