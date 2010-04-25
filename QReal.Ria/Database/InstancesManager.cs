@@ -52,24 +52,20 @@ namespace QReal.Ria.Database
 
         private void TimerTick(object sender, EventArgs e)
         {
-            //InstancesContext.Load(InstancesContext.GetGeometryInformationsQuery(), LoadBehavior.MergeIntoCurrent,
-            //    action => InstancesContext.Load(InstancesContext.GetInstancePropertiesQuery(), LoadBehavior.MergeIntoCurrent,
-            //        action2 => InstancesContext.Load(InstancesContext.GetLogicalInstancesQuery(), LoadBehavior.MergeIntoCurrent,
-            //            action3 => InstancesContext.Load(InstancesContext.GetGraphicInstancesQuery(), LoadBehavior.MergeIntoCurrent, 
-            //                action4 => InstancesContext.Load(InstancesContext.GetParentableInstancesQuery(), LoadBehavior.MergeIntoCurrent,
-            //                    action5 => InstancesContext.Load(InstancesContext.GetNodeInstancesQuery(), LoadBehavior.MergeIntoCurrent,
-            //                        action6=> InstancesContext.Load(InstancesContext.GetEdgeInstancesQuery(), LoadBehavior.MergeIntoCurrent, 
-            //                            action7 => InstancesContext.Load(InstancesContext.GetRootInstancesQuery(), LoadBehavior.MergeIntoCurrent,
-            //                                false), false),false),false),false), false), false), false);
-
             InstancesContext.Load(InstancesContext.GetGeometryInformationsQuery(), LoadBehavior.MergeIntoCurrent, false);
             InstancesContext.Load(InstancesContext.GetInstancePropertiesQuery(), LoadBehavior.MergeIntoCurrent, false);
             InstancesContext.Load(InstancesContext.GetLogicalInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
-            InstancesContext.Load(InstancesContext.GetGraphicInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
-            InstancesContext.Load(InstancesContext.GetParentableInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
-            InstancesContext.Load(InstancesContext.GetNodeInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
-            InstancesContext.Load(InstancesContext.GetEdgeInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
-            InstancesContext.Load(InstancesContext.GetRootInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+            InstancesContext.Load(InstancesContext.GetGraphicInstancesQuery(), LoadBehavior.MergeIntoCurrent, 
+                action =>
+                    {
+                        InstancesContext.Load(InstancesContext.GetParentableInstancesQuery(), LoadBehavior.MergeIntoCurrent,
+                            action2 =>
+                            {
+                                InstancesContext.Load(InstancesContext.GetNodeInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+                                InstancesContext.Load(InstancesContext.GetRootInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);
+                            }, false);
+                        InstancesContext.Load(InstancesContext.GetEdgeInstancesQuery(), LoadBehavior.MergeIntoCurrent, false);                        
+                    },false);
         }
 
         public IEnumerable<Entity> CanvasInstancesSource
