@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -7,6 +6,8 @@ using System.Windows.Media;
 namespace ObjectTypes
 {
     public delegate void ZIndexChangedHandler(ObjectType objectType, int newZIndex);
+
+    public delegate void MouseLeftButtonEventHandler(ObjectType sender);
 
     public abstract class ObjectType : UserControl
     {
@@ -39,13 +40,23 @@ namespace ObjectTypes
 
         private void ObjectType_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            this.MousePress();
             if (CanMove())
             {
                 myMouseY = e.GetPosition(null).Y;
                 myMouseX = e.GetPosition(null).X;
                 IsMouseCaptured = true;
                 this.CaptureMouse();
-                SetZIndex(1);
+            }
+            e.Handled = true;
+        }
+
+        protected void MousePress()
+        {
+            SetZIndex(1);
+            if (MousePressed != null)
+            {
+                MousePressed(this);
             }
         }
 
@@ -77,11 +88,20 @@ namespace ObjectTypes
 
         private void ObjectType_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            MouseRelease();
             IsMouseCaptured = false;
             this.ReleaseMouseCapture();
             myMouseY = -1;
             myMouseX = -1;
+        }
+
+        protected void MouseRelease()
+        {
             SetZIndex(0);
+            if (MouseReleased != null)
+            {
+                MouseReleased(this);
+            }
         }
 
         public bool Selected
@@ -121,5 +141,8 @@ namespace ObjectTypes
                 return false;
             }
         }
+
+        public event MouseLeftButtonEventHandler MousePressed;
+        public event MouseLeftButtonEventHandler MouseReleased;
     }
 }

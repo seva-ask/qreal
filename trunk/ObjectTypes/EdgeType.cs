@@ -81,6 +81,7 @@ namespace ObjectTypes
 
         private void EndPortDragCompleted(object sender, DragCompletedEventArgs e)
         {
+            this.MouseRelease();
             double y = (double)this.GetValue(Canvas.TopProperty) + Y2;
             double x = (double)this.GetValue(Canvas.LeftProperty) + X2;
             Point position = new Point(x, y);
@@ -102,6 +103,7 @@ namespace ObjectTypes
 
         private void StartPortDragCompleted(object sender, DragCompletedEventArgs e)
         {
+            this.MouseRelease();
             double y = (double)this.GetValue(Canvas.TopProperty);
             double x = (double)this.GetValue(Canvas.LeftProperty);
             Point position = new Point(x, y);
@@ -194,6 +196,7 @@ namespace ObjectTypes
         private void BoundaryPortDragStarted(object sender, DragStartedEventArgs e)
         {
             myMouseTransform = this.RenderTransform;
+            this.MousePress();
         }
 
         private GeneralTransform myMouseTransform;
