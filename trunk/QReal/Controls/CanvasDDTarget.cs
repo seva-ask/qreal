@@ -16,46 +16,12 @@ namespace QReal.Controls
         public CanvasDDTarget()
         {
             this.MouseMove += new MouseEventHandler(CanvasDDTarget_MouseMove);
-            this.MouseMove += new MouseEventHandler(CanvasDDTarget_MouseMoveElement);
             this.MouseLeftButtonDown += new MouseButtonEventHandler(CanvasDDTarget_MouseLeftButtonDown);
         }
 
         private static void CanvasDDTarget_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             UIManager.Instance.SelectedGraphicInstance = null;
-        }
-
-        private void CanvasDDTarget_MouseMoveElement(object sender, MouseEventArgs e)
-        {
-            ObjectType objectType = FindObjectType(e);
-            if (objectType != null)
-            {
-                if (objectType.IsMouseCaptured)
-                {
-                    double deltaY;
-                    double deltaX;
-                    objectType.GetDeltaMouseMove(e, out deltaY, out deltaX);
-                    NodeInstance nodeInstance = (this.Content as CanvasItemsControl).Items.Single(item => item == objectType.DataContext) as NodeInstance;
-                    if (nodeInstance != null)
-                    {
-                        foreach (var instanceChild in nodeInstance.GetParent<ParentableInstance>().NodeChildren)
-                        {
-                            instanceChild.GeometryInformation.X += deltaX;
-                            instanceChild.GeometryInformation.Y += deltaY;
-                        }
-                    }
-                }
-            }
-        }
-
-        private static ObjectType FindObjectType(MouseEventArgs e)
-        {
-            FrameworkElement parent = (e.OriginalSource as FrameworkElement);
-            while ((parent != null) && (!(parent is ObjectType)))
-            {
-                parent = parent.Parent as FrameworkElement;
-            }
-            return parent as ObjectType;
         }
 
         protected override bool CanAddItem(CanvasItemsControl itemsControl, object data)

@@ -61,17 +61,18 @@ namespace ObjectTypes
             }
         }
 
-        protected override void OnMoving(double deltaX, double deltaY)
+        protected override void Move(double deltaX, double deltaY)
         {
-            base.OnMoving(deltaX, deltaY);
+            base.Move(deltaX, deltaY);
             AdjustSelectRectanglesPositions();
+            MoveChildren(deltaX, deltaY);
             Canvas canvas = VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(this.Parent)) as Canvas;
             UIElementCollection children = canvas.Children;
             foreach (var linkInstanceFrom in LinksFrom)
             {
-                EdgeType linkFrom = GetEdgeType(children.Single(item =>
+                EdgeType linkFrom = GetObjectType<EdgeType>(children.Single(item =>
                     {
-                        EdgeType edgeType = GetEdgeType(item);
+                        EdgeType edgeType = GetObjectType<EdgeType>(item);
                         return edgeType == null ? false : edgeType.DataContext == linkInstanceFrom;
                     }));
                 double oldY = (double)linkFrom.GetValue(Canvas.TopProperty);
@@ -83,9 +84,9 @@ namespace ObjectTypes
             }           
             foreach (var linkInstanceTo in LinksTo)
             {
-                EdgeType linkTo = GetEdgeType(children.Single(item =>
+                EdgeType linkTo = GetObjectType<EdgeType>(children.Single(item =>
                     {
-                        EdgeType edgeType = GetEdgeType(item);
+                        EdgeType edgeType = GetObjectType<EdgeType>(item);
                         return edgeType == null ? false : edgeType.DataContext == linkInstanceTo;
                     }));
                 linkTo.Y2 += deltaY;
@@ -93,9 +94,24 @@ namespace ObjectTypes
             }
         }
 
-        private static EdgeType GetEdgeType(object item)
+        private void MoveChildren(double deltaX, double deltaY)
         {
-            return (VisualTreeHelper.GetChild((item as ContentPresenter), 0) as Canvas).Children[0] as EdgeType;
+            Canvas canvas = VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(this.Parent)) as Canvas;
+            UIElementCollection children = canvas.Children;
+            foreach (var nodeInstance in (this.DataContext as NodeInstance).GetParent<ParentableInstance>().NodeChildren)
+            {
+                NodeType node = GetObjectType<NodeType>(children.Single(item =>
+                {
+                    NodeType nodeType = GetObjectType<NodeType>(item);
+                    return nodeType == null ? false : nodeType.DataContext == nodeInstance;
+                }));
+                node.Move(deltaX, deltaY);
+            }
+        }
+
+        private static TObjectType GetObjectType<TObjectType>(object item) where TObjectType:ObjectType
+        {
+            return (VisualTreeHelper.GetChild((item as ContentPresenter), 0) as Canvas).Children[0] as TObjectType;
         }
 
         private void NodeType_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -106,9 +122,9 @@ namespace ObjectTypes
             UIElementCollection children = canvas.Children;
             foreach (var linkInstanceFrom in LinksFrom)
             {
-                EdgeType linkFrom = GetEdgeType(children.Single(item =>
+                EdgeType linkFrom = GetObjectType<EdgeType>(children.Single(item =>
                 {
-                    EdgeType edgeType = GetEdgeType(item);
+                    EdgeType edgeType = GetObjectType<EdgeType>(item);
                     return edgeType == null ? false : edgeType.DataContext == linkInstanceFrom;
                 }));
 
@@ -129,9 +145,9 @@ namespace ObjectTypes
             }
             foreach (var linkInstanceTo in LinksTo)
             {
-                EdgeType linkTo = GetEdgeType(children.Single(item =>
+                EdgeType linkTo = GetObjectType<EdgeType>(children.Single(item =>
                 {
-                    EdgeType edgeType = GetEdgeType(item);
+                    EdgeType edgeType = GetObjectType<EdgeType>(item);
                     return edgeType == null ? false : edgeType.DataContext == linkInstanceTo;
                 }));
 

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -57,41 +58,21 @@ namespace ObjectTypes
         {
             if (IsMouseCaptured)
             {
-                double deltaY;
-                double deltaX;
-                GetDeltaMouseMove(e, out deltaY, out deltaX);
-
-                double newTop = deltaY + (double)this.GetValue(Canvas.TopProperty);
-                double newLeft = deltaX + (double)this.GetValue(Canvas.LeftProperty);
-
-                this.SetValue(Canvas.TopProperty, newTop);
-                this.SetValue(Canvas.LeftProperty, newLeft);
-
-                myPreviousMouseX = myMouseX != -1 ? myMouseX : e.GetPosition(null).X;
-                myPreviousMouseY = myMouseY != -1 ? myMouseY : e.GetPosition(null).Y;
-
-                myMouseY = e.GetPosition(null).Y;
-                myMouseX = e.GetPosition(null).X;
-                OnMoving(deltaX, deltaY);
+                Point mousePosition = e.GetPosition(null);
+                double deltaX = mousePosition.X - myMouseX;
+                double deltaY = mousePosition.Y - myMouseY;
+                Move(deltaX, deltaY);
+                myMouseX = mousePosition.X;
+                myMouseY = mousePosition.Y;
             }
         }
 
-        protected virtual void OnMoving(double deltaX, double deltaY)
+        protected virtual void Move(double deltaX, double deltaY)
         {
-        }
-
-        private double myPreviousMouseX = -1;
-        private double myPreviousMouseY = -1;
-
-        public void GetDeltaMouseMove(MouseEventArgs e, out double deltaY, out double deltaX)
-        {
-            deltaY = e.GetPosition(null).Y - myMouseY;
-            deltaX = e.GetPosition(null).X - myMouseX;
-            if ((deltaX == 0) && (deltaY == 0))
-            {
-                deltaY = e.GetPosition(null).Y - myPreviousMouseY;
-                deltaX = e.GetPosition(null).X - myPreviousMouseX;
-            }
+            double newTop = deltaY + (double)this.GetValue(Canvas.TopProperty);
+            double newLeft = deltaX + (double)this.GetValue(Canvas.LeftProperty);
+            this.SetValue(Canvas.TopProperty, newTop);
+            this.SetValue(Canvas.LeftProperty, newLeft);
         }
 
         private void ObjectType_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
