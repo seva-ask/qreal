@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <publishData>
   <publishProfile publishUrl="C:\inetpub\wwwroot" deleteExistingFiles="True" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Local IIS" publishMethod="FileSystem" replaceMatchingFiles="False" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
-    <file relUrl="Database/InstancesModel.edmx.sql" publishTime="04/24/2010 20:35:47" />
-    <file relUrl="ClientBin/QReal.xap" publishTime="04/24/2010 21:21:57" />
-    <file relUrl="Web.config" publishTime="04/24/2010 21:22:17" />
-    <file relUrl="Silverlight.js" publishTime="04/23/2010 18:35:24" />
-    <file relUrl="Default.aspx" publishTime="04/23/2010 18:35:24" />
-    <file relUrl="bin/QReal.Web.pdb" publishTime="04/24/2010 21:21:47" />
-    <file relUrl="bin/QReal.Web.dll" publishTime="04/24/2010 21:21:47" />
+    <file relUrl="bin/QReal.Web.dll" publishTime="04/26/2010 03:08:28" />
+    <file relUrl="ClientBin/QReal.xap" publishTime="04/26/2010 03:08:43" />
+    <file relUrl="Web.config" publishTime="04/26/2010 03:08:54" />
+    <file relUrl="Silverlight.js" publishTime="04/24/2010 22:14:08" />
+    <file relUrl="Default.aspx" publishTime="04/24/2010 22:14:08" />
+    <file relUrl="bin/QReal.Web.pdb" publishTime="04/26/2010 03:08:28" />
+    <file relUrl="Database/InstancesModel.edmx.sql" publishTime="04/24/2010 22:14:07" />
   </publishProfile>
 </publishData>
