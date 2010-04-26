@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.ServiceModel.DomainServices.Client;
 using System.Linq;
+using System.Threading;
 using QReal.Web.Database;
 
 namespace QReal.Ria.Database
@@ -11,6 +12,11 @@ namespace QReal.Ria.Database
         {
             PropertyInfo property = child.GetType().GetProperties().Single(item => item.Name == "InheritanceParent");
             Entity parent = property.GetValue(child, null) as Entity;
+            while (parent == null)
+            {
+                Thread.Sleep(200);
+                parent = property.GetValue(child, null) as Entity;
+            }
             TParent parentCasted = parent as TParent;
             if (parentCasted != null)
             {

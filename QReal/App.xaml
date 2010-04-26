@@ -4,5 +4,11 @@
              >
     <Application.Resources>
         
+    	<ResourceDictionary>
+    		<ResourceDictionary.MergedDictionaries>
+    			<ResourceDictionary Source="GreenStyle.xaml"/>
+    		</ResourceDictionary.MergedDictionaries>
+    	</ResourceDictionary>
+        
     </Application.Resources>
 </Application>
