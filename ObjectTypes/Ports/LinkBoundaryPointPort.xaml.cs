@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls.Primitives;
 
-namespace ObjectTypes
+namespace ObjectTypes.Ports
 {
     public partial class LinkBoundaryPointPort : Port
     {

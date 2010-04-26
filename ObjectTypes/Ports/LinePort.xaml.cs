@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace ObjectTypes
+namespace ObjectTypes.Ports
 {
     public partial class LinePort : Port
     {
