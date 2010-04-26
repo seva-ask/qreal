@@ -64,18 +64,34 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbsConverter.cs" />
+    <Compile Include="Arrow.cs" />
+    <Compile Include="Arrows\AggregationArrow.xaml.cs">
+      <DependentUpon>AggregationArrow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Arrows\AssociationArrow.xaml.cs">
+      <DependentUpon>AssociationArrow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Arrows\CompositionArrow.xaml.cs">
+      <DependentUpon>CompositionArrow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Arrows\NoArrow.xaml.cs">
+      <DependentUpon>NoArrow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EdgeType.cs" />
+    <Compile Include="Arrows\GeneralizationArrow.xaml.cs">
+      <DependentUpon>GeneralizationArrow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GeometryHelper.cs" />
     <Compile Include="IDiagram.cs" />
-    <Compile Include="LinePort.xaml.cs">
+    <Compile Include="Ports\LinePort.xaml.cs">
       <DependentUpon>LinePort.xaml</DependentUpon>
     </Compile>
     <Compile Include="NodeType.cs" />
     <Compile Include="ObjectType.cs" />
-    <Compile Include="LinkBoundaryPointPort.xaml.cs">
+    <Compile Include="Ports\LinkBoundaryPointPort.xaml.cs">
       <DependentUpon>LinkBoundaryPointPort.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PointPort.xaml.cs">
+    <Compile Include="Ports\PointPort.xaml.cs">
       <DependentUpon>PointPort.xaml</DependentUpon>
     </Compile>
     <Compile Include="PortComparer.cs" />
@@ -84,15 +100,35 @@
     <Compile Include="VisibilityConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="LinePort.xaml">
+    <Page Include="Arrows\AggregationArrow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LinkBoundaryPointPort.xaml">
+    <Page Include="Arrows\AssociationArrow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PointPort.xaml">
+    <Page Include="Arrows\CompositionArrow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Arrows\GeneralizationArrow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Arrows\NoArrow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ports\LinePort.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ports\LinkBoundaryPointPort.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ports\PointPort.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

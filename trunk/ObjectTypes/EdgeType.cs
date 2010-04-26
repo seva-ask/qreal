@@ -5,6 +5,8 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using ObjectTypes.Arrows;
+using ObjectTypes.Ports;
 using QReal.Web.Database;
 using System.Linq;
 using System.Collections.Generic;
@@ -20,12 +22,12 @@ namespace ObjectTypes
             this.Loaded += new RoutedEventHandler(EdgeType_Loaded);
         }
 
-        private Line myMainLine;
+        private readonly Line myMainLine = new Line {StrokeThickness = 5};
+        private Arrow myStartArrow;
+        private Arrow myEndArrow;
 
         private void EdgeType_Loaded(object sender, RoutedEventArgs e)
         {
-            myMainLine = new Line {StrokeThickness = 5};
-
             Binding bindingColor = new Binding
             {
                 Source = this,
@@ -34,25 +36,16 @@ namespace ObjectTypes
             };
             myMainLine.SetBinding(Line.StrokeProperty, bindingColor);
 
-            Binding bindingX2 = new Binding
-                                    {
-                                        Source = this,
-                                        Path = new PropertyPath("X2"),
-                                        Mode = BindingMode.TwoWay,
-                                        Converter = new AbsConverter()
-                                    };
-            myMainLine.SetBinding(Line.X2Property, bindingX2);
-
-            Binding bindingY2 = new Binding
-                                    {
-                                        Source = this,
-                                        Path = new PropertyPath("Y2"),
-                                        Mode = BindingMode.TwoWay,
-                                        Converter = new AbsConverter()
-                                    };
-            myMainLine.SetBinding(Line.Y2Property, bindingY2);
-
             (this.Content as Panel).Children.Add(myMainLine);
+
+            myStartArrow.VerticalAlignment = VerticalAlignment.Top;
+            myStartArrow.HorizontalAlignment = HorizontalAlignment.Left;
+            myStartArrow.Margin = new Thickness(0, -(Arrow.HEIGHT - 7) / 2, 0, 0);
+            (this.Content as Panel).Children.Add(myStartArrow);
+
+            myEndArrow.VerticalAlignment = VerticalAlignment.Top;
+            myEndArrow.HorizontalAlignment = HorizontalAlignment.Left;
+            (this.Content as Panel).Children.Add(myEndArrow);
 
             LinkBoundaryPointPort endPort = new LinkBoundaryPointPort
                                                 {
@@ -253,6 +246,36 @@ namespace ObjectTypes
                 generalTransform = GetTransform(edgeType, angle, true, true);
             }
             edgeType.RenderTransform = generalTransform;
+
+            RotateTransform rotate = new RotateTransform
+                                         {
+                                             Angle = Math.Atan(Math.Abs(edgeType.Y2/edgeType.X2))*180/Math.PI,
+                                             CenterY = Arrow.HEIGHT/2
+                                         };
+            if (edgeType.myStartArrow == null)
+            {
+                edgeType.myStartArrow = edgeType.GetStartArrow();
+                edgeType.myEndArrow = edgeType.GetEndArrow();
+            }
+            edgeType.myStartArrow.RenderTransform = rotate;
+            Point start = rotate.Transform(new Point(Arrow.WIDTH, 7 / 2));
+            edgeType.myMainLine.X1 = start.X;
+            edgeType.myMainLine.Y1 = start.Y;
+
+            edgeType.myMainLine.X2 = Math.Abs(edgeType.X2) - start.X;
+            edgeType.myMainLine.Y2 = Math.Abs(edgeType.Y2) - start.Y;
+            edgeType.myEndArrow.RenderTransform = rotate;
+            edgeType.myEndArrow.Margin = new Thickness(edgeType.myMainLine.X2 - Arrow.WIDTH / 2, edgeType.myMainLine.Y2 - Arrow.HEIGHT / 2, 0, 0);
+        }
+
+        protected virtual Arrow GetStartArrow()
+        {
+            return new NoArrow();
+        }
+
+        protected virtual Arrow GetEndArrow()
+        {
+            return new NoArrow();
         }
 
         private static Transform GetTransform(EdgeType edgeType, double angle, bool xTranslateNeeded, bool yTranformNeeded)

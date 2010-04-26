@@ -1,4 +1,4 @@
-﻿namespace ObjectTypes
+﻿namespace ObjectTypes.Ports
 {
     public partial class PointPort : Port
     {
