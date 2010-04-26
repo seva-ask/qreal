@@ -55,7 +55,7 @@ namespace QReal.Controls
             Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
             SetPropertyBindings(logicalInstance, objectType);
-            objectType.MousePressed += new MouseLeftButtonEventHandler(ObjectTypeMousePressed);
+            objectType.Clicked += new ClickHandler(ObjectTypeClicked);
             Binding bindingSelected = new Binding
                                           {
                                               Mode = BindingMode.TwoWay,
@@ -87,7 +87,7 @@ namespace QReal.Controls
             }
         }
 
-        private static void ObjectTypeMousePressed(ObjectType sender)
+        private static void ObjectTypeClicked(ObjectType sender)
         {
             UIManager.Instance.SelectedGraphicInstance = sender.DataContext as Entity;
         }
