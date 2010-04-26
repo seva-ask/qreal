@@ -18,11 +18,14 @@
         <localDatabase:InstancesManager x:Key="InstancesManager"/>
         <local:UIManager x:Key="UIManager"/>
     </UserControl.Resources>
-    <Grid x:Name="LayoutRoot">
-        <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" Background="#FFE60D0D" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.InstancesContext.RootInstances, Mode=TwoWay}" SelectedItemChanged="TreeViewSelectedItemChanged">
+    <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundBrush}">
+        <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.InstancesContext.RootInstances, Mode=TwoWay}" SelectedItemChanged="TreeViewSelectedItemChanged">
             <controls:TreeView.Resources>
                 <local:TypeToIconConverter x:Key="TypeToIconConverter"/>
             </controls:TreeView.Resources>
+        	<controls:TreeView.Background>
+        		<StaticResource ResourceKey="TreeViewBrush"/>
+        	</controls:TreeView.Background>
             <controls:TreeView.ItemTemplate>
                 <common:HierarchicalDataTemplate ItemsSource="{Binding InheritanceParent.Children}">
                     <StackPanel Height="20" Width="166" Orientation="Horizontal">
@@ -32,17 +35,17 @@
                 </common:HierarchicalDataTemplate>
             </controls:TreeView.ItemTemplate>
         </controls:TreeView>
-        <data:DataGrid x:Name="propertiesDataGrid" Height="170" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="151" Background="#FFE01AF0" ItemsSource="{Binding Source={StaticResource UIManager}, Path=Instance.InstancePropertiesSource, Mode=TwoWay}" AutoGenerateColumns="False">
+        <data:DataGrid x:Name="propertiesDataGrid" Height="170" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="151" Background="{StaticResource PropertiesDataGridBrush}" ItemsSource="{Binding Source={StaticResource UIManager}, Path=Instance.InstancePropertiesSource, Mode=TwoWay}" AutoGenerateColumns="False">
         	<data:DataGrid.Columns>
         		<data:DataGridTextColumn Binding="{Binding Name, Mode=TwoWay}" Header="Name" IsReadOnly="True"/>
         		<data:DataGridTextColumn Binding="{Binding Value, Mode=TwoWay}" Header="Value"/>
         	</data:DataGrid.Columns>
         </data:DataGrid>
-      	<Grid x:Name="toolboxGrid" HorizontalAlignment="Right" Margin="0,23,0,170" Width="151">
-      		<dataInput:Label x:Name="toolboxLabel" Background="#FFF4F715" Margin="3,0,0,0" VerticalAlignment="Top" Content="Панель инструментов" HorizontalAlignment="Center"/>
+      	<Grid x:Name="toolboxGrid" HorizontalAlignment="Right" Margin="0,23,0,170" Width="151" Background="{StaticResource ToolBoxComboBoxBrush}">
+      		<dataInput:Label x:Name="toolboxLabel" Background="{StaticResource ToolBoxComboBoxBrush}" Margin="3,0,0,0" VerticalAlignment="Top" Content="Панель инструментов" HorizontalAlignment="Center" Foreground="{StaticResource ToolBoxComboBoxTextBrush}"/>
       		<ComboBox x:Name="toolboxDiagramComboBox" Margin="0,16,0,0" VerticalAlignment="Top" SelectionChanged="ToolboxDiagramComboBoxSelectionChanged"/>
             <controlsDataToolkit:DataGridDragDropTarget HorizontalAlignment="Left" x:Name="toolboxObjectsDataGridDDT" Width="151" Margin="0,36,0,0" RenderTransformOrigin="0.497,0.653">
-                <data:DataGrid x:Name="toolboxObjectsDataGrid" Background="#FF31DC1A" HeadersVisibility="None" Height="{Binding ActualHeight, ElementName=toolboxObjectsDataGridDDT, Mode=OneWay}" Width="{Binding ActualWidth, ElementName=toolboxObjectsDataGridDDT, Mode=OneWay}" GridLinesVisibility="Horizontal">
+                <data:DataGrid x:Name="toolboxObjectsDataGrid" HeadersVisibility="None" Height="{Binding ActualHeight, ElementName=toolboxObjectsDataGridDDT, Mode=OneWay}" Width="{Binding ActualWidth, ElementName=toolboxObjectsDataGridDDT, Mode=OneWay}" GridLinesVisibility="Horizontal">
                 	<data:DataGrid.Resources>
                         <local:ToolBoxTypeConverter x:Key="ToolBoxTypeConverter"/>
                         <Style x:Key="toolboxDataGridRowStyle" TargetType="data:DataGridRow">
@@ -58,6 +61,9 @@
                 			</Setter>
                 		</Style>
                 	</data:DataGrid.Resources>
+                	<data:DataGrid.Background>
+                		<StaticResource ResourceKey="ToolBoxDataGridBrush"/>
+                	</data:DataGrid.Background>
                 	<data:DataGrid.RowStyle>
                 		<StaticResource ResourceKey="toolboxDataGridRowStyle"/>
                 	</data:DataGrid.RowStyle>
@@ -72,7 +78,7 @@
         		<localControls:CanvasItemsControl x:Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding Instance.CanvasInstancesSource, Mode=TwoWay, Source={StaticResource InstancesManager}}" Width="{Binding Width, ElementName=canvasDDTarget, Mode=OneWay}" Height="{Binding Height, ElementName=canvasDDTarget, Mode=OneWay}">
         			<localControls:CanvasItemsControl.ItemsPanel>
         				<ItemsPanelTemplate>
-        					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#606077"/>
+        					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{StaticResource CanvasBrush}"/>
         				</ItemsPanelTemplate>
         			</localControls:CanvasItemsControl.ItemsPanel>
         		</localControls:CanvasItemsControl>
