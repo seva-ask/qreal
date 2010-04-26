@@ -14,7 +14,7 @@ namespace QReal.Web.Database
             {
                 if (myChildren == null)
                 {
-                    Create();
+                    Create(); // i don't know how it can be null, but it can
                 }
                 return myChildren;
             }

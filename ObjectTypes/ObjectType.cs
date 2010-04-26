@@ -7,7 +7,7 @@ namespace ObjectTypes
 {
     public delegate void ZIndexChangedHandler(ObjectType objectType, int newZIndex);
 
-    public delegate void MouseLeftButtonEventHandler(ObjectType sender);
+    public delegate void ClickHandler(ObjectType sender);
 
     public abstract class ObjectType : UserControl
     {
@@ -54,9 +54,9 @@ namespace ObjectTypes
         protected void MousePress()
         {
             SetZIndex(1);
-            if (MousePressed != null)
+            if (Clicked != null)
             {
-                MousePressed(this);
+                Clicked(this);
             }
         }
 
@@ -98,10 +98,6 @@ namespace ObjectTypes
         protected void MouseRelease()
         {
             SetZIndex(0);
-            if (MouseReleased != null)
-            {
-                MouseReleased(this);
-            }
         }
 
         public bool Selected
@@ -142,7 +138,6 @@ namespace ObjectTypes
             }
         }
 
-        public event MouseLeftButtonEventHandler MousePressed;
-        public event MouseLeftButtonEventHandler MouseReleased;
+        public event ClickHandler Clicked;
     }
 }
