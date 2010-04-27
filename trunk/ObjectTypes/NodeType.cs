@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Browser;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -17,10 +18,18 @@ namespace ObjectTypes
     {
         protected NodeType()
         {
-            this.Loaded += new RoutedEventHandler(NodeType_Loaded);
-            this.SizeChanged += new SizeChangedEventHandler(NodeType_SizeChanged);
+            if (IsNotDesigner())
+            {
+                this.Loaded += new RoutedEventHandler(NodeType_Loaded);
+                this.SizeChanged += new SizeChangedEventHandler(NodeType_SizeChanged);                
+            }
             this.MinHeight = 100;
             this.MinWidth = 100;
+        }
+        
+        private static bool IsNotDesigner()
+        {
+            return HtmlPage.IsEnabled;
         }
 
         private void NodeType_Loaded(object sender, RoutedEventArgs e)
@@ -44,18 +53,37 @@ namespace ObjectTypes
                                                  };
             thumb.SetBinding(VisibilityProperty, bindingThumbVisibility);
 
+            if (this.Content is Canvas)
+            {
+                Binding bindingThumbTop = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath("Height"),
+                    Mode = BindingMode.TwoWay,
+                };
+                thumb.SetBinding(Canvas.TopProperty, bindingThumbTop);
+                thumb.Margin = new Thickness(-7, -7, 0, 0);
+                Binding bindingThumbLeft = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath("Width"),
+                    Mode = BindingMode.TwoWay,
+                };
+                thumb.SetBinding(Canvas.LeftProperty, bindingThumbLeft);
+            }
+
             (this.Content as Panel).Children.Add(thumb);
         }
 
         private void ThumbDragDelta(object sender, DragDeltaEventArgs e)
         {
             double newWidth = this.Width + e.HorizontalChange;
-            if (newWidth > 0)
+            if (newWidth > 0 && newWidth > this.MinWidth)
             {
                 this.Width = newWidth;
             }
             double newHeight = this.Height + e.VerticalChange;
-            if (newHeight > 0)
+            if (newHeight > 0 && newHeight > this.MinHeight)
             {
                 this.Height = newHeight;
             }

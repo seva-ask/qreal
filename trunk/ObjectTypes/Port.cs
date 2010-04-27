@@ -65,6 +65,10 @@ namespace ObjectTypes
         {
             get
             {
+                if (this.Parent is Canvas)
+                {
+                    return new Point((double)this.GetValue(Canvas.LeftProperty), (double) this.GetValue(Canvas.TopProperty));
+                }
                 ObjectType objectType = FindObjectTypeParent();
                 Point result = new Point();
                 switch (this.HorizontalAlignment)
