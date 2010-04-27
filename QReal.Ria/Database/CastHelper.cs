@@ -10,12 +10,19 @@ namespace QReal.Ria.Database
     {
         public static TParent GetParent<TParent>(this Entity child) where TParent : Entity
         {
-            PropertyInfo property = child.GetType().GetProperties().Single(item => item.Name == "InheritanceParent");
-            Entity parent = property.GetValue(child, null) as Entity;
-            while (parent == null)
+            PropertyInfo propertyParent = child.GetType().GetProperty("InheritanceParent");
+            Entity parent = propertyParent.GetValue(child, null) as Entity;
+            if (parent == null)
             {
-                Thread.Sleep(200);
-                parent = property.GetValue(child, null) as Entity;
+                PropertyInfo propertyId = child.GetType().GetProperty("InheritanceId");
+                int inheritanceId = (int) propertyId.GetValue(child, null);
+                parent = InstancesManager.Instance.InstancesContext.EntityContainer.GetEntitySet<TParent>().Single(
+                    item =>
+                    {
+                        PropertyInfo property = item.GetType().GetProperty("Id");
+                        int id = (int) property.GetValue(item, null);
+                        return id == inheritanceId;
+                    });
             }
             TParent parentCasted = parent as TParent;
             if (parentCasted != null)
@@ -30,7 +37,7 @@ namespace QReal.Ria.Database
 
         public static GeometryInformation GetGeometryInformation(this Entity child)
         {
-            PropertyInfo property = child.GetType().GetProperties().Single(item => item.Name == "GeometryInformation");
+            PropertyInfo property = child.GetType().GetProperty("GeometryInformation");
             return property.GetValue(child, null) as GeometryInformation;
         }
 

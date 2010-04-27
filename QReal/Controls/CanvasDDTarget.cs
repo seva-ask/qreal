@@ -66,12 +66,14 @@ namespace QReal.Controls
         private void AddGraphicVisualizedInstance(Type type, GraphicInstance graphicInstance, DragEventArgs args)
         {
             Point position = args.GetPosition(this);
+            double width = (double) type.GetProperty("Width").GetValue(Activator.CreateInstance(type),null);
+            double height = (double)type.GetProperty("Height").GetValue(Activator.CreateInstance(type), null);
             GeometryInformation geometryInformation = new GeometryInformation
                                                           {
                                                               X = position.X,
                                                               Y = position.Y,
-                                                              Width = 200,
-                                                              Height = 200
+                                                              Width = (width != 0 && !double.IsNaN(width)) ? width : 200,
+                                                              Height = (height != 0 && !double.IsNaN(height)) ? height : 200
                                                           };
             InstancesManager.Instance.InstancesContext.GeometryInformations.Add(geometryInformation);
             if (type.IsSubclassOf(typeof(NodeType)))

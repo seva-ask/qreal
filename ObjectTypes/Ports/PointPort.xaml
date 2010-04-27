@@ -9,7 +9,7 @@
     <Thumb x:Name="thumb">
         <Thumb.Resources>
             <ControlTemplate x:Key="ThumbTemplate" TargetType="Thumb">
-                <Grid Background="Green"/>
+                <Grid Background="#4C008000"/>
             </ControlTemplate>
         </Thumb.Resources>
         <Thumb.Template>

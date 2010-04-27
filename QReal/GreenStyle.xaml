@@ -14,5 +14,5 @@
 		<Setter Property="Foreground" Value="{StaticResource ButtonTextBrush}"/>
 		<Setter Property="BorderBrush" Value="{StaticResource ButtonTextBrush}"/>
 	</Style>
-	<SolidColorBrush x:Key="BackgroundBrush" Color="#FF03CA4E" />
+	<SolidColorBrush x:Key="BackgroundBrush" Color="#FF03CA4E" />	
 </ResourceDictionary>
