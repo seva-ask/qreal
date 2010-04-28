@@ -12,12 +12,16 @@ namespace QReal.Ria.Database
 {
     public class InstancesManager : DependencyObject
     {
-        private static readonly InstancesManager myInstance = new InstancesManager();
+        private static InstancesManager myInstance;
 
         public static InstancesManager Instance
         {
             get
             {
+                if (myInstance == null)
+                {
+                    myInstance = new InstancesManager();
+                }
                 return myInstance;
             }
         }
@@ -28,6 +32,7 @@ namespace QReal.Ria.Database
 	    {
             if (IsNotDesigner())
             {
+                myInstance = this;
                 InstancesContext = new InstancesContext();
                 InstancesContext.EdgeInstances.PropertyChanged += GraphicInstances_PropertyChanged;
                 InstancesContext.NodeInstances.PropertyChanged += GraphicInstances_PropertyChanged;
@@ -112,10 +117,13 @@ namespace QReal.Ria.Database
 
         private static void AddChildren(List<Entity> canvasSource, NodeInstance nodeInstance)
         {
-            foreach (var entity in nodeInstance.GetParent<ParentableInstance>().NodeChildren)
+            if (nodeInstance.GetParent<ParentableInstance>() != null)
             {
-                canvasSource.Add(entity);
-                AddChildren(canvasSource, entity);
+                foreach (var entity in nodeInstance.GetParent<ParentableInstance>().NodeChildren)
+                {
+                    canvasSource.Add(entity);
+                    AddChildren(canvasSource, entity);
+                }
             }
         }
 

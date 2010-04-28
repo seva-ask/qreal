@@ -14,15 +14,16 @@ namespace QReal.Ria.Database
             Entity parent = propertyParent.GetValue(child, null) as Entity;
             if (parent == null)
             {
-                PropertyInfo propertyId = child.GetType().GetProperty("InheritanceId");
-                int inheritanceId = (int) propertyId.GetValue(child, null);
-                parent = InstancesManager.Instance.InstancesContext.EntityContainer.GetEntitySet<TParent>().Single(
-                    item =>
-                    {
-                        PropertyInfo property = item.GetType().GetProperty("Id");
-                        int id = (int) property.GetValue(item, null);
-                        return id == inheritanceId;
-                    });
+                return null;
+                //PropertyInfo propertyId = child.GetType().GetProperty("InheritanceId");
+                //int inheritanceId = (int) propertyId.GetValue(child, null);
+                //parent = InstancesManager.Instance.InstancesContext.EntityContainer.GetEntitySet<TParent>().Single(
+                //    item =>
+                //    {
+                //        PropertyInfo property = item.GetType().GetProperty("Id");
+                //        int id = (int) property.GetValue(item, null);
+                //        return id == inheritanceId;
+                //    });
             }
             TParent parentCasted = parent as TParent;
             if (parentCasted != null)

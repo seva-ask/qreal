@@ -22,7 +22,7 @@ namespace ObjectTypes
             this.Loaded += new RoutedEventHandler(EdgeType_Loaded);
         }
 
-        private readonly Line myMainLine = new Line {StrokeThickness = 5};
+        protected readonly Line MainLine = new Line {StrokeThickness = 5};
         private Arrow myStartArrow;
         private Arrow myEndArrow;
 
@@ -34,9 +34,9 @@ namespace ObjectTypes
                 Path = new PropertyPath("LineBrush"),
                 Mode = BindingMode.TwoWay
             };
-            myMainLine.SetBinding(Line.StrokeProperty, bindingColor);
+            MainLine.SetBinding(Line.StrokeProperty, bindingColor);
 
-            (this.Content as Panel).Children.Add(myMainLine);
+            (this.Content as Panel).Children.Add(MainLine);
 
             myStartArrow.VerticalAlignment = VerticalAlignment.Top;
             myStartArrow.HorizontalAlignment = HorizontalAlignment.Left;
@@ -259,13 +259,13 @@ namespace ObjectTypes
             }
             edgeType.myStartArrow.RenderTransform = rotate;
             Point start = rotate.Transform(new Point(Arrow.WIDTH, 7 / 2));
-            edgeType.myMainLine.X1 = start.X;
-            edgeType.myMainLine.Y1 = start.Y;
+            edgeType.MainLine.X1 = start.X;
+            edgeType.MainLine.Y1 = start.Y;
 
-            edgeType.myMainLine.X2 = Math.Abs(edgeType.X2) - start.X;
-            edgeType.myMainLine.Y2 = Math.Abs(edgeType.Y2) - start.Y;
+            edgeType.MainLine.X2 = Math.Abs(edgeType.X2) - start.X;
+            edgeType.MainLine.Y2 = Math.Abs(edgeType.Y2) - start.Y;
             edgeType.myEndArrow.RenderTransform = rotate;
-            edgeType.myEndArrow.Margin = new Thickness(edgeType.myMainLine.X2 - Arrow.WIDTH / 2, edgeType.myMainLine.Y2 - Arrow.HEIGHT / 2, 0, 0);
+            edgeType.myEndArrow.Margin = new Thickness(edgeType.MainLine.X2 - Arrow.WIDTH / 2, edgeType.MainLine.Y2 - Arrow.HEIGHT / 2, 0, 0);
         }
 
         protected virtual Arrow GetStartArrow()

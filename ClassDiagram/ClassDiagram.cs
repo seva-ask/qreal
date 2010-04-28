@@ -7,7 +7,7 @@ namespace ClassDiagram
     {
         public string Name
         {
-            get { return "Class diagram"; }
+            get { return "Class Diagram"; }
         }
     }
 }

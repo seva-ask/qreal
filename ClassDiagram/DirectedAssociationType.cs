@@ -1,18 +1,19 @@
-﻿using ObjectTypes;
+﻿using System;
+using ObjectTypes;
 using ObjectTypes.Arrows;
 
 namespace ClassDiagram
 {
-    public class AggregationType : EdgeType
+    public class DirectedAssociationType : EdgeType
     {
         public override string TypeName
         {
-            get { return "Aggregation"; }
+            get { return "Directed Association"; }
         }
 
         protected override Arrow GetStartArrow()
         {
-            return new AggregationArrow();
+            return new AssociationArrow();
         }
     }
 }
