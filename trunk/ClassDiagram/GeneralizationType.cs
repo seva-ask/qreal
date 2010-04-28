@@ -3,16 +3,16 @@ using ObjectTypes.Arrows;
 
 namespace ClassDiagram
 {
-    public class AggregationType : EdgeType
+    public class GeneralizationType : EdgeType
     {
         public override string TypeName
         {
-            get { return "Aggregation"; }
+            get { return "Generalization"; }
         }
 
         protected override Arrow GetStartArrow()
         {
-            return new AggregationArrow();
+            return new GeneralizationArrow();
         }
     }
 }
