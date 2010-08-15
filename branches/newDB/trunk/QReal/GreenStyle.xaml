@@ -1,0 +1,18 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<SolidColorBrush x:Key="TreeViewBrush" Color="#FFABFFAB" />
+	<SolidColorBrush x:Key="CanvasBrush" Color="#FFCFFFDD" />
+	<SolidColorBrush x:Key="ToolBoxDataGridBrush" Color="#FFA3F2A6" />
+	<SolidColorBrush x:Key="PropertiesDataGridBrush" Color="#FF49C953" />
+	<SolidColorBrush x:Key="ToolBoxComboBoxBrush" Color="#FF007D2F" />
+	<SolidColorBrush x:Key="ToolBoxComboBoxTextBrush" Color="White" />
+	<SolidColorBrush x:Key="ButtonBrush" Color="#FF63FF8C" />
+	<SolidColorBrush x:Key="ButtonTextBrush" Color="#FF023715" />
+	<Style TargetType="Button">
+		<Setter Property="Background" Value="{StaticResource ButtonBrush}"/>
+		<Setter Property="Foreground" Value="{StaticResource ButtonTextBrush}"/>
+		<Setter Property="BorderBrush" Value="{StaticResource ButtonTextBrush}"/>
+	</Style>
+	<SolidColorBrush x:Key="BackgroundBrush" Color="#FF03CA4E" />	
+</ResourceDictionary>

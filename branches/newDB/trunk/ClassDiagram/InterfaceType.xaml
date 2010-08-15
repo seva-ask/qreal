@@ -1,0 +1,33 @@
+﻿<base:NodeType
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:base="clr-namespace:ObjectTypes;assembly=ObjectTypes"
+    xmlns:ObjectTypes_Ports="clr-namespace:ObjectTypes.Ports;assembly=ObjectTypes" x:Name="nodeType" x:Class="ClassDiagram.InterfaceType"
+    mc:Ignorable="d" Width="150" Height="200">
+    <base:NodeType.Resources>
+        <base:PercentConverter x:Key="PercentConverter"/>
+    </base:NodeType.Resources>
+    <Canvas x:Name="LayoutRoot" HorizontalAlignment="Left" Height="200" Margin="0" VerticalAlignment="Top" Width="150" Background="Transparent" >
+        <ObjectTypes_Ports:LinePort RenderTransformOrigin="0,0" Width="{Binding Height, ElementName=nodeType, Mode=OneWay}" UseLayoutRounding="False" d:LayoutRounding="Auto" HorizontalAlignment="Left" Canvas.Left="7">
+            <ObjectTypes_Ports:LinePort.RenderTransform>
+                <CompositeTransform Rotation="90"/>
+            </ObjectTypes_Ports:LinePort.RenderTransform>
+        </ObjectTypes_Ports:LinePort>
+        <ObjectTypes_Ports:LinePort RenderTransformOrigin="0,0" Width="{Binding Height, ElementName=nodeType, Mode=OneWay}" UseLayoutRounding="False" d:LayoutRounding="Auto" HorizontalAlignment="Left" Canvas.Left="{Binding Width, ElementName=nodeType, Mode=OneWay}">
+            <ObjectTypes_Ports:LinePort.RenderTransform>
+                <CompositeTransform Rotation="90"/>
+            </ObjectTypes_Ports:LinePort.RenderTransform>
+        </ObjectTypes_Ports:LinePort>
+        <ObjectTypes_Ports:LinePort Width="{Binding Width, ElementName=nodeType}" d:LayoutOverrides="Height"/>
+        <ObjectTypes_Ports:LinePort Width="{Binding Width, ElementName=nodeType}" d:LayoutOverrides="Height" Canvas.Top="{Binding Height, ElementName=nodeType, Mode=OneWay}" Margin="0,-7,0,0"/>
+        <Path Data="M1.9868196E-08,27.333334 L150,27.333334" Fill="#FFF4F4F5" Height="1" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="Black" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" Canvas.Top="27" UseLayoutRounding="False" Width="{Binding Width, ElementName=nodeType, Mode=OneWay}"/>
+        <Path Data="M1.9868196E-08,27.333334 L150,27.333334" Fill="#FFF4F4F5" Height="1" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="Black" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" UseLayoutRounding="False" Width="{Binding Width, ElementName=nodeType, Mode=OneWay}" Canvas.Top="{Binding Height, ConverterParameter=50, Converter={StaticResource PercentConverter}, ElementName=nodeType, Mode=OneWay}"/>
+        <Grid Height="27" Width="{Binding Width, ElementName=nodeType, Mode=OneWay}" Background="Transparent">
+            <TextBlock Margin="0" TextWrapping="Wrap" Text="{Binding DataContext.LogicalInstance.Name, ElementName=nodeType, Mode=TwoWay}" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock HorizontalAlignment="Left" Margin="0" TextWrapping="Wrap" Text="&lt;&lt;interface&gt;&gt;" d:LayoutOverrides="HorizontalAlignment, Height" FontSize="9.333"/>
+        </Grid>
+        <Rectangle Fill="Transparent" Height="{Binding Height, ElementName=nodeType}" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat" Stroke="Black" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" Width="{Binding Width, ElementName=nodeType}"/>
+    </Canvas>
+</base:NodeType>

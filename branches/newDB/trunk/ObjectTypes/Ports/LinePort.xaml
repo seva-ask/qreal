@@ -1,0 +1,19 @@
+﻿<local:Port x:Class="ObjectTypes.Ports.LinePort"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:ObjectTypes"
+    mc:Ignorable="d"
+    Height="7" d:DesignWidth="100" MaxHeight="7" MinHeight="7">
+    <Thumb x:Name="thumb">
+        <Thumb.Resources>
+            <ControlTemplate x:Key="ThumbTemplate" TargetType="Thumb">
+                <Grid Background="#4C008000"/>
+            </ControlTemplate>
+        </Thumb.Resources>
+        <Thumb.Template>
+            <StaticResource ResourceKey="ThumbTemplate"/>
+        </Thumb.Template>
+    </Thumb>
+</local:Port>
