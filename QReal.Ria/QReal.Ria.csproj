@@ -62,7 +62,6 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\CastHelper.cs" />
     <Compile Include="Database\EntityExtensions.cs" />
     <Compile Include="Database\InstancesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

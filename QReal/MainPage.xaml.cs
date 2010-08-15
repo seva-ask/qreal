@@ -71,7 +71,7 @@ namespace QReal
 
         private void TreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            UIManager.Instance.SelectedGraphicInstance = treeView.SelectedItem as Entity;
+            UIManager.Instance.SelectedGraphicInstance = treeView.SelectedItem as GraphicInstance;
         }
     }
 }

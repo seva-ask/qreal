@@ -45,62 +45,56 @@ namespace QReal.Controls
                     Type = type.FullName
                 };
                 InstancesManager.Instance.InstancesContext.LogicalInstances.Add(logicalInstance);
-
-                GraphicInstance graphicInstance = new GraphicInstance { LogicalInstance = logicalInstance };
-                InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicInstance);
+                GraphicInstance graphicInstance = null;
                 if (InstancesManager.Instance.CanvasRootElement == null)
                 {
-                    ParentableInstance parentableInstance = new ParentableInstance {InheritanceParent = graphicInstance};
-                    RootInstance rootInstance = new RootInstance {InheritanceParent = parentableInstance};
-                    InstancesManager.Instance.InstancesContext.RootInstances.Add(rootInstance);
+                    graphicInstance = new RootInstance { LogicalInstance = logicalInstance };
                 }
                 else
                 {
-                    AddGraphicVisualizedInstance(type, graphicInstance, args);
+                    graphicInstance = CreateGraphicVisualizedInstance(type, logicalInstance, args);
                 }
+                InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicInstance);
+                InstancesManager.Instance.AddInstance(graphicInstance);
+                InstancesManager.Instance.InstancesContext.SubmitChanges();
             }
-            InstancesManager.Instance.InstancesContext.SubmitChanges(
-                action => InstancesManager.Instance.UpdateCanvasInstancesSource(), null);
         }
 
-        private void AddGraphicVisualizedInstance(Type type, GraphicInstance graphicInstance, DragEventArgs args)
+        private GraphicInstance CreateGraphicVisualizedInstance(Type type, LogicalInstance logicalInstance,DragEventArgs args)
         {
             Point position = args.GetPosition(this);
             double width = (double) type.GetProperty("Width").GetValue(Activator.CreateInstance(type),null);
             double height = (double)type.GetProperty("Height").GetValue(Activator.CreateInstance(type), null);
-            GeometryInformation geometryInformation = new GeometryInformation
-                                                          {
-                                                              X = position.X,
-                                                              Y = position.Y,
-                                                              Width = (width != 0 && !double.IsNaN(width)) ? width : 200,
-                                                              Height = (height != 0 && !double.IsNaN(height)) ? height : 200
-                                                          };
-            InstancesManager.Instance.InstancesContext.GeometryInformations.Add(geometryInformation);
+            GraphicInstance graphicInstance = null;
             if (type.IsSubclassOf(typeof(NodeType)))
             {
-                ParentableInstance parentableInstance = new ParentableInstance {InheritanceParent = graphicInstance};
-                InstancesManager.Instance.InstancesContext.ParentableInstances.Add(parentableInstance);
-                NodeInstance nodeInstance = new NodeInstance
+                ParentableInstance parent = FindParent(position, graphicInstance);
+                graphicInstance = new NodeInstance
                                                 {
-                                                    InheritanceParent = parentableInstance,
-                                                    GeometryInformation = geometryInformation
+                                                    X = position.X,
+                                                    Y = position.Y,
+                                                    Width = (width != 0 && !double.IsNaN(width)) ? width : 200,
+                                                    Height = (height != 0 && !double.IsNaN(height)) ? height : 200,
+                                                    LogicalInstance = logicalInstance,
+                                                    Parent = parent
                                                 };
-                InstancesManager.Instance.InstancesContext.NodeInstances.Add(nodeInstance);
-                nodeInstance.Parent = FindParent(position, nodeInstance);
             }
             else
             {
-                EdgeInstance edgeInstance = new EdgeInstance
+                graphicInstance = new EdgeInstance
                                                 {
-                                                    GeometryInformation = geometryInformation,
-                                                    InheritanceParent = graphicInstance,
+                                                    X = position.X,
+                                                    Y = position.Y,
+                                                    Width = (width != 0 && !double.IsNaN(width)) ? width : 200,
+                                                    Height = (height != 0 && !double.IsNaN(height)) ? height : 200,
+                                                    LogicalInstance = logicalInstance,
                                                     Parent = InstancesManager.Instance.CanvasRootElement
                                                 };
-                InstancesManager.Instance.InstancesContext.EdgeInstances.Add(edgeInstance);
             }
+            return graphicInstance;
         }
 
-        private ParentableInstance FindParent(Point position, NodeInstance instance)
+        private ParentableInstance FindParent(Point position, GraphicInstance instance)
         {
             foreach (var item in (this.Content as CanvasItemsControl).Items)
             {
@@ -109,14 +103,13 @@ namespace QReal.Controls
                 {
                     continue;
                 }
-                GeometryInformation geom = nodeInstance.GeometryInformation;
-                Rect itemBoundingRect = new Rect(geom.X, geom.Y, geom.Width, geom.Height);
+                Rect itemBoundingRect = new Rect(nodeInstance.X, nodeInstance.Y, nodeInstance.Width, nodeInstance.Height);
                 if (itemBoundingRect.Contains(position))
                 {
-                    return nodeInstance.GetParent<ParentableInstance>();
+                    return nodeInstance;
                 }
             }
-            return InstancesManager.Instance.CanvasRootElement.GetParent<ParentableInstance>();
+            return InstancesManager.Instance.CanvasRootElement;
         }
 
         private void CanvasDDTarget_MouseMove(object sender, MouseEventArgs e)
@@ -127,11 +120,22 @@ namespace QReal.Controls
             double topBound = double.PositiveInfinity;
             foreach (var item in (this.Content as CanvasItemsControl).Items)
             {
-                GeometryInformation geom = (item as Entity).GetGeometryInformation();
-                rightBound = Math.Max(rightBound, geom.X + geom.Width + 10);
-                leftBound = Math.Min(leftBound, geom.X - 10);
-                topBound = Math.Min(topBound, geom.Y - 10);
-                bottomBound = Math.Max(bottomBound, geom.Y + geom.Height + 10);
+                if (item is NodeInstance)
+                {
+                    NodeInstance nodeInstance = item as NodeInstance;
+                    rightBound = Math.Max(rightBound, nodeInstance.X + nodeInstance.Width + 10);
+                    leftBound = Math.Min(leftBound, nodeInstance.X - 10);
+                    topBound = Math.Min(topBound, nodeInstance.Y - 10);
+                    bottomBound = Math.Max(bottomBound, nodeInstance.Y + nodeInstance.Height + 10);
+                }
+                else if (item is EdgeInstance)
+                {
+                    EdgeInstance edgeInstance = item as EdgeInstance;
+                    rightBound = Math.Max(rightBound, edgeInstance.X + edgeInstance.Width + 10);
+                    leftBound = Math.Min(leftBound, edgeInstance.X - 10);
+                    topBound = Math.Min(topBound, edgeInstance.Y - 10);
+                    bottomBound = Math.Max(bottomBound, edgeInstance.Y + edgeInstance.Height + 10);
+                }
             }
             if (rightBound > this.Width)
             {
@@ -145,16 +149,28 @@ namespace QReal.Controls
             {
                 foreach (var item in (this.Content as CanvasItemsControl).Items)
                 {
-                    GeometryInformation geom = (item as Entity).GetGeometryInformation();
-                    geom.X -= leftBound;
+                    if (item is NodeInstance)
+                    {
+                        (item as NodeInstance).X -= leftBound;
+                    }
+                    else if (item is EdgeInstance)
+                    {
+                        (item as EdgeInstance).X -= leftBound;
+                    }
                 }
             }
             if (topBound < 0)
             {
                 foreach (var item in (this.Content as CanvasItemsControl).Items)
                 {
-                    GeometryInformation geom = (item as Entity).GetGeometryInformation();
-                    geom.Y -= topBound;
+                    if (item is NodeInstance)
+                    {
+                        (item as NodeInstance).Y -= topBound;
+                    }
+                    else if (item is EdgeInstance)
+                    {
+                        (item as EdgeInstance).Y -= topBound;
+                    }
                 }
             }
         }

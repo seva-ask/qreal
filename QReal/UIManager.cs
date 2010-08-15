@@ -44,14 +44,14 @@ namespace QReal
             }
         }
 
-        public Entity SelectedGraphicInstance
+        public GraphicInstance SelectedGraphicInstance
         {
-            get { return (Entity)GetValue(SelectedGraphicInstanceProperty); }
+            get { return (GraphicInstance)GetValue(SelectedGraphicInstanceProperty); }
             set { SetValue(SelectedGraphicInstanceProperty, value); }
         }
 
         public static readonly DependencyProperty SelectedGraphicInstanceProperty =
-            DependencyProperty.Register("SelectedGraphicInstance", typeof(Entity), typeof(UIManager), new PropertyMetadata(null, OnSelectedGraphicInstancePropertyChanged));
+            DependencyProperty.Register("SelectedGraphicInstance", typeof(GraphicInstance), typeof(UIManager), new PropertyMetadata(null, OnSelectedGraphicInstancePropertyChanged));
 
         private static void OnSelectedGraphicInstancePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
@@ -63,7 +63,7 @@ namespace QReal
             {
                 UIManager.Instance.SelectedItemChanged(UIManager.Instance.SelectedGraphicInstance);
             }
-            UIManager.Instance.InstancePropertiesSource = UIManager.Instance.SelectedGraphicInstance != null ? InstancesManager.Instance.InstancesContext.InstanceProperties.Where(item => item.LogicalInstance == UIManager.Instance.SelectedGraphicInstance.GetParent<GraphicInstance>().LogicalInstance) : null;
+            UIManager.Instance.InstancePropertiesSource = UIManager.Instance.SelectedGraphicInstance != null ? InstancesManager.Instance.InstancesContext.InstanceProperties.Where(item => item.LogicalInstance == UIManager.Instance.SelectedGraphicInstance.LogicalInstance) : null;
         }
 
         public event SelectedItemChangedHandler SelectedItemChanged;

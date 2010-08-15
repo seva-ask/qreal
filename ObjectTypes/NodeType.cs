@@ -126,7 +126,7 @@ namespace ObjectTypes
         {
             Canvas canvas = VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(this.Parent)) as Canvas;
             UIElementCollection children = canvas.Children;
-            foreach (var nodeInstance in (this.DataContext as NodeInstance).GetParent<ParentableInstance>().NodeChildren)
+            foreach (var nodeInstance in (this.DataContext as NodeInstance).NodeChildren)
             {
                 NodeType node = GetObjectType<NodeType>(children.Single(item =>
                 {
@@ -180,8 +180,8 @@ namespace ObjectTypes
                 }));
 
                 IEnumerable<UIElement> ports = (this.Content as Panel).Children.Where(item => item is Port);
-                Port portTo = ports.ElementAt((int)Math.Floor(linkTo.PortFrom)) as Port;
-                double portNearestPosition = linkTo.PortFrom - Math.Floor(linkTo.PortFrom);
+                Port portTo = ports.ElementAt((int)Math.Floor(linkTo.PortTo)) as Port;
+                double portNearestPosition = linkTo.PortTo - Math.Floor(linkTo.PortTo);
 
                 linkTo.Y2 = (double)this.GetValue(Canvas.TopProperty) + portTo.Position.Y + 
                     portTo.TransformedHeight * portNearestPosition - (double)linkTo.GetValue(Canvas.TopProperty);
