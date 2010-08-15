@@ -35,9 +35,9 @@ namespace QReal.Controls
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);
-            Entity entity = item as Entity;
+            GraphicInstance graphicInstance = item as GraphicInstance;
             ContentPresenter contentPresenter = element as ContentPresenter;
-            LogicalInstance logicalInstance = entity.GetLogicalInstance();
+            LogicalInstance logicalInstance = graphicInstance.LogicalInstance;
             if (logicalInstance != null)
             {
                 TypeLoader.Instance.Request(() =>
@@ -49,8 +49,8 @@ namespace QReal.Controls
         private void ContentPresenterLoaded(object sender, RoutedEventArgs e)
         {
             ContentPresenter contentPresenter = sender as ContentPresenter;
-            Entity entity = contentPresenter.Content as Entity;
-            LogicalInstance logicalInstance = entity.GetLogicalInstance();
+            GraphicInstance graphicInstance = contentPresenter.Content as GraphicInstance;
+            LogicalInstance logicalInstance = graphicInstance.LogicalInstance;
             TypesHelper.InitProperties(logicalInstance);
             Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
@@ -80,7 +80,7 @@ namespace QReal.Controls
             NodeInstance nodeInstance = parent.DataContext as NodeInstance;
             if (nodeInstance != null)
             {
-                foreach (var child in nodeInstance.InheritanceParent.NodeChildren)
+                foreach (var child in nodeInstance.NodeChildren)
                 {
                     yield return GetObjectTypes().Single(item => item.DataContext == child);
                 }
@@ -89,7 +89,7 @@ namespace QReal.Controls
 
         private static void ObjectTypeClicked(ObjectType sender)
         {
-            UIManager.Instance.SelectedGraphicInstance = sender.DataContext as Entity;
+            UIManager.Instance.SelectedGraphicInstance = sender.DataContext as GraphicInstance;
         }
 
         private static void SetPropertyBindings(LogicalInstance logicalInstance, ObjectType objectType)
@@ -126,25 +126,34 @@ namespace QReal.Controls
 
         private static DataTemplate Create(Type type)
         {
-            string xaml = @"<DataTemplate 
-                xmlns=""http://schemas.microsoft.com/client/2007""
-                xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @""">
-                <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">
-                    <controls:" + type.Name + @" Canvas.Left=""{Binding GeometryInformation.X, Mode=TwoWay}"" Canvas.Top=""{Binding GeometryInformation.Y, Mode=TwoWay}"" " + GetTypeSpecificBinding(type) + @" />
-                </Canvas>
-                </DataTemplate>";
-            return (DataTemplate)XamlReader.Load(xaml);
+            string xaml = @"
+                <ResourceDictionary 
+                    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
+                    xmlns:d=""http://schemas.microsoft.com/expression/blend/2008"" 
+                    xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
+                    mc:Ignorable=""d"" 
+                    xmlns:local=""clr-namespace:QReal""
+                    xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @""">
+                    <DataTemplate x:Key=""ObjectTypeTemplate"">
+                    <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">
+                        <controls:" + type.Name + @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" " + GetTypeSpecificBinding(type) + @" />
+                    </Canvas>
+                    </DataTemplate>
+                </ResourceDictionary>";
+            ResourceDictionary resourceDictionary = (ResourceDictionary)XamlReader.Load(xaml);
+            return resourceDictionary["ObjectTypeTemplate"] as DataTemplate;
         }
 
         private static string GetTypeSpecificBinding(Type type)
         {
             if (type.IsSubclassOf(typeof(NodeType)))
             {
-                return @"Width=""{Binding GeometryInformation.Width, Mode=TwoWay}"" Height=""{Binding GeometryInformation.Height, Mode=TwoWay}""";
+                return @"Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}""";
             }
             else
             {
-                return @"X2=""{Binding GeometryInformation.Width, Mode=TwoWay}"" Y2=""{Binding GeometryInformation.Height, Mode=TwoWay}""";
+                return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}""";
             }
         }
     }

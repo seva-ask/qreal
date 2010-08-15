@@ -62,7 +62,9 @@
     <Content Include="Database\InstancesModel.edmx.sql" />
     <Content Include="Default.aspx" />
     <Content Include="Silverlight.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

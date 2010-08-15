@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 04/24/2010 20:35:29
+-- Date Created: 08/16/2010 03:16:27
 -- Generated from EDMX file: C:\Projects\QReal\silverlight\svn\trunk\QReal.Web\Database\InstancesModel.edmx
 -- --------------------------------------------------
 
@@ -24,34 +24,28 @@ IF OBJECT_ID(N'[dbo].[FK_GraphicToLogical]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GraphicInstances] DROP CONSTRAINT [FK_GraphicToLogical];
 GO
 IF OBJECT_ID(N'[dbo].[FK_RootInstanceEdgeInstance]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[EdgeInstances] DROP CONSTRAINT [FK_RootInstanceEdgeInstance];
+    ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_RootInstanceEdgeInstance];
 GO
 IF OBJECT_ID(N'[dbo].[FK_EdgesFromNode]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[EdgeInstances] DROP CONSTRAINT [FK_EdgesFromNode];
+    ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_EdgesFromNode];
 GO
 IF OBJECT_ID(N'[dbo].[FK_EdgesToNode]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[EdgeInstances] DROP CONSTRAINT [FK_EdgesToNode];
+    ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_EdgesToNode];
 GO
 IF OBJECT_ID(N'[dbo].[FK_NodeParents]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[NodeInstances] DROP CONSTRAINT [FK_NodeParents];
+    ALTER TABLE [dbo].[GraphicInstances_NodeInstance] DROP CONSTRAINT [FK_NodeParents];
 GO
-IF OBJECT_ID(N'[dbo].[FK_GraphicInstanceParentableInstanceInheritance]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[ParentableInstances] DROP CONSTRAINT [FK_GraphicInstanceParentableInstanceInheritance];
+IF OBJECT_ID(N'[dbo].[FK_ParentableInstance_inherits_GraphicInstance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GraphicInstances_ParentableInstance] DROP CONSTRAINT [FK_ParentableInstance_inherits_GraphicInstance];
 GO
-IF OBJECT_ID(N'[dbo].[FK_GraphicInstanceEdgeInstanceInheritance]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[EdgeInstances] DROP CONSTRAINT [FK_GraphicInstanceEdgeInstanceInheritance];
+IF OBJECT_ID(N'[dbo].[FK_RootInstance_inherits_ParentableInstance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GraphicInstances_RootInstance] DROP CONSTRAINT [FK_RootInstance_inherits_ParentableInstance];
 GO
-IF OBJECT_ID(N'[dbo].[FK_ParentableInstanceRootInstanceInheritance]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[RootInstances] DROP CONSTRAINT [FK_ParentableInstanceRootInstanceInheritance];
+IF OBJECT_ID(N'[dbo].[FK_EdgeInstance_inherits_GraphicInstance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GraphicInstances_EdgeInstance] DROP CONSTRAINT [FK_EdgeInstance_inherits_GraphicInstance];
 GO
-IF OBJECT_ID(N'[dbo].[FK_ParentableInstanceNodeInstanceInheritance]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[NodeInstances] DROP CONSTRAINT [FK_ParentableInstanceNodeInstanceInheritance];
-GO
-IF OBJECT_ID(N'[dbo].[FK_NodeInstanceGeometryInformation]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[NodeInstances] DROP CONSTRAINT [FK_NodeInstanceGeometryInformation];
-GO
-IF OBJECT_ID(N'[dbo].[FK_EdgeInstanceGeometryInformation]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[EdgeInstances] DROP CONSTRAINT [FK_EdgeInstanceGeometryInformation];
+IF OBJECT_ID(N'[dbo].[FK_NodeInstance_inherits_ParentableInstance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GraphicInstances_NodeInstance] DROP CONSTRAINT [FK_NodeInstance_inherits_ParentableInstance];
 GO
 
 -- --------------------------------------------------
@@ -67,20 +61,17 @@ GO
 IF OBJECT_ID(N'[dbo].[GraphicInstances]', 'U') IS NOT NULL
     DROP TABLE [dbo].[GraphicInstances];
 GO
-IF OBJECT_ID(N'[dbo].[ParentableInstances]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[ParentableInstances];
+IF OBJECT_ID(N'[dbo].[GraphicInstances_ParentableInstance]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GraphicInstances_ParentableInstance];
 GO
-IF OBJECT_ID(N'[dbo].[RootInstances]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[RootInstances];
+IF OBJECT_ID(N'[dbo].[GraphicInstances_RootInstance]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GraphicInstances_RootInstance];
 GO
-IF OBJECT_ID(N'[dbo].[NodeInstances]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[NodeInstances];
+IF OBJECT_ID(N'[dbo].[GraphicInstances_EdgeInstance]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GraphicInstances_EdgeInstance];
 GO
-IF OBJECT_ID(N'[dbo].[EdgeInstances]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[EdgeInstances];
-GO
-IF OBJECT_ID(N'[dbo].[GeometryInformations]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[GeometryInformations];
+IF OBJECT_ID(N'[dbo].[GraphicInstances_NodeInstance]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GraphicInstances_NodeInstance];
 GO
 
 -- --------------------------------------------------
@@ -111,49 +102,41 @@ CREATE TABLE [dbo].[GraphicInstances] (
 );
 GO
 
--- Creating table 'ParentableInstances'
-CREATE TABLE [dbo].[ParentableInstances] (
-    [Id] int IDENTITY(1,1) NOT NULL,
-    [InheritanceId] int  NOT NULL
+-- Creating table 'GraphicInstances_ParentableInstance'
+CREATE TABLE [dbo].[GraphicInstances_ParentableInstance] (
+    [Id] int  NOT NULL
 );
 GO
 
--- Creating table 'RootInstances'
-CREATE TABLE [dbo].[RootInstances] (
-    [Id] int IDENTITY(1,1) NOT NULL,
-    [InheritanceId] int  NOT NULL
+-- Creating table 'GraphicInstances_RootInstance'
+CREATE TABLE [dbo].[GraphicInstances_RootInstance] (
+    [Id] int  NOT NULL
 );
 GO
 
--- Creating table 'NodeInstances'
-CREATE TABLE [dbo].[NodeInstances] (
-    [Id] int IDENTITY(1,1) NOT NULL,
-    [ParentId] int  NULL,
-    [InheritanceId] int  NOT NULL,
-    [GeometryInformationId] int  NOT NULL
-);
-GO
-
--- Creating table 'EdgeInstances'
-CREATE TABLE [dbo].[EdgeInstances] (
-    [Id] int IDENTITY(1,1) NOT NULL,
+-- Creating table 'GraphicInstances_EdgeInstance'
+CREATE TABLE [dbo].[GraphicInstances_EdgeInstance] (
     [ParentId] int  NOT NULL,
     [NodeFromId] int  NULL,
     [NodeToId] int  NULL,
     [PortFrom] float  NULL,
     [PortTo] float  NULL,
-    [InheritanceId] int  NOT NULL,
-    [GeometryInformationId] int  NOT NULL
-);
-GO
-
--- Creating table 'GeometryInformations'
-CREATE TABLE [dbo].[GeometryInformations] (
-    [Id] int IDENTITY(1,1) NOT NULL,
     [X] float  NOT NULL,
     [Y] float  NOT NULL,
     [Width] float  NOT NULL,
-    [Height] float  NOT NULL
+    [Height] float  NOT NULL,
+    [Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'GraphicInstances_NodeInstance'
+CREATE TABLE [dbo].[GraphicInstances_NodeInstance] (
+    [ParentId] int  NULL,
+    [X] float  NOT NULL,
+    [Y] float  NOT NULL,
+    [Width] float  NOT NULL,
+    [Height] float  NOT NULL,
+    [Id] int  NOT NULL
 );
 GO
 
@@ -179,33 +162,27 @@ ADD CONSTRAINT [PK_GraphicInstances]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'ParentableInstances'
-ALTER TABLE [dbo].[ParentableInstances]
-ADD CONSTRAINT [PK_ParentableInstances]
+-- Creating primary key on [Id] in table 'GraphicInstances_ParentableInstance'
+ALTER TABLE [dbo].[GraphicInstances_ParentableInstance]
+ADD CONSTRAINT [PK_GraphicInstances_ParentableInstance]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'RootInstances'
-ALTER TABLE [dbo].[RootInstances]
-ADD CONSTRAINT [PK_RootInstances]
+-- Creating primary key on [Id] in table 'GraphicInstances_RootInstance'
+ALTER TABLE [dbo].[GraphicInstances_RootInstance]
+ADD CONSTRAINT [PK_GraphicInstances_RootInstance]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'NodeInstances'
-ALTER TABLE [dbo].[NodeInstances]
-ADD CONSTRAINT [PK_NodeInstances]
+-- Creating primary key on [Id] in table 'GraphicInstances_EdgeInstance'
+ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
+ADD CONSTRAINT [PK_GraphicInstances_EdgeInstance]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'EdgeInstances'
-ALTER TABLE [dbo].[EdgeInstances]
-ADD CONSTRAINT [PK_EdgeInstances]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
-GO
-
--- Creating primary key on [Id] in table 'GeometryInformations'
-ALTER TABLE [dbo].[GeometryInformations]
-ADD CONSTRAINT [PK_GeometryInformations]
+-- Creating primary key on [Id] in table 'GraphicInstances_NodeInstance'
+ALTER TABLE [dbo].[GraphicInstances_NodeInstance]
+ADD CONSTRAINT [PK_GraphicInstances_NodeInstance]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -241,144 +218,96 @@ ON [dbo].[GraphicInstances]
     ([LogicalInstanceId]);
 GO
 
--- Creating foreign key on [ParentId] in table 'EdgeInstances'
-ALTER TABLE [dbo].[EdgeInstances]
+-- Creating foreign key on [ParentId] in table 'GraphicInstances_EdgeInstance'
+ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
 ADD CONSTRAINT [FK_RootInstanceEdgeInstance]
     FOREIGN KEY ([ParentId])
-    REFERENCES [dbo].[RootInstances]
+    REFERENCES [dbo].[GraphicInstances_RootInstance]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_RootInstanceEdgeInstance'
 CREATE INDEX [IX_FK_RootInstanceEdgeInstance]
-ON [dbo].[EdgeInstances]
+ON [dbo].[GraphicInstances_EdgeInstance]
     ([ParentId]);
 GO
 
--- Creating foreign key on [NodeFromId] in table 'EdgeInstances'
-ALTER TABLE [dbo].[EdgeInstances]
+-- Creating foreign key on [NodeFromId] in table 'GraphicInstances_EdgeInstance'
+ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
 ADD CONSTRAINT [FK_EdgesFromNode]
     FOREIGN KEY ([NodeFromId])
-    REFERENCES [dbo].[NodeInstances]
+    REFERENCES [dbo].[GraphicInstances_NodeInstance]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_EdgesFromNode'
 CREATE INDEX [IX_FK_EdgesFromNode]
-ON [dbo].[EdgeInstances]
+ON [dbo].[GraphicInstances_EdgeInstance]
     ([NodeFromId]);
 GO
 
--- Creating foreign key on [NodeToId] in table 'EdgeInstances'
-ALTER TABLE [dbo].[EdgeInstances]
+-- Creating foreign key on [NodeToId] in table 'GraphicInstances_EdgeInstance'
+ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
 ADD CONSTRAINT [FK_EdgesToNode]
     FOREIGN KEY ([NodeToId])
-    REFERENCES [dbo].[NodeInstances]
+    REFERENCES [dbo].[GraphicInstances_NodeInstance]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_EdgesToNode'
 CREATE INDEX [IX_FK_EdgesToNode]
-ON [dbo].[EdgeInstances]
+ON [dbo].[GraphicInstances_EdgeInstance]
     ([NodeToId]);
 GO
 
--- Creating foreign key on [ParentId] in table 'NodeInstances'
-ALTER TABLE [dbo].[NodeInstances]
+-- Creating foreign key on [ParentId] in table 'GraphicInstances_NodeInstance'
+ALTER TABLE [dbo].[GraphicInstances_NodeInstance]
 ADD CONSTRAINT [FK_NodeParents]
     FOREIGN KEY ([ParentId])
-    REFERENCES [dbo].[ParentableInstances]
+    REFERENCES [dbo].[GraphicInstances_ParentableInstance]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_NodeParents'
 CREATE INDEX [IX_FK_NodeParents]
-ON [dbo].[NodeInstances]
+ON [dbo].[GraphicInstances_NodeInstance]
     ([ParentId]);
 GO
 
--- Creating foreign key on [InheritanceId] in table 'ParentableInstances'
-ALTER TABLE [dbo].[ParentableInstances]
-ADD CONSTRAINT [FK_GraphicInstanceParentableInstanceInheritance]
-    FOREIGN KEY ([InheritanceId])
+-- Creating foreign key on [Id] in table 'GraphicInstances_ParentableInstance'
+ALTER TABLE [dbo].[GraphicInstances_ParentableInstance]
+ADD CONSTRAINT [FK_ParentableInstance_inherits_GraphicInstance]
+    FOREIGN KEY ([Id])
     REFERENCES [dbo].[GraphicInstances]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_GraphicInstanceParentableInstanceInheritance'
-CREATE INDEX [IX_FK_GraphicInstanceParentableInstanceInheritance]
-ON [dbo].[ParentableInstances]
-    ([InheritanceId]);
 GO
 
--- Creating foreign key on [InheritanceId] in table 'EdgeInstances'
-ALTER TABLE [dbo].[EdgeInstances]
-ADD CONSTRAINT [FK_GraphicInstanceEdgeInstanceInheritance]
-    FOREIGN KEY ([InheritanceId])
+-- Creating foreign key on [Id] in table 'GraphicInstances_RootInstance'
+ALTER TABLE [dbo].[GraphicInstances_RootInstance]
+ADD CONSTRAINT [FK_RootInstance_inherits_ParentableInstance]
+    FOREIGN KEY ([Id])
+    REFERENCES [dbo].[GraphicInstances_ParentableInstance]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [Id] in table 'GraphicInstances_EdgeInstance'
+ALTER TABLE [dbo].[GraphicInstances_EdgeInstance]
+ADD CONSTRAINT [FK_EdgeInstance_inherits_GraphicInstance]
+    FOREIGN KEY ([Id])
     REFERENCES [dbo].[GraphicInstances]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_GraphicInstanceEdgeInstanceInheritance'
-CREATE INDEX [IX_FK_GraphicInstanceEdgeInstanceInheritance]
-ON [dbo].[EdgeInstances]
-    ([InheritanceId]);
 GO
 
--- Creating foreign key on [InheritanceId] in table 'RootInstances'
-ALTER TABLE [dbo].[RootInstances]
-ADD CONSTRAINT [FK_ParentableInstanceRootInstanceInheritance]
-    FOREIGN KEY ([InheritanceId])
-    REFERENCES [dbo].[ParentableInstances]
+-- Creating foreign key on [Id] in table 'GraphicInstances_NodeInstance'
+ALTER TABLE [dbo].[GraphicInstances_NodeInstance]
+ADD CONSTRAINT [FK_NodeInstance_inherits_ParentableInstance]
+    FOREIGN KEY ([Id])
+    REFERENCES [dbo].[GraphicInstances_ParentableInstance]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_ParentableInstanceRootInstanceInheritance'
-CREATE INDEX [IX_FK_ParentableInstanceRootInstanceInheritance]
-ON [dbo].[RootInstances]
-    ([InheritanceId]);
-GO
-
--- Creating foreign key on [InheritanceId] in table 'NodeInstances'
-ALTER TABLE [dbo].[NodeInstances]
-ADD CONSTRAINT [FK_ParentableInstanceNodeInstanceInheritance]
-    FOREIGN KEY ([InheritanceId])
-    REFERENCES [dbo].[ParentableInstances]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_ParentableInstanceNodeInstanceInheritance'
-CREATE INDEX [IX_FK_ParentableInstanceNodeInstanceInheritance]
-ON [dbo].[NodeInstances]
-    ([InheritanceId]);
-GO
-
--- Creating foreign key on [GeometryInformationId] in table 'NodeInstances'
-ALTER TABLE [dbo].[NodeInstances]
-ADD CONSTRAINT [FK_NodeInstanceGeometryInformation]
-    FOREIGN KEY ([GeometryInformationId])
-    REFERENCES [dbo].[GeometryInformations]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_NodeInstanceGeometryInformation'
-CREATE INDEX [IX_FK_NodeInstanceGeometryInformation]
-ON [dbo].[NodeInstances]
-    ([GeometryInformationId]);
-GO
-
--- Creating foreign key on [GeometryInformationId] in table 'EdgeInstances'
-ALTER TABLE [dbo].[EdgeInstances]
-ADD CONSTRAINT [FK_EdgeInstanceGeometryInformation]
-    FOREIGN KEY ([GeometryInformationId])
-    REFERENCES [dbo].[GeometryInformations]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_EdgeInstanceGeometryInformation'
-CREATE INDEX [IX_FK_EdgeInstanceGeometryInformation]
-ON [dbo].[EdgeInstances]
-    ([GeometryInformationId]);
 GO
 
 -- --------------------------------------------------

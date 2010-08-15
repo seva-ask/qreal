@@ -19,7 +19,7 @@
         <local:UIManager x:Key="UIManager"/>
     </UserControl.Resources>
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundBrush}">
-        <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.InstancesContext.RootInstances, Mode=TwoWay}" SelectedItemChanged="TreeViewSelectedItemChanged">
+        <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.RootInstances, Mode=TwoWay}" SelectedItemChanged="TreeViewSelectedItemChanged">
             <controls:TreeView.Resources>
                 <local:TypeToIconConverter x:Key="TypeToIconConverter"/>
             </controls:TreeView.Resources>
@@ -27,7 +27,7 @@
         		<StaticResource ResourceKey="TreeViewBrush"/>
         	</controls:TreeView.Background>
             <controls:TreeView.ItemTemplate>
-                <common:HierarchicalDataTemplate ItemsSource="{Binding InheritanceParent.Children}">
+                <common:HierarchicalDataTemplate ItemsSource="{Binding Children}">
                     <StackPanel Height="20" Width="166" Orientation="Horizontal">
                         <Image Height="20" Source="{Binding LogicalInstance.Type, Converter={StaticResource TypeToIconConverter}}" HorizontalAlignment="Left" Width="40"/>
                         <TextBox Text="{Binding LogicalInstance.Name, Mode=TwoWay}" Height="25"/>
