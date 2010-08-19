@@ -134,11 +134,14 @@ namespace QReal.Controls
                     xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
                     mc:Ignorable=""d"" 
                     xmlns:local=""clr-namespace:QReal""
-                    xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @""">
+                    xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @"""
+                    xmlns:ObjectTypes=""clr-namespace:ObjectTypes;assembly=ObjectTypes"">
+                    <ObjectTypes:VisibilityConverter x:Key=""VisibilityConverter""/>
                     <DataTemplate x:Key=""ObjectTypeTemplate"">
                     <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">
-                        <controls:" + type.Name + @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" " + GetTypeSpecificBinding(type) + @" />
-                    </Canvas>
+                        <controls:" + type.Name + @" Name=""MainControl"" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" " + GetTypeSpecificBinding(type) + @" />"
+                                    + GetSelectRectanglesXaml(type) +
+                    @"</Canvas>
                     </DataTemplate>
                 </ResourceDictionary>";
             ResourceDictionary resourceDictionary = (ResourceDictionary)XamlReader.Load(xaml);
@@ -155,6 +158,23 @@ namespace QReal.Controls
             {
                 return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}""";
             }
+        }
+
+        private static string GetSelectRectanglesXaml(Type type)
+        {
+            if (type.IsSubclassOf(typeof(NodeType)))
+            {
+                return @"<Grid
+                    Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}""
+                    Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}""
+                    Visibility=""{Binding Selected, ElementName=MainControl, Converter={StaticResource VisibilityConverter}}"">
+                    <Rectangle Fill=""Blue"" Width=""5"" Height=""5"" VerticalAlignment=""Top"" HorizontalAlignment=""Left""/>
+                    <Rectangle Fill=""Blue"" Width=""5"" Height=""5"" VerticalAlignment=""Top"" HorizontalAlignment=""Right""/>
+                    <Rectangle Fill=""Blue"" Width=""5"" Height=""5"" VerticalAlignment=""Bottom"" HorizontalAlignment=""Left""/>
+                    <Rectangle Fill=""Blue"" Width=""5"" Height=""5"" VerticalAlignment=""Bottom"" HorizontalAlignment=""Right""/>
+                    </Grid>";
+            }
+            return string.Empty;
         }
     }
 }
