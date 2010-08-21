@@ -4,10 +4,8 @@ using System.Windows.Browser;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using System.Collections.Generic;
-using QReal.Ria.Database;
 using QReal.Web.Database;
 using System.Linq;
 using System.Windows.Data;
@@ -102,12 +100,7 @@ namespace ObjectTypes
                         EdgeType edgeType = GetObjectType<EdgeType>(item);
                         return edgeType == null ? false : edgeType.DataContext == linkInstanceFrom;
                     }));
-                double oldY = (double)linkFrom.GetValue(Canvas.TopProperty);
-                double oldX = (double)linkFrom.GetValue(Canvas.LeftProperty);
-                linkFrom.SetValue(Canvas.TopProperty, (double)linkFrom.GetValue(Canvas.TopProperty) + deltaY);
-                linkFrom.SetValue(Canvas.LeftProperty, (double)linkFrom.GetValue(Canvas.LeftProperty) + deltaX);
-                linkFrom.Y2 += oldY - (double)linkFrom.GetValue(Canvas.TopProperty);
-                linkFrom.X2 += oldX - (double)linkFrom.GetValue(Canvas.LeftProperty);
+                linkFrom.MoveStartPort(deltaX, deltaY);
             }           
             foreach (var linkInstanceTo in LinksTo)
             {
@@ -116,8 +109,7 @@ namespace ObjectTypes
                         EdgeType edgeType = GetObjectType<EdgeType>(item);
                         return edgeType == null ? false : edgeType.DataContext == linkInstanceTo;
                     }));
-                linkTo.Y2 += deltaY;
-                linkTo.X2 += deltaX;
+                linkTo.MoveEndPort(deltaX, deltaY);
             }
         }
 
@@ -143,48 +135,51 @@ namespace ObjectTypes
 
         private void NodeType_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Canvas canvas = VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(this.Parent)) as Canvas;
-            UIElementCollection children = canvas.Children;
-            foreach (var linkInstanceFrom in LinksFrom)
+            if (e.PreviousSize != new Size(0, 0))
             {
-                EdgeType linkFrom = GetObjectType<EdgeType>(children.Single(item =>
+                Canvas canvas = VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(this.Parent)) as Canvas;
+                UIElementCollection children = canvas.Children;
+                foreach (var linkInstanceFrom in LinksFrom)
                 {
-                    EdgeType edgeType = GetObjectType<EdgeType>(item);
-                    return edgeType == null ? false : edgeType.DataContext == linkInstanceFrom;
-                }));
+                    EdgeType linkFrom = GetObjectType<EdgeType>(children.Single(item =>
+                                                                                    {
+                                                                                        EdgeType edgeType =
+                                                                                            GetObjectType<EdgeType>(item);
+                                                                                        return edgeType == null
+                                                                                                   ? false
+                                                                                                   : edgeType.
+                                                                                                         DataContext ==
+                                                                                                     linkInstanceFrom;
+                                                                                    }));
 
-                IEnumerable<UIElement> ports = (this.Content as Panel).Children.Where(item => item is Port);
-                Port portFrom = ports.ElementAt((int)Math.Floor(linkFrom.PortFrom)) as Port;
-                double portNearestPosition = linkFrom.PortFrom - Math.Floor(linkFrom.PortFrom);
+                    IEnumerable<UIElement> ports = (this.Content as Panel).Children.Where(item => item is Port);
+                    Port portFrom = ports.ElementAt((int) Math.Floor(linkFrom.PortFrom)) as Port;
+                    double portNearestPosition = linkFrom.PortFrom - Math.Floor(linkFrom.PortFrom);
 
-                double oldY = (double)linkFrom.GetValue(Canvas.TopProperty);
-                double oldX = (double)linkFrom.GetValue(Canvas.LeftProperty);
-                linkFrom.SetValue(Canvas.TopProperty, (double)this.GetValue(Canvas.TopProperty) 
-                    + portFrom.Position.Y + 
-                    portFrom.TransformedHeight * portNearestPosition);
-                linkFrom.SetValue(Canvas.LeftProperty, (double)this.GetValue(Canvas.LeftProperty)
-                    + portFrom.Position.X +
-                    portFrom.TransformedWidth * portNearestPosition);
-                linkFrom.Y2 += oldY - (double)linkFrom.GetValue(Canvas.TopProperty);
-                linkFrom.X2 += oldX - (double)linkFrom.GetValue(Canvas.LeftProperty);
-            }
-            foreach (var linkInstanceTo in LinksTo)
-            {
-                EdgeType linkTo = GetObjectType<EdgeType>(children.Single(item =>
+                    linkFrom.SetStartPortPosition(
+                        X + portFrom.Position.X + portFrom.TransformedWidth*portNearestPosition,
+                        Y + portFrom.Position.Y + portFrom.TransformedHeight*portNearestPosition);
+                }
+                foreach (var linkInstanceTo in LinksTo)
                 {
-                    EdgeType edgeType = GetObjectType<EdgeType>(item);
-                    return edgeType == null ? false : edgeType.DataContext == linkInstanceTo;
-                }));
+                    EdgeType linkTo = GetObjectType<EdgeType>(children.Single(item =>
+                                                                                  {
+                                                                                      EdgeType edgeType =
+                                                                                          GetObjectType<EdgeType>(item);
+                                                                                      return edgeType == null
+                                                                                                 ? false
+                                                                                                 : edgeType.DataContext ==
+                                                                                                   linkInstanceTo;
+                                                                                  }));
 
-                IEnumerable<UIElement> ports = (this.Content as Panel).Children.Where(item => item is Port);
-                Port portTo = ports.ElementAt((int)Math.Floor(linkTo.PortTo)) as Port;
-                double portNearestPosition = linkTo.PortTo - Math.Floor(linkTo.PortTo);
+                    IEnumerable<UIElement> ports = (this.Content as Panel).Children.Where(item => item is Port);
+                    Port portTo = ports.ElementAt((int) Math.Floor(linkTo.PortTo)) as Port;
+                    double portNearestPosition = linkTo.PortTo - Math.Floor(linkTo.PortTo);
 
-                linkTo.Y2 = (double)this.GetValue(Canvas.TopProperty) + portTo.Position.Y + 
-                    portTo.TransformedHeight * portNearestPosition - (double)linkTo.GetValue(Canvas.TopProperty);
-
-                linkTo.X2 = (double)this.GetValue(Canvas.LeftProperty) + portTo.Position.X + 
-                    portTo.TransformedWidth * portNearestPosition - (double)linkTo.GetValue(Canvas.LeftProperty);
+                    linkTo.SetEndPortPosition(
+                        X + portTo.Position.X + portTo.TransformedWidth*portNearestPosition - linkTo.X,
+                        Y + portTo.Position.Y + portTo.TransformedHeight*portNearestPosition - linkTo.Y);
+                }
             }
         }
 

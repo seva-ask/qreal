@@ -6,8 +6,8 @@
     xmlns:local="clr-namespace:ObjectTypes"
     mc:Ignorable="d"
     MaxHeight="10" MinHeight="10" MaxWidth="10" MinWidth="10">
-    <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Path Data="M0,4.6666665 L6,3.1789145E-07" Fill="#FFF4F4F5" HorizontalAlignment="Left" Margin="0,0,0,4" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="Black" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" UseLayoutRounding="False" Width="10" Height="6"/>
-        <Path Data="M0,5 L7,10" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="6" Margin="0" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="Black" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" UseLayoutRounding="False" VerticalAlignment="Bottom" Width="10"/>
-    </Grid>
+    <Canvas x:Name="LayoutRoot" Background="Transparent">
+    	<Path Data="M0.0,0.0 10.0,5.0" Fill="Black" Height="5.5" Stretch="Fill" Stroke="Black" Canvas.Left="-0.5" Canvas.Top="-0.5" UseLayoutRounding="False" Width="10.5"/>
+		<Path Data="M0.0,0.0 10.0,-5.0" Fill="Black" Height="5.5" Stretch="Fill" Stroke="Black" Canvas.Left="-0.5" Canvas.Top="-4.5" UseLayoutRounding="False" Width="10.5"/>
+    </Canvas>
 </local:Arrow>

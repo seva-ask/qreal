@@ -134,13 +134,16 @@ namespace QReal.Controls
                     xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
                     mc:Ignorable=""d"" 
                     xmlns:local=""clr-namespace:QReal""
+                    xmlns:commonControls=""clr-namespace:QReal.Controls;assembly=QReal""
                     xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @"""
                     xmlns:ObjectTypes=""clr-namespace:ObjectTypes;assembly=ObjectTypes"">
                     <ObjectTypes:VisibilityConverter x:Key=""VisibilityConverter""/>
+                    <commonControls:AbsOrNullConverter x:Key=""AbsOrNullConverter""/>
                     <DataTemplate x:Key=""ObjectTypeTemplate"">
-                    <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">
-                        <controls:" + type.Name + @" Name=""MainControl"" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" " + GetTypeSpecificBinding(type) + @" />"
-                                    + GetSelectRectanglesXaml(type) +
+                    <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">"
+                        + GetEdgeTypeNegativeCoordinatesXaml(type) +
+                        "<controls:" + type.Name + @" Name=""MainControl"" X=""{Binding X, Mode=TwoWay}"" Y=""{Binding Y, Mode=TwoWay}""" + GetTypeSpecificBinding(type) + @" />"
+                        + GetSelectRectanglesXaml(type) +
                     @"</Canvas>
                     </DataTemplate>
                 </ResourceDictionary>";
@@ -148,15 +151,27 @@ namespace QReal.Controls
             return resourceDictionary["ObjectTypeTemplate"] as DataTemplate;
         }
 
+        private static string GetEdgeTypeNegativeCoordinatesXaml(Type type)
+        {
+            if (type.IsSubclassOf(typeof(EdgeType)))
+            {
+                return @"<Canvas.RenderTransform>
+                    <TranslateTransform X=""{Binding Width, Converter={StaticResource AbsOrNullConverter}}"" 
+                        Y=""{Binding Height, Converter={StaticResource AbsOrNullConverter}}""/>
+                    </Canvas.RenderTransform>";
+            }
+            return string.Empty;
+        }
+
         private static string GetTypeSpecificBinding(Type type)
         {
             if (type.IsSubclassOf(typeof(NodeType)))
             {
-                return @"Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}""";
+                return @" Canvas.Left=""{Binding X, Mode=TwoWay}"" Canvas.Top=""{Binding Y, Mode=TwoWay}"" Width=""{Binding Width, Mode=TwoWay}"" Height=""{Binding Height, Mode=TwoWay}""";
             }
             else
             {
-                return @"X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}""";
+                return @" Canvas.Left=""{Binding Left, Mode=TwoWay}"" Canvas.Top=""{Binding Top, Mode=TwoWay}"" X2=""{Binding Width, Mode=TwoWay}"" Y2=""{Binding Height, Mode=TwoWay}""";
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel.DomainServices.Client;
@@ -66,6 +67,36 @@ namespace QReal.Web.Database
         private void EdgeChildren_EntityAdded(object sender, EntityCollectionChangedEventArgs<EdgeInstance> e)
         {
             Children.Add(e.Entity);
+        }
+    }
+
+    public partial class EdgeInstance
+    {
+        public double Top { get; private set; }
+        public double Left { get; private set; }
+
+        partial void OnHeightChanged()
+        {
+            Top = Y + (Height > 0 ? 0 : Height);
+            OnPropertyChanged(new PropertyChangedEventArgs("Top"));
+        }
+
+        partial void OnWidthChanged()
+        {
+            Left = X + (Width > 0 ? 0 : Width);
+            OnPropertyChanged(new PropertyChangedEventArgs("Left"));
+        }
+
+        partial void OnXChanged()
+        {
+            Left = X + (Width > 0 ? 0 : Width);
+            OnPropertyChanged(new PropertyChangedEventArgs("Left"));
+        }
+
+        partial void OnYChanged()
+        {
+            Top = Y + (Height > 0 ? 0 : Height);
+            OnPropertyChanged(new PropertyChangedEventArgs("Top"));
         }
     }
 }
