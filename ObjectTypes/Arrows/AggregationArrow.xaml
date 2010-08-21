@@ -4,12 +4,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:ObjectTypes"
+	xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
     mc:Ignorable="d"
-    MaxHeight="10" MinHeight="10" MaxWidth="10" MinWidth="10">
-    <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Path Data="M0,4.6666665 L6,3.1789145E-07" Fill="#FFF4F4F5" HorizontalAlignment="Left" Margin="0,0,0,4" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="Black" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" UseLayoutRounding="False" Width="6" Height="6"/>
-        <Path Data="M0,5 L7,10" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="6" Margin="0" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="Black" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" UseLayoutRounding="False" VerticalAlignment="Bottom" Width="6"/>
-        <Path Data="M0,5 L7,10" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="6" Margin="0" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="Black" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" UseLayoutRounding="False" VerticalAlignment="Top" Width="6"/>
-        <Path Data="M0,4.6666665 L6,3.1789145E-07" Fill="#FFF4F4F5" HorizontalAlignment="Right" Margin="4,0,0,0" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="Black" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" UseLayoutRounding="False" Width="6" Height="6" VerticalAlignment="Bottom"/>
-    </Grid>
+    MaxHeight="16" MinHeight="16" MaxWidth="16" MinWidth="16">
+	<Canvas x:Name="LayoutRoot" Background="Transparent">
+		<ed:RegularPolygon Height="8" Stretch="Fill" PointCount="4" Stroke="Black" Canvas.Top="-4" UseLayoutRounding="False" Width="16"/>
+	</Canvas>
 </local:Arrow>

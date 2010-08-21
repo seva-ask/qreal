@@ -5,7 +5,6 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using ObjectTypes.Arrows;
 using ObjectTypes.Ports;
 using QReal.Web.Database;
 using System.Linq;
@@ -17,43 +16,41 @@ namespace ObjectTypes
     {
         protected EdgeType()
         {
-            Grid grid = new Grid {Name = "LayoutRoot"};
-            this.Content = grid;
+            Canvas canvas = new Canvas { Name = "LayoutRoot" };
+            this.Content = canvas;
             this.Loaded += new RoutedEventHandler(EdgeType_Loaded);
         }
 
-        protected readonly Line MainLine = new Line {StrokeThickness = 5};
+        protected readonly Line MainLine = new Line();
+
         private Arrow myStartArrow;
         private Arrow myEndArrow;
 
         private void EdgeType_Loaded(object sender, RoutedEventArgs e)
         {
-            Binding bindingColor = new Binding
-            {
-                Source = this,
-                Path = new PropertyPath("LineBrush"),
-                Mode = BindingMode.TwoWay
-            };
-            MainLine.SetBinding(Line.StrokeProperty, bindingColor);
+            CreateMainLine();
 
-            (this.Content as Panel).Children.Add(MainLine);
-
-            myStartArrow.VerticalAlignment = VerticalAlignment.Top;
-            myStartArrow.HorizontalAlignment = HorizontalAlignment.Left;
-            myStartArrow.Margin = new Thickness(0, -(Arrow.HEIGHT - 7) / 2, 0, 0);
-            (this.Content as Panel).Children.Add(myStartArrow);
-
-            myEndArrow.VerticalAlignment = VerticalAlignment.Top;
-            myEndArrow.HorizontalAlignment = HorizontalAlignment.Left;
-            (this.Content as Panel).Children.Add(myEndArrow);
+            CreateArrows();
 
             LinkBoundaryPointPort endPort = new LinkBoundaryPointPort
                                                 {
                                                     Width = 7,
-                                                    Height = 7,
-                                                    VerticalAlignment = VerticalAlignment.Bottom,
-                                                    HorizontalAlignment = HorizontalAlignment.Right
+                                                    Height = 7
                                                 };
+            Binding bindingEndPortX = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("X2"),
+                Mode = BindingMode.TwoWay
+            };
+            endPort.SetBinding(Canvas.LeftProperty, bindingEndPortX);
+            Binding bindingEndPortY = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("Y2"),
+                Mode = BindingMode.TwoWay
+            };
+            endPort.SetBinding(Canvas.TopProperty, bindingEndPortY);
             endPort.DragStarted += new DragStartedEventHandler(BoundaryPortDragStarted);
             endPort.DragDelta += new DragDeltaEventHandler(EndPortDragDelta);
             endPort.DragCompleted += new DragCompletedEventHandler(EndPortDragCompleted);
@@ -62,9 +59,7 @@ namespace ObjectTypes
             LinkBoundaryPointPort startPort = new LinkBoundaryPointPort
                                                   {
                                                       Width = 7,
-                                                      Height = 7,
-                                                      VerticalAlignment = VerticalAlignment.Top,
-                                                      HorizontalAlignment = HorizontalAlignment.Left
+                                                      Height = 7
                                                   };
             startPort.DragStarted += new DragStartedEventHandler(BoundaryPortDragStarted);
             startPort.DragDelta += new DragDeltaEventHandler(StartPortDragDelta);
@@ -72,19 +67,95 @@ namespace ObjectTypes
             (this.Content as Panel).Children.Add(startPort);
         }
 
+        private void CreateMainLine()
+        {
+            Binding bindingColor = new Binding
+                                       {
+                                           Source = this,
+                                           Path = new PropertyPath("LineBrush"),
+                                           Mode = BindingMode.TwoWay
+                                       };
+            MainLine.SetBinding(Line.StrokeProperty, bindingColor);
+
+            Binding bindingStartX = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("MainLineStartX"),
+                Mode = BindingMode.TwoWay
+            };
+            MainLine.SetBinding(Line.X1Property, bindingStartX);
+
+            Binding bindingStartY = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("MainLineStartY"),
+                Mode = BindingMode.TwoWay
+            };
+            MainLine.SetBinding(Line.Y1Property, bindingStartY);
+
+            Binding bindingEndX = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("MainLineEndX"),
+                Mode = BindingMode.TwoWay
+            };
+            MainLine.SetBinding(Line.X2Property, bindingEndX);
+
+            Binding bindingEndY = new Binding
+            {
+                Source = this,
+                Path = new PropertyPath("MainLineEndY"),
+                Mode = BindingMode.TwoWay
+            };
+            MainLine.SetBinding(Line.Y2Property, bindingEndY);
+
+            (this.Content as Panel).Children.Add(MainLine);
+        }
+
+        private void CreateArrows()
+        {
+            myStartArrow = GetStartArrow();
+            if (myStartArrow != null)
+            {
+                (this.Content as Panel).Children.Add(myStartArrow);
+            }
+
+            myEndArrow = GetEndArrow();
+            if (myEndArrow != null)
+            {
+                Binding bindingX = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath("X2"),
+                    Mode = BindingMode.TwoWay
+                };
+                myEndArrow.SetBinding(Canvas.LeftProperty, bindingX);
+
+                Binding bindingY = new Binding
+                {
+                    Source = this,
+                    Path = new PropertyPath("Y2"),
+                    Mode = BindingMode.TwoWay
+                };
+                myEndArrow.SetBinding(Canvas.TopProperty, bindingY);
+                (this.Content as Panel).Children.Add(myEndArrow);
+            }
+            AdjustArrowsAndMainLine();
+        }
+
         private void EndPortDragCompleted(object sender, DragCompletedEventArgs e)
         {
             this.MouseRelease();
-            double y = (double)this.GetValue(Canvas.TopProperty) + Y2;
-            double x = (double)this.GetValue(Canvas.LeftProperty) + X2;
+            double y = Y + Y2;
+            double x = X + X2;
             Point position = new Point(x, y);
             NodeType nodeTo = FindNodeUnderPosition(position);
             if (nodeTo != null)
             {
-                Point positionInNode = new Point(x - (double)nodeTo.GetValue(Canvas.LeftProperty), y - (double)nodeTo.GetValue(Canvas.TopProperty));
+                Point positionInNode = new Point(x - nodeTo.X, y - nodeTo.Y);
                 Port nearestPort = GetNearestPort(positionInNode, nodeTo);
-                Y2 = (double)nodeTo.GetValue(Canvas.TopProperty) + nearestPort.GetNearestPointToPosition(positionInNode).Y - (double)this.GetValue(Canvas.TopProperty);
-                X2 = (double)nodeTo.GetValue(Canvas.LeftProperty) + nearestPort.GetNearestPointToPosition(positionInNode).X - (double)this.GetValue(Canvas.LeftProperty);
+                Y2 = nodeTo.Y + nearestPort.GetNearestPointToPosition(positionInNode).Y - Y;
+                X2 = nodeTo.X + nearestPort.GetNearestPointToPosition(positionInNode).X - X;
                 NodeTo = nodeTo.DataContext as NodeInstance;
                 PortTo = GetPortNumber(nearestPort, nodeTo) + nearestPort.GetNearestPointOfPort(positionInNode);
             }
@@ -97,20 +168,18 @@ namespace ObjectTypes
         private void StartPortDragCompleted(object sender, DragCompletedEventArgs e)
         {
             this.MouseRelease();
-            double y = (double)this.GetValue(Canvas.TopProperty);
-            double x = (double)this.GetValue(Canvas.LeftProperty);
-            Point position = new Point(x, y);
+            Point position = new Point(X, Y);
             NodeType nodeFrom = FindNodeUnderPosition(position);
             if (nodeFrom != null)
             {
-                Point positionInNode = new Point(x - (double)nodeFrom.GetValue(Canvas.LeftProperty), y - (double)nodeFrom.GetValue(Canvas.TopProperty));
+                Point positionInNode = new Point(X - nodeFrom.X, Y - nodeFrom.Y);
                 Port nearestPort = GetNearestPort(positionInNode, nodeFrom);
-                double oldY = (double)this.GetValue(Canvas.TopProperty);
-                double oldX = (double)this.GetValue(Canvas.LeftProperty);
-                this.SetValue(Canvas.TopProperty, (double)nodeFrom.GetValue(Canvas.TopProperty) + nearestPort.GetNearestPointToPosition(positionInNode).Y);
-                this.SetValue(Canvas.LeftProperty, (double)nodeFrom.GetValue(Canvas.LeftProperty) + nearestPort.GetNearestPointToPosition(positionInNode).X);
-                Y2 += oldY - (double)this.GetValue(Canvas.TopProperty);
-                X2 += oldX - (double)this.GetValue(Canvas.LeftProperty);
+                double oldY = Y;
+                double oldX = X;
+                Y = nodeFrom.Y + nearestPort.GetNearestPointToPosition(positionInNode).Y;
+                X = nodeFrom.X + nearestPort.GetNearestPointToPosition(positionInNode).X;
+                Y2 += oldY - Y;
+                X2 += oldX - X;
                 NodeFrom = nodeFrom.DataContext as NodeInstance;
                 PortFrom = GetPortNumber(nearestPort, nodeFrom) + nearestPort.GetNearestPointOfPort(positionInNode);
             }
@@ -150,9 +219,7 @@ namespace ObjectTypes
                 NodeType nodeType = (VisualTreeHelper.GetChild((item as ContentPresenter), 0) as Canvas).Children[0] as NodeType;
                 if (nodeType != null)
                 {
-                    double nodeX = (double)nodeType.GetValue(Canvas.LeftProperty);
-                    double nodeY = (double)nodeType.GetValue(Canvas.TopProperty);
-                    Rect itemBoundingRect = new Rect(nodeX, nodeY, nodeType.Width, nodeType.Height);
+                    Rect itemBoundingRect = new Rect(nodeType.X, nodeType.Y, nodeType.Width, nodeType.Height);
                     if (itemBoundingRect.Contains(position))
                     {
                         return nodeType;
@@ -164,48 +231,47 @@ namespace ObjectTypes
 
         private void StartPortDragDelta(object sender, DragDeltaEventArgs e)
         {
-            Point deltaTempPoint = new Point(e.HorizontalChange, e.VerticalChange);
-            if (myMouseTransform != null)
-            {
-                Point deltaTempPointTransformed = myMouseTransform.Transform(deltaTempPoint);
-                X2 -= deltaTempPointTransformed.X;
-                Y2 -= deltaTempPointTransformed.Y;
-                double newTop = deltaTempPointTransformed.Y + (double)this.GetValue(Canvas.TopProperty);
-                double newLeft = deltaTempPointTransformed.X + (double)this.GetValue(Canvas.LeftProperty);
+            MoveStartPort(e.HorizontalChange, e.VerticalChange);
+        }
 
-                this.SetValue(Canvas.TopProperty, newTop);
-                this.SetValue(Canvas.LeftProperty, newLeft);
-                return;
-            }
-            X2 -= e.HorizontalChange;
-            Y2 -= e.VerticalChange;
-            double newTop2 = e.VerticalChange + (double)this.GetValue(Canvas.TopProperty);
-            double newLeft2 = e.HorizontalChange + (double)this.GetValue(Canvas.LeftProperty);
+        public void MoveStartPort(double deltaX, double deltaY)
+        {
+            X += deltaX;
+            Y += deltaY;
+            X2 -= deltaX;
+            Y2 -= deltaY;
+        }
 
-            this.SetValue(Canvas.TopProperty, newTop2);
-            this.SetValue(Canvas.LeftProperty, newLeft2);
+        public void SetStartPortPosition(double x, double y)
+        {
+            double deltaX = x - X;
+            double deltaY = y - Y;
+            X = x;
+            Y = y;
+            X2 -= deltaX;
+            Y2 -= deltaY;
         }
 
         private void BoundaryPortDragStarted(object sender, DragStartedEventArgs e)
         {
-            myMouseTransform = this.RenderTransform;
             this.MousePress();
         }
 
-        private GeneralTransform myMouseTransform;
-
         private void EndPortDragDelta(object sender, DragDeltaEventArgs e)
         {
-            Point deltaTempPoint = new Point(e.HorizontalChange, e.VerticalChange);
-            if (myMouseTransform != null)
-            {
-                Point deltaTempPointTransformed = myMouseTransform.Transform(deltaTempPoint);
-                X2 += deltaTempPointTransformed.X;
-                Y2 += deltaTempPointTransformed.Y;
-                return;
-            }
-            X2 += e.HorizontalChange;
-            Y2 += e.VerticalChange;
+            MoveEndPort(e.HorizontalChange, e.VerticalChange);
+        }
+
+        public void MoveEndPort(double deltaX, double deltaY)
+        {
+            X2 += deltaX;
+            Y2 += deltaY;
+        }
+
+        public void SetEndPortPosition(double x, double y)
+        {
+            X2 = x;
+            Y2 = y;
         }
 
         public double X2
@@ -229,79 +295,104 @@ namespace ObjectTypes
         private static void OnSizePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             EdgeType edgeType = obj as EdgeType;
-            Transform generalTransform = null;
-            if ((edgeType.X2 < 0) && (edgeType.Y2 > 0))
-            {
-                double angle = 2 * Math.Atan(Math.Abs(edgeType.X2 / edgeType.Y2)) * 180 / Math.PI;
-                generalTransform = GetTransform(edgeType, angle, true, false);
-            }
-            else if ((edgeType.X2 > 0) && (edgeType.Y2 < 0))
-            {
-                double angle = - 2 * Math.Atan(Math.Abs(edgeType.Y2 / edgeType.X2)) * 180 / Math.PI;
-                generalTransform = GetTransform(edgeType, angle, false, true);
-            }
-            else if ((edgeType.X2 < 0) && (edgeType.Y2 < 0))
-            {
-                const double angle = 180;
-                generalTransform = GetTransform(edgeType, angle, true, true);
-            }
-            edgeType.RenderTransform = generalTransform;
-
-            RotateTransform rotate = new RotateTransform
-                                         {
-                                             Angle = Math.Atan(Math.Abs(edgeType.Y2/edgeType.X2))*180/Math.PI,
-                                             CenterY = Arrow.HEIGHT/2
-                                         };
-            if (edgeType.myStartArrow == null)
-            {
-                edgeType.myStartArrow = edgeType.GetStartArrow();
-                edgeType.myEndArrow = edgeType.GetEndArrow();
-            }
-            edgeType.myStartArrow.RenderTransform = rotate;
-            Point start = rotate.Transform(new Point(Arrow.WIDTH, 7 / 2));
-            edgeType.MainLine.X1 = start.X;
-            edgeType.MainLine.Y1 = start.Y;
-
-            edgeType.MainLine.X2 = Math.Abs(edgeType.X2) - start.X;
-            edgeType.MainLine.Y2 = Math.Abs(edgeType.Y2) - start.Y;
-            edgeType.myEndArrow.RenderTransform = rotate;
-            edgeType.myEndArrow.Margin = new Thickness(edgeType.MainLine.X2 - Arrow.WIDTH / 2, edgeType.MainLine.Y2 - Arrow.HEIGHT / 2, 0, 0);
+            edgeType.AdjustArrowsAndMainLine();
         }
+
+        protected override void OnPositionChanged()
+        {
+            base.OnPositionChanged();
+            AdjustArrowsAndMainLine();
+        }
+
+        public double MainLineStartX
+        {
+            get { return (double) GetValue(MainLineStartXProperty); }
+            set { SetValue(MainLineStartXProperty, value); }
+        }
+
+        public static readonly DependencyProperty MainLineStartXProperty =
+            DependencyProperty.Register("MainLineStartX", typeof (double), typeof (EdgeType), null);
+
+        public double MainLineStartY
+        {
+            get { return (double) GetValue(MainLineStartYProperty); }
+            set { SetValue(MainLineStartYProperty, value); }
+        }
+
+        public static readonly DependencyProperty MainLineStartYProperty =
+            DependencyProperty.Register("MainLineStartY", typeof (double), typeof (EdgeType), null);
+
+        public double MainLineEndX
+        {
+            get { return (double) GetValue(MainLineEndXProperty); }
+            set { SetValue(MainLineEndXProperty, value); }
+        }
+
+        public static readonly DependencyProperty MainLineEndXProperty =
+            DependencyProperty.Register("MainLineEndX", typeof (double), typeof (EdgeType), null);
+
+        public double MainLineEndY
+        {
+            get { return (double) GetValue(MainLineEndYProperty); }
+            set { SetValue(MainLineEndYProperty, value); }
+        }
+
+        public static readonly DependencyProperty MainLineEndYProperty =
+            DependencyProperty.Register("MainLineEndY", typeof (double), typeof (EdgeType), null);
+
+        private void AdjustArrowsAndMainLine()
+        {
+            double angle = Math.Atan(Y2 / X2) + (X2 < 0 ? Math.PI : 0);
+            if (myStartArrow != null)
+            {
+                RotateTransform rotateStartArrow = new RotateTransform
+                {
+                    Angle = angle * 180 / Math.PI 
+                };
+                myStartArrow.RenderTransform = rotateStartArrow;
+            }
+            if (myStartArrow != null && !myStartArrow.IsMainLineVisibleUnderArrow)
+            {
+                double deltaY = Math.Sin(angle) * myStartArrow.MinWidth;
+                MainLineStartY = deltaY;
+                double deltaX = Math.Cos(angle) * myStartArrow.MinWidth;
+                MainLineStartX = deltaX;
+            }
+            else
+            {
+                MainLineStartX = 0;
+                MainLineStartY = 0;
+            }
+            if (myEndArrow != null)
+            {
+                RotateTransform rotateEndArrow = new RotateTransform
+                {
+                    Angle = angle * 180 / Math.PI + 180
+                };
+                myEndArrow.RenderTransform = rotateEndArrow;
+            }
+            if (myEndArrow != null && !myEndArrow.IsMainLineVisibleUnderArrow)
+            {
+                double deltaY = Math.Sin(angle) * myEndArrow.MinWidth;
+                MainLineEndY = Y2 - deltaY;
+                double deltaX = Math.Cos(angle) * myEndArrow.MinWidth;
+                MainLineEndX = X2 - deltaX;
+            }
+            else
+            {
+                MainLineEndX = X2;
+                MainLineEndY = Y2;
+            }
+         }
 
         protected virtual Arrow GetStartArrow()
         {
-            return new NoArrow();
+            return null;
         }
 
         protected virtual Arrow GetEndArrow()
         {
-            return new NoArrow();
-        }
-
-        private static Transform GetTransform(EdgeType edgeType, double angle, bool xTranslateNeeded, bool yTranformNeeded)
-        {
-            TransformGroup transformGroup = new TransformGroup();
-
-            RotateTransform rotateTransform = new RotateTransform
-                                                  {
-                                                      Angle = angle,
-                                                      CenterX = Math.Abs(edgeType.X2)/2,
-                                                      CenterY = Math.Abs(edgeType.Y2)/2
-                                                  };
-            transformGroup.Children.Add(rotateTransform);
-
-            TranslateTransform translateTransform = new TranslateTransform();
-            if (xTranslateNeeded)
-            {
-                translateTransform.X = - Math.Abs(edgeType.X2);
-            }
-            if (yTranformNeeded)
-            {
-                translateTransform.Y = - Math.Abs(edgeType.Y2);
-            }
-
-            transformGroup.Children.Add(translateTransform);
-            return transformGroup;
+            return null;
         }
 
         protected override void Select()

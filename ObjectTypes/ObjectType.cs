@@ -9,6 +9,8 @@ namespace ObjectTypes
 
     public delegate void ClickHandler(ObjectType sender);
 
+    public delegate void SelectedChangedHandler(bool newState);
+
     public abstract class ObjectType : UserControl
     {
         public abstract string TypeName { get; }
@@ -80,10 +82,8 @@ namespace ObjectTypes
 
         protected virtual void Move(double deltaX, double deltaY)
         {
-            double newTop = deltaY + (double)this.GetValue(Canvas.TopProperty);
-            double newLeft = deltaX + (double)this.GetValue(Canvas.LeftProperty);
-            this.SetValue(Canvas.TopProperty, newTop);
-            this.SetValue(Canvas.LeftProperty, newLeft);
+            X += deltaX;
+            Y += deltaY;
         }
 
         private void ObjectType_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -120,7 +120,13 @@ namespace ObjectTypes
             {
                 objectType.UnSelect();
             }
+            if (objectType.SelectedChanged != null)
+            {
+                objectType.SelectedChanged(objectType.Selected);
+            }
         }
+
+        public event SelectedChangedHandler SelectedChanged;
 
         protected virtual void Select()
         {
@@ -139,5 +145,33 @@ namespace ObjectTypes
         }
 
         public event ClickHandler Clicked;
+
+        public double X
+        {
+            get { return (double) GetValue(XProperty); }
+            set { SetValue(XProperty, value); }
+        }
+
+        public static readonly DependencyProperty XProperty =
+            DependencyProperty.Register("X", typeof(double), typeof(ObjectType), new PropertyMetadata(OnPositionPropertyChanged));
+
+        public double Y
+        {
+            get { return (double) GetValue(YProperty); }
+            set { SetValue(YProperty, value); }
+        }
+
+        public static readonly DependencyProperty YProperty =
+            DependencyProperty.Register("Y", typeof(double), typeof(ObjectType), new PropertyMetadata(OnPositionPropertyChanged));
+
+        private static void OnPositionPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            ObjectType objectType = obj as ObjectType;
+            objectType.OnPositionChanged();
+        }
+
+        protected virtual void OnPositionChanged()
+        {            
+        }
     }
 }

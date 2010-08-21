@@ -6,5 +6,13 @@
         {
             InitializeComponent();
         }
+
+        public override bool IsMainLineVisibleUnderArrow
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }

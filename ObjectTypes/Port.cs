@@ -28,17 +28,43 @@ namespace ObjectTypes
             {
                 parent.MouseEnter += new MouseEventHandler(ParentMouseEnter);
                 parent.MouseLeave += new MouseEventHandler(ParentMouseLeave);
+                parent.SelectedChanged += new SelectedChangedHandler(ParentSelectedChanged);
+            }
+        }
+
+        private bool myIsParentSelected = false;
+
+        private bool myIsMouseInsideParent = false;
+
+        void ParentSelectedChanged(bool newState)
+        {
+            myIsParentSelected = newState;
+            SetVibility();
+        }
+
+        private void SetVibility()
+        {
+            bool mustBeVisible = myIsParentSelected || myIsMouseInsideParent;
+            if (mustBeVisible)
+            {
+                this.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.Visibility = Visibility.Collapsed;
             }
         }
 
         private void ParentMouseLeave(object sender, MouseEventArgs e)
         {
-            this.Visibility = Visibility.Collapsed;
+            myIsMouseInsideParent = false;
+            SetVibility();
         }
 
         private void ParentMouseEnter(object sender, MouseEventArgs e)
         {
-            this.Visibility = Visibility.Visible;
+            myIsMouseInsideParent = true;
+            SetVibility();
         }
 
         private ObjectType GetParent()

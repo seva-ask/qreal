@@ -4,16 +4,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:ObjectTypes"
+	xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
     mc:Ignorable="d"
-    MaxHeight="10" MinHeight="10" MaxWidth="10" MinWidth="10">
-    <Grid x:Name="LayoutRoot">
-    	<Grid.Background>
-    		<ImageBrush Stretch="Fill"/>
-    	</Grid.Background>
-    	<Rectangle Fill="Black" Stroke="Black" RenderTransformOrigin="0.5,0.5" Width="6" Height="6" HorizontalAlignment="Center" VerticalAlignment="Center">
-    		<Rectangle.RenderTransform>
-    			<CompositeTransform Rotation="45"/>
-    		</Rectangle.RenderTransform>
-    	</Rectangle>
-    </Grid>
+    MaxHeight="16" MinHeight="16" MaxWidth="16" MinWidth="16">
+	<Canvas x:Name="LayoutRoot" Background="Transparent">
+		<ed:RegularPolygon Fill="Black" Height="8" Stretch="Fill" PointCount="4" Stroke="Black" Canvas.Top="-4" UseLayoutRounding="False" Width="16"/>
+	</Canvas>
 </local:Arrow>
