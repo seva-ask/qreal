@@ -51,7 +51,7 @@ namespace QReal.Controls
             ContentPresenter contentPresenter = sender as ContentPresenter;
             GraphicInstance graphicInstance = contentPresenter.Content as GraphicInstance;
             LogicalInstance logicalInstance = graphicInstance.LogicalInstance;
-            TypesHelper.InitProperties(logicalInstance);
+            TypeLoader.Instance.Request(() => TypesHelper.InitProperties(logicalInstance));
             Canvas itemsCanvas = VisualTreeHelper.GetChild(contentPresenter, 0) as Canvas;
             ObjectType objectType = VisualTreeHelper.GetChild(itemsCanvas, 0) as ObjectType;
             SetPropertyBindings(logicalInstance, objectType);
@@ -116,9 +116,12 @@ namespace QReal.Controls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            var itemsPresenter = VisualTreeHelper.GetChild(this, 0);
-            var canvas = VisualTreeHelper.GetChild(itemsPresenter, 0) as Canvas;
-            UIManager.Instance.Canvas = canvas;
+            if (UIManager.Instance.Canvas == null)
+            {
+                var itemsPresenter = VisualTreeHelper.GetChild(this, 0);
+                var canvas = VisualTreeHelper.GetChild(itemsPresenter, 0) as Canvas;
+                UIManager.Instance.Canvas = canvas;                
+            }
             return base.GetContainerForItemOverride();
         }
 
