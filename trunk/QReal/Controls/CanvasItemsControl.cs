@@ -127,9 +127,14 @@ namespace QReal.Controls
 
         public AutoScroller Autoscroller { get; set; }
 
-        private static DataTemplate Create(Type type)
+        private readonly Dictionary<Type, DataTemplate> myDataTemplates = new Dictionary<Type, DataTemplate>();
+
+        private DataTemplate Create(Type type)
         {
-            string xaml = @"
+            if (!myDataTemplates.ContainsKey(type))
+            {
+                string xaml =
+                    @"
                 <ResourceDictionary 
                     xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                     xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
@@ -138,20 +143,26 @@ namespace QReal.Controls
                     mc:Ignorable=""d"" 
                     xmlns:local=""clr-namespace:QReal""
                     xmlns:commonControls=""clr-namespace:QReal.Controls;assembly=QReal""
-                    xmlns:controls=""clr-namespace:" + type.Namespace + @";assembly=" + type.Namespace + @"""
+                    xmlns:controls=""clr-namespace:" +
+                    type.Namespace + @";assembly=" + type.Namespace +
+                    @"""
                     xmlns:ObjectTypes=""clr-namespace:ObjectTypes;assembly=ObjectTypes"">
                     <ObjectTypes:VisibilityConverter x:Key=""VisibilityConverter""/>
                     <commonControls:AbsOrNullConverter x:Key=""AbsOrNullConverter""/>
                     <DataTemplate x:Key=""ObjectTypeTemplate"">
                     <Canvas HorizontalAlignment=""Stretch"" VerticalAlignment=""Stretch"">"
-                        + GetEdgeTypeNegativeCoordinatesXaml(type) +
-                        "<controls:" + type.Name + @" Name=""MainControl"" X=""{Binding X, Mode=TwoWay}"" Y=""{Binding Y, Mode=TwoWay}""" + GetTypeSpecificBinding(type) + @" />"
-                        + GetSelectRectanglesXaml(type) +
+                    + GetEdgeTypeNegativeCoordinatesXaml(type) +
+                    "<controls:" + type.Name +
+                    @" Name=""MainControl"" X=""{Binding X, Mode=TwoWay}"" Y=""{Binding Y, Mode=TwoWay}""" +
+                    GetTypeSpecificBinding(type) + @" />"
+                    + GetSelectRectanglesXaml(type) +
                     @"</Canvas>
                     </DataTemplate>
                 </ResourceDictionary>";
-            ResourceDictionary resourceDictionary = (ResourceDictionary)XamlReader.Load(xaml);
-            return resourceDictionary["ObjectTypeTemplate"] as DataTemplate;
+                ResourceDictionary resourceDictionary = (ResourceDictionary) XamlReader.Load(xaml);
+                myDataTemplates[type] = resourceDictionary["ObjectTypeTemplate"] as DataTemplate;
+            }
+            return myDataTemplates[type];
         }
 
         private static string GetEdgeTypeNegativeCoordinatesXaml(Type type)

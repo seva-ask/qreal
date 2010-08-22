@@ -110,7 +110,7 @@ namespace QReal.Ria.Database
 
         public void UpdateCanvasInstancesSource()
         {
-            CanvasInstancesSource.Clear();
+            CanvasInstancesSource = new ObservableCollection<GraphicInstance>();
             if (CanvasRootElement != null)
             {
                 AddNodeChildren(CanvasRootElement);
