@@ -170,7 +170,7 @@ namespace QReal.Ria.Database
             }
             else
             {
-                if (CanvasRootElement == GetRootParent(graphicInstance) && !CanvasInstancesSource.Contains(graphicInstance))
+                if (CanvasRootElement!= null && CanvasRootElement == GetRootParent(graphicInstance) && !CanvasInstancesSource.Contains(graphicInstance))
                 {
                     CanvasInstancesSource.Add(graphicInstance);
                 }
