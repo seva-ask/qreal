@@ -9,6 +9,7 @@
     xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
     xmlns:common="clr-namespace:System.Windows;assembly=System.Windows.Controls"
     xmlns:controlsDataToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Toolkit"
+    xmlns:controlsInputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     xmlns:local="clr-namespace:QReal"
     xmlns:localControls="clr-namespace:QReal.Controls"
     xmlns:localDatabase="clr-namespace:QReal.Ria.Database;assembly=QReal.Ria"
@@ -19,7 +20,7 @@
         <local:UIManager x:Key="UIManager"/>
         <local:TypeToIconConverter x:Key="TypeToIconConverter"/>
     </UserControl.Resources>
-    <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundBrush}">
+    <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundBrush}" KeyDown="LayoutRoot_KeyDown">
         <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.RootInstances, Mode=TwoWay}" SelectedItemChanged="TreeViewSelectedItemChanged">
         	<controls:TreeView.Background>
         		<StaticResource ResourceKey="TreeViewBrush"/>
@@ -29,6 +30,11 @@
                     <StackPanel Height="35" Width="166" Orientation="Horizontal">
                         <ContentPresenter Height="35" Content="{Binding LogicalInstance.Type, Converter={StaticResource TypeToIconConverter}, ConverterParameter=TypeName}" HorizontalAlignment="Left" Width="37"/>
                         <TextBox Text="{Binding LogicalInstance.Name, Mode=TwoWay}" Height="25"/>
+                        <controlsInputToolkit:ContextMenuService.ContextMenu>
+                            <controlsInputToolkit:ContextMenu>
+                                <controlsInputToolkit:MenuItem Name="DeleteMenuItem" Header="Удалить" Click="DeleteMenuItem_Click"/>
+                            </controlsInputToolkit:ContextMenu>
+                        </controlsInputToolkit:ContextMenuService.ContextMenu>
                     </StackPanel>
                 </common:HierarchicalDataTemplate>
             </controls:TreeView.ItemTemplate>

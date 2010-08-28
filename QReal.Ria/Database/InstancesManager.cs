@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using QReal.Ria.Types;
 using QReal.Web.Database;
@@ -97,7 +98,7 @@ namespace QReal.Ria.Database
             }
             else
             {
-                if (CanvasRootElement == GetRootParent(e.Entity))
+                if (CanvasInstancesSource.Contains(e.Entity))
                 {
                     CanvasInstancesSource.Remove(e.Entity);
                 }
@@ -175,6 +176,37 @@ namespace QReal.Ria.Database
                 {
                     CanvasInstancesSource.Add(graphicInstance);
                 }
+            }
+        }
+
+        public void DeleteInstance(GraphicInstance graphicInstance)
+        {
+            if (graphicInstance is NodeInstance)
+            {
+                foreach (var edgeFrom in (graphicInstance as NodeInstance).EdgesFrom)
+                {
+                    DeleteGraphicInstance(edgeFrom);
+                }
+                foreach (var edgeTo in (graphicInstance as NodeInstance).EdgesTo)
+                {
+                    DeleteGraphicInstance(edgeTo);
+                }
+            }
+            DeleteGraphicInstance(graphicInstance);
+            InstancesContext.SubmitChanges();
+            if (graphicInstance is RootInstance)
+            {
+                SetCanvasRootItem(null);
+            }
+        }
+
+        private void DeleteGraphicInstance(GraphicInstance graphicInstance)
+        {
+            LogicalInstance logicalInstance = graphicInstance.LogicalInstance;
+            InstancesContext.GraphicInstances.Remove(graphicInstance);
+            if (!graphicInstance.LogicalInstance.GraphicInstances.Any())
+            {
+                InstancesContext.LogicalInstances.Remove(logicalInstance);
             }
         }
     }

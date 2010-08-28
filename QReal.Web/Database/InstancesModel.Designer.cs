@@ -963,7 +963,7 @@ namespace QReal.Web.Database
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("QRealModel", "GraphicToLogical", "GraphicInstance")]
-        public EntityCollection<GraphicInstance> GraphicInstance
+        public EntityCollection<GraphicInstance> GraphicInstances
         {
             get
             {

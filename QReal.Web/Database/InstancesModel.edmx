@@ -117,7 +117,9 @@
     <Property Name="Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="LogicalInstanceProperties">
-    <End Role="LogicalInstance" Type="QRealModel.Store.LogicalInstances" Multiplicity="1" />
+    <End Role="LogicalInstance" Type="QRealModel.Store.LogicalInstances" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="InstanceProperty" Type="QRealModel.Store.InstanceProperties" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="LogicalInstance">
@@ -130,7 +132,9 @@
   </Association>
   <Association Name="GraphicToLogical">
     <End Role="GraphicInstance" Type="QRealModel.Store.GraphicInstances" Multiplicity="*" />
-    <End Role="LogicalInstance" Type="QRealModel.Store.LogicalInstances" Multiplicity="1" />
+    <End Role="LogicalInstance" Type="QRealModel.Store.LogicalInstances" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <ReferentialConstraint>
       <Principal Role="LogicalInstance">
         <PropertyRef Name="Id" />
@@ -141,7 +145,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="RootInstanceEdgeInstance">
-    <End Role="RootInstance" Type="QRealModel.Store.GraphicInstances_RootInstance" Multiplicity="1" />
+    <End Role="RootInstance" Type="QRealModel.Store.GraphicInstances_RootInstance" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="EdgeInstance" Type="QRealModel.Store.GraphicInstances_EdgeInstance" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="RootInstance">
@@ -177,7 +183,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="NodeParents">
-    <End Role="ParentableInstance" Type="QRealModel.Store.GraphicInstances_ParentableInstance" Multiplicity="0..1" />
+    <End Role="ParentableInstance" Type="QRealModel.Store.GraphicInstances_ParentableInstance" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="NodeInstance" Type="QRealModel.Store.GraphicInstances_NodeInstance" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ParentableInstance">
@@ -277,7 +285,7 @@
           <Property Type="String" Name="Type" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" />
           <NavigationProperty Name="InstanceProperties" Relationship="QRealModel.LogicalInstanceProperties" FromRole="LogicalInstance" ToRole="InstanceProperty" />
-          <NavigationProperty Name="GraphicInstance" Relationship="QRealModel.GraphicToLogical" FromRole="LogicalInstance" ToRole="GraphicInstance" />
+          <NavigationProperty Name="GraphicInstances" Relationship="QRealModel.GraphicToLogical" FromRole="LogicalInstance" ToRole="GraphicInstance" />
         </EntityType>
         <EntityType Name="InstanceProperty">
           <Key>
@@ -290,7 +298,9 @@
           <Property Type="Int32" Name="LogicalInstanceId" Nullable="false" />
         </EntityType>
         <Association Name="LogicalInstanceProperties">
-          <End Type="QRealModel.LogicalInstance" Role="LogicalInstance" Multiplicity="1" />
+          <End Type="QRealModel.LogicalInstance" Role="LogicalInstance" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="QRealModel.InstanceProperty" Role="InstanceProperty" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="LogicalInstance">
@@ -311,7 +321,9 @@
         </EntityType>
         <Association Name="GraphicToLogical">
           <End Type="QRealModel.GraphicInstance" Role="GraphicInstance" Multiplicity="*" />
-          <End Type="QRealModel.LogicalInstance" Role="LogicalInstance" Multiplicity="1" />
+          <End Type="QRealModel.LogicalInstance" Role="LogicalInstance" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <ReferentialConstraint>
             <Principal Role="LogicalInstance">
               <PropertyRef Name="Id" />
@@ -352,7 +364,9 @@
           <Property Type="Double" Name="Height" Nullable="false" />
         </EntityType>
         <Association Name="RootInstanceEdgeInstance">
-          <End Type="QRealModel.RootInstance" Role="RootInstance" Multiplicity="1" />
+          <End Type="QRealModel.RootInstance" Role="RootInstance" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="QRealModel.EdgeInstance" Role="EdgeInstance" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="RootInstance">
@@ -364,7 +378,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="EdgesFromNode">
-          <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="0..1" />
+          <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="0..1" >
+          </End>
           <End Type="QRealModel.EdgeInstance" Role="EdgeInstance" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="NodeInstance">
@@ -376,7 +391,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="EdgesToNode">
-          <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="0..1" />
+          <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="0..1" >
+          </End>
           <End Type="QRealModel.EdgeInstance" Role="EdgeInstance" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="NodeInstance">
@@ -388,7 +404,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="NodeParents">
-          <End Type="QRealModel.ParentableInstance" Role="ParentableInstance" Multiplicity="0..1" />
+          <End Type="QRealModel.ParentableInstance" Role="ParentableInstance" Multiplicity="0..1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="QRealModel.NodeInstance" Role="NodeInstance" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ParentableInstance">
