@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ObjectTypes;
 using QReal.Types;
+using System.Windows.Shapes;
 
 namespace QReal
 {
@@ -31,18 +32,14 @@ namespace QReal
                 objectType.RenderTransform = new ScaleTransform {ScaleX = scaleCoefficient, ScaleY = scaleCoefficient};
                 objectType.SetValue(Canvas.TopProperty, (iconSize - objectType.Height*scaleCoefficient)/2);
                 objectType.SetValue(Canvas.LeftProperty, (iconSize - objectType.Width*scaleCoefficient)/2);
-                objectType.IsHitTestVisible = false;
-                canvas.Children.Add(objectType);
             }
             else
             {
-                //objectType.X = 10;
-                //objectType.Y = 10;
-                //(objectType as EdgeType).X2 = 20;
-                //(objectType as EdgeType).Y2 = 20;
-                //objectType.SetValue(Canvas.TopProperty, 10.0);
-                //objectType.SetValue(Canvas.LeftProperty, 10.0);
+                (objectType as EdgeType).X2 = iconSize;
+                (objectType as EdgeType).Y2 = iconSize;
             }
+            objectType.IsHitTestVisible = false;
+            canvas.Children.Add(objectType);
             return canvas;
         }
 

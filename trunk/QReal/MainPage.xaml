@@ -52,7 +52,7 @@
                 					<ControlTemplate TargetType="data:DataGridRow">
                                     	<StackPanel Height="37" Orientation="Horizontal">
                                             <ContentPresenter Height="35" Content="{Binding Mode=OneWay, Converter={StaticResource TypeToIconConverter}, ConverterParameter=Type}" HorizontalAlignment="Left" Width="37"/>
-                                       		<TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource ToolBoxTypeConverter}}" Height="35"/>
+                                       		<TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource ToolBoxTypeConverter}}" Height="15"/>
                                     	</StackPanel>
                 					</ControlTemplate>
                 				</Setter.Value>
