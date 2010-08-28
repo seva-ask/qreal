@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ObjectTypes;
 
@@ -9,16 +11,8 @@ namespace QReal
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (parameter.ToString() == "Name")
-            {
-                Type type = value as Type;
-                return (Activator.CreateInstance(type) as ObjectType).TypeName;
-            }
-            else
-            {
-                BitmapImage img = new BitmapImage(new Uri("../demo.png", UriKind.Relative));
-                return img;
-            }
+            Type type = value as Type;
+            return (Activator.CreateInstance(type) as ObjectType).TypeName;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

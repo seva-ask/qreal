@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ObjectTypes;
+using QReal.Types;
 
 namespace QReal
 {
@@ -8,8 +13,37 @@ namespace QReal
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            BitmapImage img = new BitmapImage(new Uri("../demo.png", UriKind.Relative));
-            return img;
+            Type type;
+            if (parameter.ToString() == "TypeName")
+            {
+                type = TypesHelper.GetType(value.ToString());
+            }
+            else
+            {
+                type = value as Type;
+            }
+            const int iconSize = 35;
+            Canvas canvas = new Canvas();
+            ObjectType objectType = (Activator.CreateInstance(type)) as ObjectType;
+            if (objectType is NodeType)
+            {
+                double scaleCoefficient = iconSize/Math.Max(objectType.Width, objectType.Height);
+                objectType.RenderTransform = new ScaleTransform {ScaleX = scaleCoefficient, ScaleY = scaleCoefficient};
+                objectType.SetValue(Canvas.TopProperty, (iconSize - objectType.Height*scaleCoefficient)/2);
+                objectType.SetValue(Canvas.LeftProperty, (iconSize - objectType.Width*scaleCoefficient)/2);
+                objectType.IsHitTestVisible = false;
+                canvas.Children.Add(objectType);
+            }
+            else
+            {
+                //objectType.X = 10;
+                //objectType.Y = 10;
+                //(objectType as EdgeType).X2 = 20;
+                //(objectType as EdgeType).Y2 = 20;
+                //objectType.SetValue(Canvas.TopProperty, 10.0);
+                //objectType.SetValue(Canvas.LeftProperty, 10.0);
+            }
+            return canvas;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
