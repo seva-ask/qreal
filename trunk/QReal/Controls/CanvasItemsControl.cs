@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ServiceModel.DomainServices.Client;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -65,6 +64,23 @@ namespace QReal.Controls
                                           };
             objectType.SetBinding(ObjectType.SelectedProperty, bindingSelected);
             objectType.ZIndexChanged += new ZIndexChangedHandler(ObjectTypeZIndexChanged);
+            SetContextMenu(objectType);
+        }
+
+        private static void SetContextMenu(ObjectType objectType)
+        {
+            MenuItem deleteMenuItemItem = new MenuItem();
+            deleteMenuItemItem.Header = "Удалить";
+            deleteMenuItemItem.Click += DeleteMenuItemItemClick;
+            ContextMenu contextMenu = new ContextMenu();
+            contextMenu.Items.Add(deleteMenuItemItem);
+            ContextMenuService.SetContextMenu(objectType, contextMenu);
+        }
+
+        private static void DeleteMenuItemItemClick(object sender, RoutedEventArgs e)
+        {
+            GraphicInstance graphicInstance = ((sender as MenuItem).DataContext as GraphicInstance);
+            InstancesManager.Instance.DeleteInstance(graphicInstance);
         }
 
         private void ObjectTypeZIndexChanged(ObjectType objectType, int newZIndex)

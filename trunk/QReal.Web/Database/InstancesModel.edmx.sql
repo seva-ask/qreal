@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 08/16/2010 03:16:27
+-- Date Created: 08/29/2010 02:52:36
 -- Generated from EDMX file: C:\Projects\QReal\silverlight\svn\trunk\QReal.Web\Database\InstancesModel.edmx
 -- --------------------------------------------------
 
@@ -196,7 +196,7 @@ ADD CONSTRAINT [FK_LogicalInstanceProperties]
     FOREIGN KEY ([LogicalInstanceId])
     REFERENCES [dbo].[LogicalInstances]
         ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_LogicalInstanceProperties'
 CREATE INDEX [IX_FK_LogicalInstanceProperties]
@@ -210,7 +210,7 @@ ADD CONSTRAINT [FK_GraphicToLogical]
     FOREIGN KEY ([LogicalInstanceId])
     REFERENCES [dbo].[LogicalInstances]
         ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_GraphicToLogical'
 CREATE INDEX [IX_FK_GraphicToLogical]
@@ -224,7 +224,7 @@ ADD CONSTRAINT [FK_RootInstanceEdgeInstance]
     FOREIGN KEY ([ParentId])
     REFERENCES [dbo].[GraphicInstances_RootInstance]
         ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_RootInstanceEdgeInstance'
 CREATE INDEX [IX_FK_RootInstanceEdgeInstance]
@@ -266,7 +266,7 @@ ADD CONSTRAINT [FK_NodeParents]
     FOREIGN KEY ([ParentId])
     REFERENCES [dbo].[GraphicInstances_ParentableInstance]
         ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_NodeParents'
 CREATE INDEX [IX_FK_NodeParents]

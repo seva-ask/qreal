@@ -6,6 +6,7 @@ using QReal.Ria.Types;
 using System.Windows;
 using QReal.Ria.Database;
 using QReal.Types;
+using System.Windows.Input;
 
 namespace QReal
 {
@@ -72,6 +73,24 @@ namespace QReal
         private void TreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             UIManager.Instance.SelectedGraphicInstance = treeView.SelectedItem as GraphicInstance;
+        }
+
+        private void LayoutRoot_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                GraphicInstance selectedGraphicInstance = UIManager.Instance.SelectedGraphicInstance;
+                if (selectedGraphicInstance != null)
+                {
+                    InstancesManager.Instance.DeleteInstance(selectedGraphicInstance);
+                }
+            }
+        }
+
+        private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            GraphicInstance graphicInstance = ((sender as MenuItem).DataContext as GraphicInstance);
+            InstancesManager.Instance.DeleteInstance(graphicInstance);
         }
     }
 }
