@@ -17,19 +17,17 @@
     <UserControl.Resources>
         <localDatabase:InstancesManager x:Key="InstancesManager"/>
         <local:UIManager x:Key="UIManager"/>
+        <local:TypeToIconConverter x:Key="TypeToIconConverter"/>
     </UserControl.Resources>
     <Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundBrush}">
         <controls:TreeView x:Name="treeView" HorizontalAlignment="Left" Margin="0,23,0,0" Width="200" ItemsSource="{Binding Source={StaticResource InstancesManager}, Path=Instance.RootInstances, Mode=TwoWay}" SelectedItemChanged="TreeViewSelectedItemChanged">
-            <controls:TreeView.Resources>
-                <local:TypeToIconConverter x:Key="TypeToIconConverter"/>
-            </controls:TreeView.Resources>
         	<controls:TreeView.Background>
         		<StaticResource ResourceKey="TreeViewBrush"/>
         	</controls:TreeView.Background>
             <controls:TreeView.ItemTemplate>
                 <common:HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                    <StackPanel Height="20" Width="166" Orientation="Horizontal">
-                        <Image Height="20" Source="{Binding LogicalInstance.Type, Converter={StaticResource TypeToIconConverter}}" HorizontalAlignment="Left" Width="40"/>
+                    <StackPanel Height="35" Width="166" Orientation="Horizontal">
+                        <ContentPresenter Height="35" Content="{Binding LogicalInstance.Type, Converter={StaticResource TypeToIconConverter}, ConverterParameter=TypeName}" HorizontalAlignment="Left" Width="37"/>
                         <TextBox Text="{Binding LogicalInstance.Name, Mode=TwoWay}" Height="25"/>
                     </StackPanel>
                 </common:HierarchicalDataTemplate>
@@ -52,9 +50,9 @@
                 			<Setter Property="Template">
                 				<Setter.Value>
                 					<ControlTemplate TargetType="data:DataGridRow">
-                                    	<StackPanel Height="20" Orientation="Horizontal">
-                                        	<Image Height="20" Source="{Binding Mode=OneWay, Converter={StaticResource ToolBoxTypeConverter}, ConverterParameter=Icon}" HorizontalAlignment="Left" Width="25"/>
-                                       		<TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource ToolBoxTypeConverter}, ConverterParameter=Name}" Height="20"/>
+                                    	<StackPanel Height="37" Orientation="Horizontal">
+                                            <ContentPresenter Height="35" Content="{Binding Mode=OneWay, Converter={StaticResource TypeToIconConverter}, ConverterParameter=Type}" HorizontalAlignment="Left" Width="37"/>
+                                       		<TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource ToolBoxTypeConverter}}" Height="35"/>
                                     	</StackPanel>
                 					</ControlTemplate>
                 				</Setter.Value>

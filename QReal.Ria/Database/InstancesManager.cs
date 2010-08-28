@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using QReal.Ria.Types;
 using QReal.Web.Database;
 using System.Windows.Threading;
 using System.ServiceModel.DomainServices.Client;
@@ -36,7 +37,7 @@ namespace QReal.Ria.Database
                 InstancesContext.GraphicInstances.EntityRemoved += GraphicInstances_EntityRemoved;
                 DispatcherTimer timer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 0, 0, 1000)};
                 timer.Tick += new EventHandler(TimerTick);
-                timer.Start();                
+                TypeLoader.Instance.Request(timer.Start);              
             }
         }
 
