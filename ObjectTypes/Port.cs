@@ -23,7 +23,7 @@ namespace ObjectTypes
 
         private void Port_Loaded(object sender, RoutedEventArgs e)
         {
-            ObjectType parent = GetParent();
+            ObjectType parent = FindObjectTypeParent();
             if (parent != null)
             {
                 parent.MouseEnter += new MouseEventHandler(ParentMouseEnter);
@@ -65,16 +65,6 @@ namespace ObjectTypes
         {
             myIsMouseInsideParent = true;
             SetVibility();
-        }
-
-        private ObjectType GetParent()
-        {
-            FrameworkElement parent = (this.Parent as FrameworkElement);
-            while ((parent != null) && (!(parent is ObjectType)))
-            {
-                parent = parent.Parent as FrameworkElement;
-            }
-            return parent as ObjectType;
         }
 
         private ObjectType FindObjectTypeParent()
