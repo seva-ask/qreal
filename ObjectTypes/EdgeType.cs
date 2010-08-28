@@ -16,7 +16,7 @@ namespace ObjectTypes
     {
         protected EdgeType()
         {
-            Canvas canvas = new Canvas { Name = "LayoutRoot" };
+            Canvas canvas = new Canvas();
             this.Content = canvas;
             this.Loaded += new RoutedEventHandler(EdgeType_Loaded);
         }
