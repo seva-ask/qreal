@@ -15,7 +15,6 @@ namespace QReal
         public MainPage()
         {
             InitializeComponent();
-            InitializeToolBox();
             UIManager.Instance.MainPage = this;
             UIManager.Instance.SelectedItemChanged += new SelectedItemChangedHandler(Instance_SelectedItemChanged);
         }
@@ -35,22 +34,7 @@ namespace QReal
                 }
             }
         }
-
-        private void InitializeToolBox()
-        {
-            TypeLoader.Instance.Request(() =>
-                                            {
-                                                toolboxDiagramComboBox.ItemsSource = TypesHelper.Diagrams;
-                                                toolboxDiagramComboBox.SelectedIndex = 0;
-                                            });
-        }
-
-        private void ToolboxDiagramComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            string diagram = (string) toolboxDiagramComboBox.SelectedItem;
-            toolboxObjectsDataGrid.ItemsSource = TypesHelper.GetDiagramTypes(diagram);
-        }
-
+        
         private void Button1Click(object sender, RoutedEventArgs e)
         {
             InstancesManager.Instance.InstancesContext.SubmitChanges();

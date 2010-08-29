@@ -109,7 +109,10 @@ namespace ObjectTypes
             };
             MainLine.SetBinding(Line.Y2Property, bindingEndY);
 
-            (this.Content as Panel).Children.Add(MainLine);
+            if (!(this.Content as Panel).Children.Contains(MainLine)) //hack
+            {
+                (this.Content as Panel).Children.Add(MainLine);                
+            }
         }
 
         private void CreateArrows()

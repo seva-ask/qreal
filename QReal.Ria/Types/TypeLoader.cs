@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Reflection;
 using System.IO;
@@ -7,11 +8,16 @@ using QReal.Web.Assemblies;
 
 namespace QReal.Ria.Types
 {
-    public delegate void LoadingComplete();
-
-    public class TypeLoader
+    public class TypeLoader : DependencyObject
     {
-        private readonly List<Type> myTypes;
+        public ObservableCollection<Type> Types
+        {
+            get { return (ObservableCollection<Type>) GetValue(TypesProperty); }
+            set { SetValue(TypesProperty, value); }
+        }
+
+        public static readonly DependencyProperty TypesProperty =
+            DependencyProperty.Register("Types", typeof (ObservableCollection<Type>), typeof (TypeLoader), new PropertyMetadata(new ObservableCollection<Type>()));
 
         private static readonly TypeLoader myInstance = new TypeLoader();
 
@@ -25,7 +31,6 @@ namespace QReal.Ria.Types
 
         private TypeLoader()
         {
-            myTypes = new List<Type>();
             AssembliesContext assembliesContext = new AssembliesContext();
             assembliesContext.GetAssemblies(operation =>
             {
@@ -44,7 +49,7 @@ namespace QReal.Ria.Types
             myReady--;
             if (myReady == 0)
             {
-                foreach (LoadingComplete action in myActions)
+                foreach (Action action in myActions)
                 {
                     action();
                 }
@@ -60,31 +65,26 @@ namespace QReal.Ria.Types
                 AssemblyPart part = new AssemblyPart();
                 Assembly assembly = part.Load(ms);
                 Type[] availableTypes = assembly.GetTypes();
-                myTypes.AddRange(availableTypes);
+                foreach (var availableType in availableTypes)
+                {
+                    Types.Add(availableType);
+                }
                 DecreaseReady();
             }, null);
         }
 
-        public void Request(LoadingComplete action)
+        internal void Request(Action callback)
         {
             if (myReady != 0)
             {
-	            myActions.Add(action);
+	            myActions.Add(callback);
             }
             else
             {
-                action();
+                callback();
             }
         }
 
-        readonly List<LoadingComplete> myActions = new List<LoadingComplete>();
-
-        public IEnumerable<Type> Types
-        {
-            get
-            {
-                return myTypes;
-            }
-        }
+        readonly List<Action> myActions = new List<Action>();
     }
 }
