@@ -181,6 +181,23 @@ namespace QReal.Ria.Database
 
         public void DeleteInstance(GraphicInstance graphicInstance)
         {
+            RecursiveDeleteInstance(graphicInstance);
+            InstancesContext.SubmitChanges();
+            if (graphicInstance is RootInstance)
+            {
+                SetCanvasRootItem(null);
+            }
+        }
+
+        private void RecursiveDeleteInstance(GraphicInstance graphicInstance)
+        {
+            if (graphicInstance is ParentableInstance)
+            {
+                while ((graphicInstance as ParentableInstance).Children.Any())
+                {
+                    RecursiveDeleteInstance((graphicInstance as ParentableInstance).Children.First());
+                }
+            }
             if (graphicInstance is NodeInstance)
             {
                 foreach (var edgeFrom in (graphicInstance as NodeInstance).EdgesFrom)
@@ -193,11 +210,6 @@ namespace QReal.Ria.Database
                 }
             }
             DeleteGraphicInstance(graphicInstance);
-            InstancesContext.SubmitChanges();
-            if (graphicInstance is RootInstance)
-            {
-                SetCanvasRootItem(null);
-            }
         }
 
         private void DeleteGraphicInstance(GraphicInstance graphicInstance)
