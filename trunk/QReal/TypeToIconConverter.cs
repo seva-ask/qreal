@@ -17,7 +17,7 @@ namespace QReal
             Type type;
             if (parameter.ToString() == "TypeName")
             {
-                type = TypesHelper.GetType(value.ToString());
+                type = TypesManager.Instance.GetType(value.ToString());
             }
             else
             {
