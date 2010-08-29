@@ -49,21 +49,23 @@
 	        <Button Content="Reject" Grid.Column="2" Click="Button2Click" />
 	        <Button Content="Clear" Grid.Column="4" Click="Button3Click" />
 		</Grid>
-        <controls:TreeView x:Name="treeView" Grid.Row="2" ItemsSource="{Binding Instance.RootInstances, Mode=TwoWay, Source={StaticResource InstancesManager}}" SelectedItemChanged="TreeViewSelectedItemChanged" Background="{StaticResource TreeViewBrush}">
-            <controls:TreeView.ItemTemplate>
-                <common:HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                    <StackPanel Height="35" Orientation="Horizontal">
-                        <controlsInputToolkit:ContextMenuService.ContextMenu>
-                            <controlsInputToolkit:ContextMenu>
-                                <controlsInputToolkit:MenuItem x:Name="DeleteMenuItem" Header="Удалить" Click="DeleteMenuItem_Click"/>
-                            </controlsInputToolkit:ContextMenu>
-                        </controlsInputToolkit:ContextMenuService.ContextMenu>
-                        <ContentPresenter Content="{Binding LogicalInstance.Type, ConverterParameter=TypeName, Converter={StaticResource TypeToIconConverter}}" HorizontalAlignment="Left" Width="37"/>
-                        <TextBox Text="{Binding LogicalInstance.Name, Mode=TwoWay}" Height="25"/>
-                    </StackPanel>
-                </common:HierarchicalDataTemplate>
-            </controls:TreeView.ItemTemplate>
-        </controls:TreeView>
+		<toolkit:TreeViewDragDropTarget x:Name="treeViewDDTarget" Grid.Row="2" AllowDrop="True" AllowedSourceEffects="Link" DragOver="treeViewDDTarget_DragOver">
+			<controls:TreeView x:Name="treeView" ItemsSource="{Binding Instance.RootInstances, Mode=TwoWay, Source={StaticResource InstancesManager}}" SelectedItemChanged="TreeViewSelectedItemChanged" Background="{StaticResource TreeViewBrush}" Width="{Binding ActualWidth, ElementName=treeViewDDTarget}" Height="{Binding ActualHeight, ElementName=treeViewDDTarget}">
+				<controls:TreeView.ItemTemplate>
+					<common:HierarchicalDataTemplate ItemsSource="{Binding Children}">
+						<StackPanel Height="35" Orientation="Horizontal">
+							<toolkit:ContextMenuService.ContextMenu>
+								<toolkit:ContextMenu>
+									<toolkit:MenuItem x:Name="DeleteMenuItem" Header="Удалить" Click="DeleteMenuItem_Click"/>
+								</toolkit:ContextMenu>
+							</toolkit:ContextMenuService.ContextMenu>
+							<ContentPresenter Content="{Binding LogicalInstance.Type, ConverterParameter=TypeName, Converter={StaticResource TypeToIconConverter}}" HorizontalAlignment="Left" Width="37"/>
+							<TextBox Text="{Binding LogicalInstance.Name, Mode=TwoWay}" Height="25"/>
+						</StackPanel>
+					</common:HierarchicalDataTemplate>
+				</controls:TreeView.ItemTemplate>
+			</controls:TreeView>
+		</toolkit:TreeViewDragDropTarget>
 		<ScrollViewer x:Name="scrollViewer" Grid.Row="2" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         	<localControls:CanvasDDTarget AllowDrop="True">
         		<localControls:CanvasItemsControl ItemsSource="{Binding Instance.CanvasInstancesSource, Mode=TwoWay, Source={StaticResource InstancesManager}}" Width="{Binding ActualWidth, ElementName=scrollViewer}" Height="{Binding ActualHeight, ElementName=scrollViewer}">

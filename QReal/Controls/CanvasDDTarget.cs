@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ServiceModel.DomainServices.Client;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,6 +7,7 @@ using ObjectTypes;
 using QReal.Web.Database;
 using QReal.Ria.Database;
 using DragEventArgs = Microsoft.Windows.DragEventArgs;
+using QReal.Types;
 
 namespace QReal.Controls
 {
@@ -15,11 +15,11 @@ namespace QReal.Controls
     {
         public CanvasDDTarget()
         {
-            this.MouseMove += new MouseEventHandler(CanvasDDTarget_MouseMove);
-            this.MouseLeftButtonDown += new MouseButtonEventHandler(CanvasDDTarget_MouseLeftButtonDown);
+            this.MouseMove += new MouseEventHandler(CanvasDDTargetMouseMove);
+            this.MouseLeftButtonDown += new MouseButtonEventHandler(CanvasDDTargetMouseLeftButtonDown);
         }
 
-        private static void CanvasDDTarget_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private static void CanvasDDTargetMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             UIManager.Instance.SelectedGraphicInstance = null;
         }
@@ -33,31 +33,50 @@ namespace QReal.Controls
         protected override void OnDropOverride(Microsoft.Windows.DragEventArgs args)
         {
             ItemDragEventArgs rawObject = args.Data.GetData(args.Data.GetFormats()[0]) as ItemDragEventArgs;
-            Type type = (rawObject.Data as System.Collections.ObjectModel.SelectionCollection).First().Item as Type;
-
-            if (CanAddItem(null, type))
+            object droppedItem = (rawObject.Data as System.Collections.ObjectModel.SelectionCollection).First().Item;
+            LogicalInstance logicalInstance = null;
+            Type type = null;
+            bool shouldCreateItem = false;
+            if (droppedItem is Type)
             {
-                LogicalInstance logicalInstance = new LogicalInstance
+                type = droppedItem as Type;
+                if (CanAddItem(null, type))
                 {
-                    Name =
-                        "anonymous " +
-                        (Activator.CreateInstance(type) as ObjectType).TypeName,
-                    Type = type.FullName
-                };
-                InstancesManager.Instance.InstancesContext.LogicalInstances.Add(logicalInstance);
-                GraphicInstance graphicInstance = null;
-                if (InstancesManager.Instance.CanvasRootElement == null)
-                {
-                    graphicInstance = new RootInstance { LogicalInstance = logicalInstance };
+                    logicalInstance = new LogicalInstance
+                        {
+                            Name = "anonymous " + (Activator.CreateInstance(type) as ObjectType).TypeName,
+                            Type = type.FullName
+                        };
+                    InstancesManager.Instance.InstancesContext.LogicalInstances.Add(logicalInstance);
+                    shouldCreateItem = true;
                 }
-                else
-                {
-                    graphicInstance = CreateGraphicVisualizedInstance(type, logicalInstance, args);
-                }
-                InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicInstance);
-                InstancesManager.Instance.AddInstance(graphicInstance);
-                InstancesManager.Instance.InstancesContext.SubmitChanges();
             }
+            else if (droppedItem is GraphicInstance)
+            {
+                logicalInstance = (droppedItem as GraphicInstance).LogicalInstance;
+                type = TypesManager.Instance.GetType(logicalInstance.Type);
+                shouldCreateItem = true;
+            }
+            if (shouldCreateItem)
+            {
+                CreateItem(args, type, logicalInstance);
+            }
+        }
+
+        private void CreateItem(DragEventArgs args, Type type, LogicalInstance logicalInstance)
+        {
+            GraphicInstance graphicInstance = null;
+            if (InstancesManager.Instance.CanvasRootElement == null)
+            {
+                graphicInstance = new RootInstance { LogicalInstance = logicalInstance };
+            }
+            else
+            {
+                graphicInstance = CreateGraphicVisualizedInstance(type, logicalInstance, args);
+            }
+            InstancesManager.Instance.InstancesContext.GraphicInstances.Add(graphicInstance);
+            InstancesManager.Instance.AddInstance(graphicInstance);
+            InstancesManager.Instance.InstancesContext.SubmitChanges();
         }
 
         private GraphicInstance CreateGraphicVisualizedInstance(Type type, LogicalInstance logicalInstance,DragEventArgs args)
@@ -112,7 +131,7 @@ namespace QReal.Controls
             return InstancesManager.Instance.CanvasRootElement;
         }
 
-        private void CanvasDDTarget_MouseMove(object sender, MouseEventArgs e)
+        private void CanvasDDTargetMouseMove(object sender, MouseEventArgs e)
         {
             double rightBound = 0;
             double leftBound = double.PositiveInfinity;

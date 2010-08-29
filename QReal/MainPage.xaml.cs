@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.ServiceModel.DomainServices.Client;
 using System.Windows.Controls;
+using System.Windows.Media;
 using QReal.Web.Database;
 using QReal.Ria.Types;
 using System.Windows;
@@ -75,6 +76,15 @@ namespace QReal
         {
             GraphicInstance graphicInstance = ((sender as MenuItem).DataContext as GraphicInstance);
             InstancesManager.Instance.DeleteInstance(graphicInstance);
+        }
+
+        private void treeViewDDTarget_DragOver(object sender, Microsoft.Windows.DragEventArgs e)
+        {
+            var elements = VisualTreeHelper.FindElementsInHostCoordinates(e.GetPosition(treeView), treeView).Where(element => element is TreeViewItem).Cast<TreeViewItem>();
+            if (elements.Any())
+            {
+                UIManager.Instance.SelectedGraphicInstance = elements.First().DataContext as GraphicInstance;
+            }
         }
     }
 }
