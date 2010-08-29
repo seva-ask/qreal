@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Markup;
 using System.Linq;
@@ -10,7 +11,6 @@ using System.Reflection;
 using System.Windows.Data;
 using QReal.Ria.Database;
 using QReal.Web.Database;
-using QReal.Ria.Types;
 using QReal.Types;
 
 namespace QReal.Controls
@@ -63,7 +63,44 @@ namespace QReal.Controls
                                           };
             objectType.SetBinding(ObjectType.SelectedProperty, bindingSelected);
             objectType.ZIndexChanged += new ZIndexChangedHandler(ObjectTypeZIndexChanged);
+            objectType.MouseLeftButtonUp += ObjectTypeMouseLeftButtonUp;
             SetContextMenu(objectType);
+        }
+
+        private void ObjectTypeMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            GraphicInstance dataContext = (sender as ObjectType).DataContext as GraphicInstance;
+            if (dataContext is NodeInstance)
+            {
+                Point position = e.GetPosition(this);
+                ParentableInstance parent = FindParent(position, dataContext);
+                ((sender as ObjectType).DataContext as NodeInstance).Parent = parent;
+                if (parent is NodeInstance)
+                {
+                    Point positionInParent = new Point((dataContext as NodeInstance).X - (parent as NodeInstance).X,
+                                                       (dataContext as NodeInstance).Y - (parent as NodeInstance).Y);
+                    (parent as NodeInstance).Width = Math.Max(positionInParent.X + (dataContext as NodeInstance).Width + 5, (parent as NodeInstance).Width);
+                    (parent as NodeInstance).Height = Math.Max(positionInParent.Y + (dataContext as NodeInstance).Height + 5, (parent as NodeInstance).Height);
+                }
+            }
+        }
+
+        public ParentableInstance FindParent(Point position, GraphicInstance instance)
+        {
+            foreach (var item in this.Items)
+            {
+                NodeInstance nodeInstance = item as NodeInstance;
+                if ((nodeInstance == null) || (nodeInstance == instance))
+                {
+                    continue;
+                }
+                Rect itemBoundingRect = new Rect(nodeInstance.X, nodeInstance.Y, nodeInstance.Width, nodeInstance.Height);
+                if (itemBoundingRect.Contains(position))
+                {
+                    return nodeInstance;
+                }
+            }
+            return InstancesManager.Instance.CanvasRootElement;
         }
 
         private static void SetContextMenu(ObjectType objectType)
