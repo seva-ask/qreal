@@ -7,8 +7,6 @@
     xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data" 
     xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
     xmlns:common="clr-namespace:System.Windows;assembly=System.Windows.Controls"
-    xmlns:controlsDataToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Toolkit"
-    xmlns:controlsInputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     xmlns:local="clr-namespace:QReal"
     xmlns:localControls="clr-namespace:QReal.Controls"
     xmlns:localTypes="clr-namespace:QReal.Types"
@@ -49,8 +47,8 @@
 	        <Button Content="Reject" Grid.Column="2" Click="Button2Click" />
 	        <Button Content="Clear" Grid.Column="4" Click="Button3Click" />
 		</Grid>
-		<toolkit:TreeViewDragDropTarget x:Name="treeViewDDTarget" Grid.Row="2" AllowDrop="True" AllowedSourceEffects="Link" DragOver="treeViewDDTarget_DragOver">
-			<controls:TreeView x:Name="treeView" ItemsSource="{Binding Instance.RootInstances, Mode=TwoWay, Source={StaticResource InstancesManager}}" SelectedItemChanged="TreeViewSelectedItemChanged" Background="{StaticResource TreeViewBrush}" Width="{Binding ActualWidth, ElementName=treeViewDDTarget}" Height="{Binding ActualHeight, ElementName=treeViewDDTarget}">
+        <localControls:TreeViewDDTarget x:Name="treeViewDDTarget" Grid.Row="2" AllowDrop="True" AllowedSourceEffects="Link" DragOver="treeViewDDTarget_DragOver">
+            <controls:TreeView x:Name="treeView" ItemsSource="{Binding Instance.RootInstances, Mode=TwoWay, Source={StaticResource InstancesManager}}" SelectedItemChanged="TreeViewSelectedItemChanged" Background="{StaticResource TreeViewBrush}" Width="{Binding ActualWidth, ElementName=treeViewDDTarget}" Height="{Binding ActualHeight, ElementName=treeViewDDTarget}">
 				<controls:TreeView.ItemTemplate>
 					<common:HierarchicalDataTemplate ItemsSource="{Binding Children}">
 						<StackPanel Height="35" Orientation="Horizontal">
@@ -65,7 +63,7 @@
 					</common:HierarchicalDataTemplate>
 				</controls:TreeView.ItemTemplate>
 			</controls:TreeView>
-		</toolkit:TreeViewDragDropTarget>
+        </localControls:TreeViewDDTarget>
 		<ScrollViewer x:Name="scrollViewer" Grid.Row="2" Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         	<localControls:CanvasDDTarget AllowDrop="True">
         		<localControls:CanvasItemsControl ItemsSource="{Binding Instance.CanvasInstancesSource, Mode=TwoWay, Source={StaticResource InstancesManager}}" Width="{Binding ActualWidth, ElementName=scrollViewer}" Height="{Binding ActualHeight, ElementName=scrollViewer}">

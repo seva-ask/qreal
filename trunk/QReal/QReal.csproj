@@ -88,6 +88,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\AbsOrNullConverter.cs" />
+    <Compile Include="Controls\TreeViewDDTarget.cs" />
     <Compile Include="ToolBoxTypeConverter.cs" />
     <Compile Include="Controls\AutoScroller.cs" />
     <Compile Include="Controls\CanvasDDTarget.cs" />

@@ -26,8 +26,19 @@ namespace QReal.Controls
 
         protected override bool CanAddItem(CanvasItemsControl itemsControl, object data)
         {
-            Type type = data as Type;
-            return (InstancesManager.Instance.CanvasRootElement != null) || ((Activator.CreateInstance(type) as ObjectType).CanBeRootItem);
+            if (InstancesManager.Instance.CanvasRootElement != null)
+            {
+                return true;
+            }
+            if (data is GraphicInstance)
+            {
+                return true;
+            }
+            if (data is Type)
+            {
+                return (Activator.CreateInstance(data as Type) as ObjectType).CanBeRootItem;
+            }
+            return false;
         }
 
         protected override void OnDropOverride(Microsoft.Windows.DragEventArgs args)
