@@ -98,7 +98,7 @@ namespace QReal.Controls
             GraphicInstance graphicInstance = null;
             if (type.IsSubclassOf(typeof(NodeType)))
             {
-                ParentableInstance parent = FindParent(position, graphicInstance);
+                ParentableInstance parent = (this.Content as CanvasItemsControl).FindParent(position, graphicInstance);
                 graphicInstance = new NodeInstance
                                                 {
                                                     X = position.X,
@@ -122,24 +122,6 @@ namespace QReal.Controls
                                                 };
             }
             return graphicInstance;
-        }
-
-        private ParentableInstance FindParent(Point position, GraphicInstance instance)
-        {
-            foreach (var item in (this.Content as CanvasItemsControl).Items)
-            {
-                NodeInstance nodeInstance = item as NodeInstance;
-                if ((nodeInstance == null) || (nodeInstance == instance))
-                {
-                    continue;
-                }
-                Rect itemBoundingRect = new Rect(nodeInstance.X, nodeInstance.Y, nodeInstance.Width, nodeInstance.Height);
-                if (itemBoundingRect.Contains(position))
-                {
-                    return nodeInstance;
-                }
-            }
-            return InstancesManager.Instance.CanvasRootElement;
         }
 
         private void CanvasDDTargetMouseMove(object sender, MouseEventArgs e)
