@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,24 +24,7 @@ namespace QReal
             {
                 type = value as Type;
             }
-            const int iconSize = 35;
-            Canvas canvas = new Canvas();
-            ObjectType objectType = (Activator.CreateInstance(type)) as ObjectType;
-            if (objectType is NodeType)
-            {
-                double scaleCoefficient = iconSize/Math.Max(objectType.Width, objectType.Height);
-                objectType.RenderTransform = new ScaleTransform {ScaleX = scaleCoefficient, ScaleY = scaleCoefficient};
-                objectType.SetValue(Canvas.TopProperty, (iconSize - objectType.Height*scaleCoefficient)/2);
-                objectType.SetValue(Canvas.LeftProperty, (iconSize - objectType.Width*scaleCoefficient)/2);
-            }
-            else
-            {
-                (objectType as EdgeType).X2 = iconSize;
-                (objectType as EdgeType).Y2 = iconSize;
-            }
-            objectType.IsHitTestVisible = false;
-            canvas.Children.Add(objectType);
-            return canvas;
+            return TypesManager.Instance.GetIcon(type);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
