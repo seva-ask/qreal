@@ -75,13 +75,20 @@ namespace ObjectTypes
 
         private void ThumbDragDelta(object sender, DragDeltaEventArgs e)
         {
+            double minWidthAsParent = 0;
+            double minHeightAsParent = 0;
+            foreach (var child in (DataContext as NodeInstance).NodeChildren)
+            {
+                minWidthAsParent = Math.Max(minWidthAsParent, child.X - X + child.Width + 5);
+                minHeightAsParent = Math.Max(minHeightAsParent, child.Y - Y + child.Height + 5);
+            }
             double newWidth = this.Width + e.HorizontalChange;
-            if (newWidth > 0 && newWidth > this.MinWidth)
+            if (newWidth > 0 && newWidth > this.MinWidth && newWidth > minWidthAsParent)
             {
                 this.Width = newWidth;
             }
             double newHeight = this.Height + e.VerticalChange;
-            if (newHeight > 0 && newHeight > this.MinHeight)
+            if (newHeight > 0 && newHeight > this.MinHeight && newHeight > minHeightAsParent)
             {
                 this.Height = newHeight;
             }

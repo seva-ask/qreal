@@ -18,38 +18,34 @@ namespace ObjectTypes
         {
             Canvas canvas = new Canvas();
             this.Content = canvas;
-            this.Loaded += new RoutedEventHandler(EdgeType_Loaded);
-        }
 
-        protected readonly Line MainLine = new Line();
-
-        private Arrow myStartArrow;
-        private Arrow myEndArrow;
-
-        private void EdgeType_Loaded(object sender, RoutedEventArgs e)
-        {
             CreateMainLine();
 
             CreateArrows();
 
+            CreatePorts();
+        }
+
+        private void CreatePorts()
+        {
             LinkBoundaryPointPort endPort = new LinkBoundaryPointPort
                                                 {
                                                     Width = 7,
                                                     Height = 7
                                                 };
             Binding bindingEndPortX = new Binding
-            {
-                Source = this,
-                Path = new PropertyPath("X2"),
-                Mode = BindingMode.TwoWay
-            };
+                                          {
+                                              Source = this,
+                                              Path = new PropertyPath("X2"),
+                                              Mode = BindingMode.TwoWay
+                                          };
             endPort.SetBinding(Canvas.LeftProperty, bindingEndPortX);
             Binding bindingEndPortY = new Binding
-            {
-                Source = this,
-                Path = new PropertyPath("Y2"),
-                Mode = BindingMode.TwoWay
-            };
+                                          {
+                                              Source = this,
+                                              Path = new PropertyPath("Y2"),
+                                              Mode = BindingMode.TwoWay
+                                          };
             endPort.SetBinding(Canvas.TopProperty, bindingEndPortY);
             endPort.DragStarted += new DragStartedEventHandler(BoundaryPortDragStarted);
             endPort.DragDelta += new DragDeltaEventHandler(EndPortDragDelta);
@@ -66,6 +62,11 @@ namespace ObjectTypes
             startPort.DragCompleted += new DragCompletedEventHandler(StartPortDragCompleted);
             (this.Content as Panel).Children.Add(startPort);
         }
+
+        protected readonly Line MainLine = new Line();
+
+        private Arrow myStartArrow;
+        private Arrow myEndArrow;
 
         private void CreateMainLine()
         {
@@ -109,10 +110,7 @@ namespace ObjectTypes
             };
             MainLine.SetBinding(Line.Y2Property, bindingEndY);
 
-            if (!(this.Content as Panel).Children.Contains(MainLine)) //hack
-            {
-                (this.Content as Panel).Children.Add(MainLine);                
-            }
+            (this.Content as Panel).Children.Add(MainLine);                
         }
 
         private void CreateArrows()
@@ -345,6 +343,10 @@ namespace ObjectTypes
 
         private void AdjustArrowsAndMainLine()
         {
+            if (X2 == 0 || Y2 == 0)
+            {
+                return;
+            }
             double angle = Math.Atan(Y2 / X2) + (X2 < 0 ? Math.PI : 0);
             if (myStartArrow != null)
             {

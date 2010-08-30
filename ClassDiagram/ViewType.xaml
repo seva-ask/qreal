@@ -27,11 +27,9 @@
                 <CompositeTransform Rotation="90"/>
             </ObjectTypes_Ports:LinePort.RenderTransform>
         </ObjectTypes_Ports:LinePort>
+        <TextBlock Foreground="Navy" Text="View" FontSize="13.333" Width="{Binding Width, ElementName=nodeType}" Canvas.Top="6" Height="20" TextAlignment="Center"/>
         <Grid Height="20" Canvas.Top="7" Width="{Binding Width, ElementName=nodeType}" Background="Transparent" Margin="0,30,0,0">
             <TextBlock Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding DataContext.LogicalInstance.Name, ElementName=nodeType}" Foreground="Black"/>
-        </Grid>
-        <Grid Height="30" Width="{Binding Width, ElementName=nodeType}" Background="Transparent">
-        	<TextBlock Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Navy" Text="View" FontSize="13.333"/>
         </Grid>
 
     </Canvas>

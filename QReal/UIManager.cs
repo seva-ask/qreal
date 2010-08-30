@@ -13,14 +13,23 @@ namespace QReal
 
     public class UIManager : DependencyObject
     {
-        private static readonly UIManager myInstance = new UIManager();
+        private static UIManager myInstance;
 
         public static UIManager Instance
         {
             get
             {
+                if (myInstance == null)
+                {
+                    myInstance = new UIManager();
+                }
                 return myInstance;
             }
+        }
+
+        public UIManager()
+        {
+            myInstance = this;
         }
 
         public MainPage MainPage { get; set; }
