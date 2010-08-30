@@ -66,7 +66,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AddInstances.aspx" />
     <Content Include="ClientBin\QReal.xap" />
     <Content Include="Database\InstancesModel.edmx.sql" />
     <Content Include="Default.aspx" />
@@ -82,13 +81,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddInstances.aspx.cs">
-      <DependentUpon>AddInstances.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="AddInstances.aspx.designer.cs">
-      <DependentUpon>AddInstances.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Assemblies\AssembliesService.cs" />
     <Compile Include="Assemblies\AssemblyManager.cs" />
     <Compile Include="Database\InstancesModel.Designer.cs">
